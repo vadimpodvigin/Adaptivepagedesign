@@ -1,0 +1,46 @@
+{
+  "cards": [
+    {
+      "title": "View Request",
+      "badge": "1",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo.",
+      "navigation": "vertical"
+    },
+    {
+      "title": "Retrieve Checkout Session",
+      "badge": "2",
+      "description": "Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis. Donec enim arcu, scelerisque a consequat facilisis, maximus ac massa.",
+      "navigation": "horizontal"
+    },
+    {
+      "title": "Get Credit Card Data",
+      "badge": "3",
+      "description": "Fusce vel enim non nisi ullamcorper luctus. Maecenas eget risus sollicitudin, tempus odio et, euismod augue.",
+      "navigation": "horizontal"
+    },
+    {
+      "title": "Validate Card Details",
+      "badge": "4",
+      "description": "Integer elementum enim sed nisi congue, at mollis dui volutpat. Aliquam porta turpis sit amet ligula porttitor mollis.",
+      "navigation": "vertical"
+    },
+    {
+      "title": "Process Payment",
+      "badge": "5",
+      "description": "Mauris et nunc magna. Nunc venenatis viverra velit sed euismod. Praesent bibendum lectus et turpis lobortis, eu rutrum lorem pretium.",
+      "navigation": "horizontal"
+    },
+    {
+      "title": "Create Transaction Record",
+      "badge": "6",
+      "description": "Vestibulum non elit eget odio bibendum maximus. Donec volutpat nulla ante, at volutpat enim pulvinar molestie.",
+      "navigation": "horizontal"
+    },
+    {
+      "title": "Send Confirmation Email",
+      "badge": "7",
+      "description": "Final step - confirmation sent to customer with transaction details and receipt. This completes the payment workflow successfully.",
+      "navigation": "vertical"
+    }
+  ]
+}

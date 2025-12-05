@@ -1,46 +1,92 @@
 {
   "cards": [
     {
-      "title": "View Request",
+      "id": "card1",
+      "title": "Funding Source",
       "badge": "1",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et. Aenean eu enim justo.",
-      "navigation": "vertical"
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh, sit amet tempor nibh finibus et.",
+      "arrows": [
+        {
+          "direction": "right",
+          "targetCardId": "card2"
+        },
+        {
+          "direction": "down",
+          "targetCardId": "card3"
+        }
+      ]
     },
     {
-      "title": "Retrieve Checkout Session",
+      "id": "card2",
+      "title": "OMS Funds",
       "badge": "2",
-      "description": "Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis. Donec enim arcu, scelerisque a consequat facilisis, maximus ac massa.",
-      "navigation": "horizontal"
+      "description": "Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.",
+      "arrows": [
+        {
+          "direction": "down",
+          "targetCardId": "card5"
+        }
+      ]
     },
     {
-      "title": "Get Credit Card Data",
+      "id": "card3",
+      "title": "Validate & Reserve Funds",
       "badge": "3",
       "description": "Fusce vel enim non nisi ullamcorper luctus. Maecenas eget risus sollicitudin, tempus odio et, euismod augue.",
-      "navigation": "horizontal"
+      "nestedcard": [
+        {
+          "title": "Request Body",
+          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius tortor nibh."
+        },
+        {
+          "title": "Response Body",
+          "description": "Etiam finibus odio quis feugiat facilisis. Donec enim arcu, scelerisque a consequat."
+        }
+      ],
+      "arrows": [
+        {
+          "direction": "right",
+          "targetCardId": "card32"
+        }
+      ]
     },
     {
-      "title": "Validate Card Details",
+      "id": "card32",
+      "title": "Core Bank Plugin (Hogan)",
       "badge": "4",
-      "description": "Integer elementum enim sed nisi congue, at mollis dui volutpat. Aliquam porta turpis sit amet ligula porttitor mollis.",
-      "navigation": "vertical"
+      "description": "Integer elementum enim sed nisi congue, at mollis dui volutpat. Aliquam porta turpis sit amet ligula.",
+      "arrows": [
+        {
+          "direction": "right",
+          "targetCardId": "card4"
+        }
+      ]
     },
     {
-      "title": "Process Payment",
+      "id": "card4",
+      "title": "CORE: DDA",
       "badge": "5",
-      "description": "Mauris et nunc magna. Nunc venenatis viverra velit sed euismod. Praesent bibendum lectus et turpis lobortis, eu rutrum lorem pretium.",
-      "navigation": "horizontal"
+      "description": "Mauris et nunc magna. Nunc venenatis viverra velit sed euismod.",
+      "arrows": []
     },
     {
-      "title": "Create Transaction Record",
+      "id": "card5",
+      "title": "Allocate OMS Funds",
       "badge": "6",
-      "description": "Vestibulum non elit eget odio bibendum maximus. Donec volutpat nulla ante, at volutpat enim pulvinar molestie.",
-      "navigation": "horizontal"
+      "description": "Vestibulum non elit eget odio bibendum maximus. Donec volutpat nulla ante.",
+      "arrows": [
+        {
+          "direction": "down",
+          "targetCardId": "card6"
+        }
+      ]
     },
     {
-      "title": "Send Confirmation Email",
+      "id": "card6",
+      "title": "Confirm Allocation",
       "badge": "7",
-      "description": "Final step - confirmation sent to customer with transaction details and receipt. This completes the payment workflow successfully.",
-      "navigation": "vertical"
+      "description": "Final step - confirmation sent with allocation details and receipt.",
+      "arrows": []
     }
   ]
 }

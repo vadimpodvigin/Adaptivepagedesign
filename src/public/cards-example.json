@@ -1,0 +1,109 @@
+{
+  "cards": [
+    {
+      "id": "card1",
+      "title": "Initial Card",
+      "badge": "1",
+      "description": "This is the starting card. Click the arrows to expand horizontally or vertically.",
+      "nestedcard": [
+        {
+          "title": "Nunc at convallis dui",
+          "description": "Nunc at convallis dui. Suspendisse consectetur accumsan turpis et venenatis. Duis imperdiet ante ut felis condimentum ultrices. Vivamus auctor viverra ultrices. Vestibulum ac justo eget sapien tincidunt consequat. Proin tempor sem in purus faucibus facilisis."
+        },
+        {
+          "title": "Important Note",
+          "description": "This is another notification block that demonstrates multiple notifications in a single card."
+        }
+      ],
+      "arrows": [
+        {
+          "direction": "right",
+          "targetCardId": "card2"
+        },
+        {
+          "direction": "down",
+          "targetCardId": "card3"
+        }
+      ]
+    },
+    {
+      "id": "card2",
+      "title": "Right Card",
+      "badge": "2",
+      "description": "This card appears to the right when you click the right arrow on Card 1.",
+      "arrows": [
+        {
+          "direction": "down",
+          "targetCardId": "card4"
+        }
+      ]
+    },
+    {
+      "id": "card3",
+      "title": "Bottom Card",
+      "badge": "3",
+      "description": "This card appears below when you click the down arrow on Card 1.",
+      "nestedcard": [
+        {
+          "title": "Configuration Required",
+          "description": "Please ensure all settings are configured correctly before proceeding to the next step."
+        }
+      ],
+      "arrows": [
+        {
+          "direction": "left",
+          "targetCardId": "card5"
+        },
+        {
+          "direction": "right",
+          "targetCardId": "card6"
+        }
+      ]
+    },
+    {
+      "id": "card4",
+      "title": "Nested Card",
+      "badge": "4",
+      "description": "This card demonstrates nested expansion from the right card.",
+      "arrows": []
+    },
+    {
+      "id": "card5",
+      "title": "Left Card",
+      "badge": "5",
+      "description": "This card appears to the left of Bottom Card.",
+      "arrows": [
+        {
+          "direction": "down",
+          "targetCardId": "card7"
+        }
+      ]
+    },
+    {
+      "id": "card6",
+      "title": "Right Card 2",
+      "badge": "6",
+      "description": "This card appears to the right of Bottom Card.",
+      "arrows": [
+        {
+          "direction": "down",
+          "targetCardId": "card8"
+        }
+      ]
+    },
+    {
+      "id": "card7",
+      "title": "Deep Nested Left",
+      "badge": "7",
+      "description": "This demonstrates deeper nesting from the left side.",
+      "arrows": []
+    },
+    {
+      "id": "card8",
+      "title": "Deep Nested Right",
+      "badge": "8",
+      "description": "This demonstrates deeper nesting from the right side.",
+      "arrows": []
+    }
+  ]
+}

@@ -19,10 +19,10 @@ function ChevronDown() {
 
 function CustomSelect() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("CoreFlow (Stripe Payment Workflow)");
+  const [selected, setSelected] = useState("CoreFlow (Mint Digital Asset)");
   
   const options = [
-    "CoreFlow (Stripe Payment Workflow)",
+    "CoreFlow (Mint Digital Asset)",
     "Workflow 2",
     "Workflow 3"
   ];
@@ -52,7 +52,7 @@ function CustomSelect() {
           <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
           <div className="absolute left-0 top-[42px] w-full bg-white shadow-lg z-20">
             {options.map((option, index) => {
-              const isDisabled = option !== "CoreFlow (Stripe Payment Workflow)";
+              const isDisabled = option !== "CoreFlow (Mint Digital Asset)";
               return (
                 <div
                   key={index}

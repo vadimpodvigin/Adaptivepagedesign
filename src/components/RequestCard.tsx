@@ -4,16 +4,25 @@ import svgPathsUpGrey from "../imports/svg-9j3qgonek1";
 import ArrowDown from "../imports/ArrowDown";
 import ArrowRight from "../imports/ArrowRight";
 import ArrowLeft from "../imports/ArrowLeft";
+import ArrowUp from "../imports/ArrowUp";
 import ArrowRightGrey159 from "../imports/ArrowRight-159-390";
 import ArrowLeftGrey159 from "../imports/ArrowLeft-159-371";
 import { useState, useRef, useEffect } from "react";
 
 // TypeScript type for card data structure
 export interface CardData {
+  id: string;
   title: string;
   badge: string;
   description: string;
-  navigation: "vertical" | "horizontal";
+  nestedcard?: Array<{
+    title: string;
+    description: string;
+  }>;
+  arrows: Array<{
+    direction: "down" | "left" | "right";
+    targetCardId: string;
+  }>;
 }
 
 export interface CardsData {
@@ -93,14 +102,41 @@ function ArrowLeftGrey() {
   );
 }
 
+function ArrowUpWhite() {
+  return (
+    <div className="relative shrink-0 size-[24px]">
+      <ArrowUp />
+    </div>
+  );
+}
+
 interface CardProps {
   title: string;
   badge: string;
   description: string;
+  nestedcard?: Array<{
+    title: string;
+    description: string;
+  }>;
   className?: string;
 }
 
-function Card({ title, badge, description, className = "" }: CardProps) {
+function NotificationBlock({ title, description }: { title: string; description: string }) {
+  return (
+    <div className="bg-[#edf5ff] relative shrink-0 w-full">
+      <div className="size-full">
+        <div className="box-border content-stretch flex gap-[14px] items-start p-[8px] relative w-full">
+          <div className="basis-0 content-stretch flex flex-col gap-[8px] grow items-start leading-[normal] min-h-px min-w-px not-italic relative shrink-0 text-[15px] text-neutral-600">
+            <p className="font-['IBM_Plex_Sans:Medium',sans-serif] relative shrink-0 w-full">{title}</p>
+            <p className="font-['IBM_Plex_Sans:Regular',sans-serif] relative shrink-0 w-full">{description}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Card({ title, badge, description, nestedcard, className = "" }: CardProps) {
   return (
     <div className={`bg-white box-border content-stretch flex flex-col gap-[16px] items-start p-4 md:p-[24px] rounded-[8px] transition-shadow hover:shadow-md h-full ${className}`}>
       <div className="content-stretch flex gap-[10px] items-start relative shrink-0 w-full">
@@ -115,345 +151,271 @@ function Card({ title, badge, description, className = "" }: CardProps) {
       <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[16px] md:text-[18px] text-neutral-600 w-full">
         {description}
       </p>
+      
+      {nestedcard && Array.isArray(nestedcard) && nestedcard.length > 0 && (
+        <>
+          {nestedcard.map((card, index) => (
+            <NotificationBlock 
+              key={index}
+              title={card.title}
+              description={card.description}
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 }
 
-interface ExpandButtonProps {
+interface ArrowButtonProps {
+  direction: "up" | "down" | "left" | "right";
   isExpanded: boolean;
   isHovered: boolean;
   onToggle: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  direction: "vertical" | "horizontal";
 }
 
-function ExpandButton({ isExpanded, isHovered, onToggle, onMouseEnter, onMouseLeave, direction }: ExpandButtonProps) {
-  if (direction === "horizontal") {
-    // Horizontal button (right arrow) - aligned to the right of the card
-    return (
-      <div className="flex items-center justify-center">
-        <button
-          onClick={onToggle}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          className={`content-stretch size-[40px] flex-col flex isolate items-center justify-center overflow-clip shrink-0 transition-all duration-200 cursor-pointer ${
-            isExpanded 
-              ? 'bg-transparent hover:bg-[#EBEBEB]' 
-              : 'bg-[#7a23d9] hover:bg-[#6a1fc9]'
-          }`}
-        >
-          <div className="relative shrink-0 w-full">
-            <div className="flex flex-row items-center overflow-clip size-full">
-              <div className={`box-border content-stretch flex isolate items-center justify-center relative w-full ${
-                isExpanded ? 'p-[8px]' : 'p-[12px]'
-              }`}>
-                <div className={`content-stretch flex flex-col items-start overflow-clip relative shrink-0 z-[1] transition-all duration-200 ${
-                  isExpanded ? 'size-[24px]' : 'size-[24px]'
-                }`}>
-                  {isExpanded 
-                    ? (isHovered === true ? <ArrowLeftGrey /> : <ArrowRightGrey />)
-                    : <ArrowRightWhite />
-                  }
-                </div>
-              </div>
-            </div>
-          </div>
-        </button>
-      </div>
-    );
-  }
+function ArrowButton({ direction, isExpanded, isHovered, onToggle, onMouseEnter, onMouseLeave }: ArrowButtonProps) {
+  const getArrowIcon = () => {
+    if (direction === "right") {
+      return isExpanded 
+        ? <ArrowRightGrey />
+        : <ArrowRightWhite />;
+    } else if (direction === "left") {
+      return isExpanded 
+        ? <ArrowLeftGrey />
+        : <ArrowLeftWhite />;
+    } else if (direction === "down") {
+      return isExpanded 
+        ? (isHovered ? <ArrowUpGrey /> : <ArrowDownGrey />)
+        : <ArrowDown />;
+    } else { // up
+      return isExpanded 
+        ? (isHovered ? <ArrowDownGrey /> : <ArrowUpGrey />)
+        : <ArrowUpWhite />;
+    }
+  };
 
-  // Vertical button (down arrow) - centered below the card
+  const isVertical = direction === "up" || direction === "down";
+
   return (
-    <div className="flex justify-center w-full px-4 md:px-[24px] mt-[8px] mr-[0px] mb-[0px] ml-[0px]">
-      <button
-        onClick={onToggle}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        className={`content-stretch size-[40px] flex-col flex isolate items-center justify-center overflow-clip shrink-0 transition-all duration-200 cursor-pointer ${
-          isExpanded 
-            ? 'bg-transparent hover:bg-[#EBEBEB]' 
-            : 'bg-[#7a23d9] hover:bg-[#6a1fc9]'
-        }`}
-      >
-        <div className="relative shrink-0 w-full">
-          <div className="flex flex-row items-center overflow-clip size-full">
-            <div className={`box-border content-stretch flex isolate items-center relative w-full ${
-              isExpanded ? 'p-[8px]' : 'p-[12px]'
+    <button
+      onClick={onToggle}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className={`content-stretch size-[40px] flex-col flex isolate items-center justify-center overflow-clip shrink-0 transition-all duration-200 cursor-pointer ${
+        isExpanded 
+          ? 'bg-transparent hover:bg-[#EBEBEB]' 
+          : 'bg-[#7a23d9] hover:bg-[#6a1fc9]'
+      }`}
+    >
+      <div className="relative shrink-0 w-full">
+        <div className="flex flex-row items-center overflow-clip size-full">
+          <div className={`box-border content-stretch flex isolate items-center justify-center relative w-full ${
+            isExpanded ? 'p-[8px]' : 'p-[12px]'
+          }`}>
+            <div className={`content-stretch flex flex-col items-start overflow-clip relative shrink-0 z-[1] transition-all duration-200 ${
+              isVertical && !isExpanded ? 'size-[16px]' : 'size-[24px]'
             }`}>
-              <div className={`content-stretch flex flex-col items-start overflow-clip relative shrink-0 z-[1] transition-all duration-200 ${
-                isExpanded ? 'size-[24px]' : 'size-[16px]'
-              }`}>
-                {isExpanded 
-                  ? (isHovered ? <ArrowUpGrey /> : <ArrowDownGrey />)
-                  : <ArrowDown />
-                }
-              </div>
+              {getArrowIcon()}
             </div>
           </div>
         </div>
-      </button>
-    </div>
+      </div>
+    </button>
   );
 }
 
-interface CardRendererProps {
-  cards: CardData[];
-  startIndex: number;
-  onHorizontalExpandChange?: (isExpanded: boolean) => void;
+interface CardWithArrowsProps {
+  card: CardData;
+  cardsById: Map<string, CardData>;
+  visibleCards: Set<string>;
+  onToggleCard: (cardId: string) => void;
+  hoveredArrows: Map<string, boolean>;
+  onHoverArrow: (key: string, isHovered: boolean) => void;
+  isLastCard: boolean;
 }
 
-function CardRenderer({ cards, startIndex, onHorizontalExpandChange }: CardRendererProps) {
-  const [showHorizontalCard, setShowHorizontalCard] = useState(false);
-  const [showNextSection, setShowNextSection] = useState(false);
-  const [isHoveredHorizontal, setIsHoveredHorizontal] = useState(false);
-  const [isHoveredVertical, setIsHoveredVertical] = useState(false);
-  const [nextSectionHorizontalExpanded, setNextSectionHorizontalExpanded] = useState(false);
-  const expandRef = useRef<HTMLDivElement>(null);
-  const horizontalButtonRef = useRef<HTMLDivElement>(null);
-  const lastCardRef = useRef<HTMLDivElement>(null);
+function CardWithArrows({ 
+  card, 
+  cardsById, 
+  visibleCards, 
+  onToggleCard, 
+  hoveredArrows,
+  onHoverArrow,
+  isLastCard 
+}: CardWithArrowsProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (showNextSection && expandRef.current) {
-      setTimeout(() => {
-        expandRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 100);
-    }
-  }, [showNextSection]);
+  // Group arrows by direction
+  const downArrows = card.arrows.filter(a => a.direction === "down");
+  const leftArrows = card.arrows.filter(a => a.direction === "left");
+  const rightArrows = card.arrows.filter(a => a.direction === "right");
 
-  useEffect(() => {
-    if (showHorizontalCard && horizontalButtonRef.current) {
-      setTimeout(() => {
-        horizontalButtonRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 100);
-    }
-  }, [showHorizontalCard]);
-
-  useEffect(() => {
-    if (onHorizontalExpandChange) {
-      onHorizontalExpandChange(showHorizontalCard);
-    }
-  }, [showHorizontalCard, onHorizontalExpandChange]);
-
-  if (startIndex >= cards.length) {
-    return null;
-  }
-
-  const currentCard = cards[startIndex];
-  const nextCard = startIndex + 1 < cards.length ? cards[startIndex + 1] : null;
+  // Collect all cards in the current horizontal row (including main card and visible left/right cards)
+  const allCardsInRow: CardData[] = [card];
   
-  // Check if we should render horizontally (current AND next both horizontal)
-  const shouldRenderHorizontal = currentCard.navigation === "horizontal" && nextCard?.navigation === "horizontal";
+  leftArrows.forEach(arrow => {
+    const targetCard = cardsById.get(arrow.targetCardId);
+    if (visibleCards.has(arrow.targetCardId) && targetCard) {
+      allCardsInRow.push(targetCard);
+    }
+  });
+  
+  rightArrows.forEach(arrow => {
+    const targetCard = cardsById.get(arrow.targetCardId);
+    if (visibleCards.has(arrow.targetCardId) && targetCard) {
+      allCardsInRow.push(targetCard);
+    }
+  });
 
-  if (shouldRenderHorizontal) {
-    // Render horizontal pair
-    const hasMoreAfterPair = startIndex + 2 < cards.length;
-    const isLastPair = !hasMoreAfterPair;
-    
-    // Check if next section cards have dotted badges (e.g., "1.1", "1.2")
-    const nextSectionCard1 = startIndex + 2 < cards.length ? cards[startIndex + 2] : null;
-    const nextSectionCard2 = startIndex + 3 < cards.length ? cards[startIndex + 3] : null;
-    const nextSectionHasDottedBadges = nextSectionCard1?.badge.includes('.') && nextSectionCard2?.badge.includes('.');
-    
-    // Scroll to last horizontal card when it appears
-    useEffect(() => {
-      if (isLastPair && showHorizontalCard && lastCardRef.current) {
-        setTimeout(() => {
-          lastCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
-      }
-    }, [isLastPair, showHorizontalCard]);
-    
-    return (
-      <>
-        <div className={`flex flex-col lg:flex-row items-stretch gap-[8px] w-full ${isLastPair && showHorizontalCard ? 'pb-[64px]' : ''}`} ref={isLastPair && showHorizontalCard ? lastCardRef : null}>
-          {/* First horizontal card */}
-          <div className="flex-1 min-w-0">
+  // Collect ALL down arrows from all cards in the horizontal row
+  const allDownArrows: Array<{
+    arrow: { direction: "down" | "left" | "right"; targetCardId: string };
+    sourceCardId: string;
+    arrowIndex: number;
+  }> = [];
+
+  allCardsInRow.forEach(cardInRow => {
+    const cardDownArrows = cardInRow.arrows.filter(a => a.direction === "down");
+    cardDownArrows.forEach((arrow, idx) => {
+      allDownArrows.push({
+        arrow,
+        sourceCardId: cardInRow.id,
+        arrowIndex: idx
+      });
+    });
+  });
+
+  // Build the horizontal row (left arrows + card + right arrows)
+  const renderHorizontalRow = () => {
+    const elements: JSX.Element[] = [];
+
+    // Left arrows and their cards
+    leftArrows.forEach((arrow, idx) => {
+      const targetCard = cardsById.get(arrow.targetCardId);
+      const isVisible = visibleCards.has(arrow.targetCardId);
+      const hoverKey = `${card.id}-left-${idx}`;
+      const isHovered = hoveredArrows.get(hoverKey) || false;
+
+      if (isVisible && targetCard) {
+        elements.push(
+          <div key={`left-card-${idx}`} className="flex-1 min-w-0">
             <Card
-              title={currentCard.title}
-              badge={currentCard.badge}
-              description={currentCard.description}
+              title={targetCard.title}
+              badge={targetCard.badge}
+              description={targetCard.description}
+              nestedcard={targetCard.nestedcard}
             />
           </div>
-          
-          {/* Right arrow button */}
-          <ExpandButton
-            isExpanded={showHorizontalCard}
-            isHovered={isHoveredHorizontal}
-            onToggle={() => {
-              setShowHorizontalCard(!showHorizontalCard);
-              setIsHoveredHorizontal(false);
-            }}
-            onMouseEnter={() => setIsHoveredHorizontal(true)}
-            onMouseLeave={() => setIsHoveredHorizontal(false)}
-            direction="horizontal"
-          />
-          
-          {/* Second horizontal card (revealed) */}
-          {showHorizontalCard && (
-            <div className="flex-1 min-w-0">
-              <Card
-                title={nextCard!.title}
-                badge={nextCard!.badge}
-                description={nextCard!.description}
-              />
-            </div>
-          )}
-        </div>
-        
-        {/* Down arrow button (after horizontal pair) - only visible after both horizontal cards are shown */}
-        {showHorizontalCard && hasMoreAfterPair && (
-          <>
-            <div ref={horizontalButtonRef}>
-              {/* Grey button (expanded): 2 containers, button position depends on next section badges */}
-              {/* If next section has dotted badges, button in left container; otherwise right container */}
-              {/* Violet button (not expanded): 1 container */}
-              {showNextSection ? (
-                <div className="flex flex-col lg:flex-row items-stretch gap-[8px] w-full">
-                  {nextSectionHasDottedBadges ? (
-                    <>
-                      {/* Container 1: Grey arrow button (aligns with first horizontal card when next has dots) */}
-                      <div className="flex-1 min-w-0 flex justify-center">
-                        <ExpandButton
-                          isExpanded={showNextSection}
-                          isHovered={isHoveredVertical}
-                          onToggle={() => {
-                            setShowNextSection(!showNextSection);
-                            setIsHoveredVertical(false);
-                          }}
-                          onMouseEnter={() => setIsHoveredVertical(true)}
-                          onMouseLeave={() => setIsHoveredVertical(false)}
-                          direction="vertical"
-                        />
-                      </div>
-                      {/* Container 2: Empty spacer (aligns with second horizontal card) */}
-                      <div className="flex-1 min-w-0 hidden lg:block" />
-                    </>
-                  ) : (
-                    <>
-                      {/* Container 1: Empty spacer (aligns with first horizontal card) */}
-                      <div className="flex-1 min-w-0 hidden lg:block" />
-                      {/* Container 2: Grey arrow button (aligns with second horizontal card) */}
-                      <div className="flex-1 min-w-0 flex justify-center">
-                        <ExpandButton
-                          isExpanded={showNextSection}
-                          isHovered={isHoveredVertical}
-                          onToggle={() => {
-                            setShowNextSection(!showNextSection);
-                            setIsHoveredVertical(false);
-                          }}
-                          onMouseEnter={() => setIsHoveredVertical(true)}
-                          onMouseLeave={() => setIsHoveredVertical(false)}
-                          direction="vertical"
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
-              ) : (
-                <ExpandButton
-                  isExpanded={showNextSection}
-                  isHovered={isHoveredVertical}
-                  onToggle={() => {
-                    setShowNextSection(!showNextSection);
-                    setIsHoveredVertical(false);
-                  }}
-                  onMouseEnter={() => setIsHoveredVertical(true)}
-                  onMouseLeave={() => setIsHoveredVertical(false)}
-                  direction="vertical"
-                />
-              )}
-            </div>
-            
-            {showNextSection && (
-              <div className="mt-[8px] w-full" ref={expandRef}>
-                <CardRenderer 
-                  cards={cards} 
-                  startIndex={startIndex + 2}
-                  onHorizontalExpandChange={(isExpanded) => {
-                    // This is for potential future nested horizontal sections
-                    // Currently not used but keeps the prop consistent
-                  }}
-                />
-              </div>
-            )}
-          </>
-        )}
-      </>
-    );
-  }
+        );
+      }
 
-  // Render single vertical card
-  const hasNext = startIndex + 1 < cards.length;
-  const isLastCard = !hasNext;
-  
-  // Check if next section is horizontal (2 cards)
-  const cardAfterNext = startIndex + 2 < cards.length ? cards[startIndex + 2] : null;
-  const nextSectionIsHorizontal = nextCard?.navigation === "horizontal" && cardAfterNext?.navigation === "horizontal";
-  
-  // Scroll to last card when it appears
-  useEffect(() => {
-    if (isLastCard && lastCardRef.current) {
-      setTimeout(() => {
-        lastCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 100);
-    }
-  }, [isLastCard]);
-  
-  return (
-    <>
-      <div className={`w-full ${isLastCard ? 'pb-[64px]' : ''}`} ref={isLastCard ? lastCardRef : null}>
+      elements.push(
+        <div key={`left-arrow-${idx}`} className="flex items-center">
+          <ArrowButton
+            direction="left"
+            isExpanded={isVisible}
+            isHovered={isHovered}
+            onToggle={() => onToggleCard(arrow.targetCardId)}
+            onMouseEnter={() => onHoverArrow(hoverKey, true)}
+            onMouseLeave={() => onHoverArrow(hoverKey, false)}
+          />
+        </div>
+      );
+    });
+
+    // Main card
+    elements.push(
+      <div key="main-card" className="flex-1 min-w-0">
         <Card
-          title={currentCard.title}
-          badge={currentCard.badge}
-          description={currentCard.description}
+          title={card.title}
+          badge={card.badge}
+          description={card.description}
+          nestedcard={card.nestedcard}
         />
       </div>
-      
-      {hasNext && (
-        <>
-          {/* Grey button before horizontal cards: 1 container if only 1 card visible, 2 containers if both visible */}
-          {showNextSection && nextSectionIsHorizontal && nextSectionHorizontalExpanded ? (
-            <div className="flex flex-col lg:flex-row items-stretch gap-[8px] w-full">
-              {/* Container 1: Grey arrow button (aligns with first horizontal card below) */}
-              <div className="flex-1 min-w-0 flex justify-center">
-                <ExpandButton
-                  isExpanded={showNextSection}
-                  isHovered={isHoveredVertical}
-                  onToggle={() => setShowNextSection(!showNextSection)}
-                  onMouseEnter={() => setIsHoveredVertical(true)}
-                  onMouseLeave={() => setIsHoveredVertical(false)}
-                  direction="vertical"
-                />
-              </div>
-              
-              {/* Container 2: Empty spacer (aligns with second horizontal card below) */}
-              <div className="flex-1 min-w-0 hidden lg:block" />
-            </div>
-          ) : (
-            <ExpandButton
-              isExpanded={showNextSection}
-              isHovered={isHoveredVertical}
-              onToggle={() => setShowNextSection(!showNextSection)}
-              onMouseEnter={() => setIsHoveredVertical(true)}
-              onMouseLeave={() => setIsHoveredVertical(false)}
-              direction="vertical"
+    );
+
+    // Right arrows and their cards
+    rightArrows.forEach((arrow, idx) => {
+      const targetCard = cardsById.get(arrow.targetCardId);
+      const isVisible = visibleCards.has(arrow.targetCardId);
+      const hoverKey = `${card.id}-right-${idx}`;
+      const isHovered = hoveredArrows.get(hoverKey) || false;
+
+      elements.push(
+        <div key={`right-arrow-${idx}`} className="flex items-center">
+          <ArrowButton
+            direction="right"
+            isExpanded={isVisible}
+            isHovered={isHovered}
+            onToggle={() => onToggleCard(arrow.targetCardId)}
+            onMouseEnter={() => onHoverArrow(hoverKey, true)}
+            onMouseLeave={() => onHoverArrow(hoverKey, false)}
+          />
+        </div>
+      );
+
+      if (isVisible && targetCard) {
+        elements.push(
+          <div key={`right-card-${idx}`} className="flex-1 min-w-0">
+            <Card
+              title={targetCard.title}
+              badge={targetCard.badge}
+              description={targetCard.description}
+              nestedcard={targetCard.nestedcard}
             />
-          )}
-          
-          {showNextSection && (
-            <div className="mt-[8px] w-full" ref={expandRef}>
-              <CardRenderer 
-                cards={cards} 
-                startIndex={startIndex + 1}
-                onHorizontalExpandChange={(isExpanded) => setNextSectionHorizontalExpanded(isExpanded)}
+          </div>
+        );
+      }
+    });
+
+    return elements;
+  };
+
+  return (
+    <div className={`w-full ${isLastCard ? 'pb-[64px]' : ''}`} ref={cardRef}>
+      {/* Horizontal row: cards with arrows between them */}
+      <div className="flex flex-col lg:flex-row items-start gap-[8px] w-full">
+        {renderHorizontalRow()}
+      </div>
+
+      {/* All down arrows from all cards in the horizontal row - rendered at full width */}
+      {allDownArrows.map((item, index) => {
+        const targetCard = cardsById.get(item.arrow.targetCardId);
+        const isVisible = visibleCards.has(item.arrow.targetCardId);
+        const hoverKey = `${item.sourceCardId}-down-${item.arrowIndex}`;
+        const isHovered = hoveredArrows.get(hoverKey) || false;
+
+        return (
+          <div key={`down-${item.sourceCardId}-${index}`} className="flex flex-col gap-[8px] w-full mt-[8px]">
+            <div className="flex justify-center w-full px-4 md:px-[24px]">
+              <ArrowButton
+                direction="down"
+                isExpanded={isVisible}
+                isHovered={isHovered}
+                onToggle={() => onToggleCard(item.arrow.targetCardId)}
+                onMouseEnter={() => onHoverArrow(hoverKey, true)}
+                onMouseLeave={() => onHoverArrow(hoverKey, false)}
               />
             </div>
-          )}
-        </>
-      )}
-    </>
+            {isVisible && targetCard && (
+              <CardWithArrows 
+                card={targetCard}
+                cardsById={cardsById}
+                visibleCards={visibleCards}
+                onToggleCard={onToggleCard}
+                hoveredArrows={hoveredArrows}
+                onHoverArrow={onHoverArrow}
+                isLastCard={false}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -465,13 +427,18 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
   const [cardsData, setCardsData] = useState<CardsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
+  const [hoveredArrows, setHoveredArrows] = useState<Map<string, boolean>>(new Map());
 
   useEffect(() => {
     async function fetchCards() {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(jsonUrl);
+        
+        const response = await fetch(jsonUrl, {
+          cache: 'reload'
+        });
         
         if (!response.ok) {
           throw new Error(`Failed to fetch cards: ${response.statusText}`);
@@ -520,9 +487,40 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
     );
   }
 
+  const cardsById = new Map<string, CardData>();
+  cardsData.cards.forEach(card => cardsById.set(card.id, card));
+
+  const onToggleCard = (cardId: string) => {
+    setVisibleCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(cardId)) {
+        newSet.delete(cardId);
+      } else {
+        newSet.add(cardId);
+      }
+      return newSet;
+    });
+  };
+
+  const onHoverArrow = (key: string, isHovered: boolean) => {
+    setHoveredArrows(prev => {
+      const newMap = new Map(prev);
+      newMap.set(key, isHovered);
+      return newMap;
+    });
+  };
+
   return (
     <div>
-      <CardRenderer cards={cardsData.cards} startIndex={0} />
+      <CardWithArrows 
+        card={cardsData.cards[0]}
+        cardsById={cardsById}
+        visibleCards={visibleCards}
+        onToggleCard={onToggleCard}
+        hoveredArrows={hoveredArrows}
+        onHoverArrow={onHoverArrow}
+        isLastCard={true}
+      />
     </div>
   );
 }

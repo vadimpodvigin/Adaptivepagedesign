@@ -32,9 +32,14 @@ export interface CardsData {
 function NumberBadge({ number }: { number: string }) {
   return (
     <div className="content-stretch flex gap-[10px] items-center justify-center relative rounded-[100px] shrink-0 min-w-[32px] px-[8px] h-[32px]">
-      <div aria-hidden="true" className="absolute border border-[#7a23d9] border-solid inset-0 pointer-events-none rounded-[100px]" />
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#7a23d9] border-solid inset-0 pointer-events-none rounded-[100px]"
+      />
       <div className="flex flex-col font-['IBM_Plex_Mono:Regular',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#7a23d9] text-[20px] text-nowrap">
-        <p className="leading-[normal] whitespace-pre">{number}</p>
+        <p className="leading-[normal] whitespace-pre">
+          {number}
+        </p>
       </div>
     </div>
   );
@@ -42,12 +47,36 @@ function NumberBadge({ number }: { number: string }) {
 
 function ArrowDownGrey() {
   return (
-    <div className="relative shrink-0 size-[24px]" data-name="Arrow--down">
-      <div className="absolute inset-0" style={{ "--fill-0": "rgba(82, 82, 82, 1)" } as React.CSSProperties}>
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+    <div
+      className="relative shrink-0 size-[24px]"
+      data-name="Arrow--down"
+    >
+      <div
+        className="absolute inset-0"
+        style={
+          {
+            "--fill-0": "rgba(82, 82, 82, 1)",
+          } as React.CSSProperties
+        }
+      >
+        <svg
+          className="block size-full"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 24 24"
+        >
           <g id="Arrow--down">
-            <rect fill="white" fillOpacity="0.01" height="24" width="24" />
-            <path d={svgPathsGrey.p2324eb80} fill="var(--fill-0, #525252)" id="Vector" />
+            <rect
+              fill="white"
+              fillOpacity="0.01"
+              height="24"
+              width="24"
+            />
+            <path
+              d={svgPathsGrey.p2324eb80}
+              fill="var(--fill-0, #525252)"
+              id="Vector"
+            />
           </g>
         </svg>
       </div>
@@ -57,12 +86,36 @@ function ArrowDownGrey() {
 
 function ArrowUpGrey() {
   return (
-    <div className="relative shrink-0 size-[24px]" data-name="Arrow--up">
-      <div className="absolute inset-0" style={{ "--fill-0": "rgba(82, 82, 82, 1)" } as React.CSSProperties}>
-        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+    <div
+      className="relative shrink-0 size-[24px]"
+      data-name="Arrow--up"
+    >
+      <div
+        className="absolute inset-0"
+        style={
+          {
+            "--fill-0": "rgba(82, 82, 82, 1)",
+          } as React.CSSProperties
+        }
+      >
+        <svg
+          className="block size-full"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 16 16"
+        >
           <g id="Arrow--up">
-            <rect fill="white" fillOpacity="0.01" height="16" width="16" />
-            <path d={svgPathsUpGrey.p14ab8500} fill="var(--fill-0, #525252)" id="Vector" />
+            <rect
+              fill="white"
+              fillOpacity="0.01"
+              height="16"
+              width="16"
+            />
+            <path
+              d={svgPathsUpGrey.p14ab8500}
+              fill="var(--fill-0, #525252)"
+              id="Vector"
+            />
           </g>
         </svg>
       </div>
@@ -81,7 +134,7 @@ function ArrowRightWhite() {
 function ArrowRightGrey() {
   return (
     <div className="relative shrink-0 size-[24px]">
-      <ArrowRightGrey159 />
+      <ArrowLeftGrey159 />
     </div>
   );
 }
@@ -97,7 +150,7 @@ function ArrowLeftWhite() {
 function ArrowLeftGrey() {
   return (
     <div className="relative shrink-0 size-[24px]">
-      <ArrowLeftGrey159 />
+      <ArrowRightGrey159 />
     </div>
   );
 }
@@ -121,14 +174,26 @@ interface CardProps {
   className?: string;
 }
 
-function NotificationBlock({ title, description }: { title: string; description: string }) {
+function NotificationBlock({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
-    <div className="bg-[#edf5ff] relative shrink-0 w-full">
+    <div className="bg-[#edf5ff] relative shrink-0 w-full rounded-[4px]">
       <div className="size-full">
         <div className="box-border content-stretch flex gap-[14px] items-start p-[8px] relative w-full">
-          <div className="basis-0 content-stretch flex flex-col gap-[8px] grow items-start leading-[normal] min-h-px min-w-px not-italic relative shrink-0 text-[15px] text-neutral-600">
-            <p className="font-['IBM_Plex_Sans:Medium',sans-serif] relative shrink-0 w-full">{title}</p>
-            <p className="font-['IBM_Plex_Sans:Regular',sans-serif] relative shrink-0 w-full">{description}</p>
+          <div className={`basis-0 content-stretch flex flex-col ${description ? 'gap-[4px] items-start' : 'items-start justify-center'} grow leading-[normal] min-h-px min-w-px not-italic relative shrink-0 text-[15px] text-neutral-600`}>
+            <p className="font-['IBM_Plex_Sans:Medium',sans-serif] relative shrink-0 w-full">
+              {title}
+            </p>
+            {description && (
+              <p className="font-['IBM_Plex_Sans:Regular',sans-serif] relative shrink-0 w-full">
+                {description}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -136,32 +201,47 @@ function NotificationBlock({ title, description }: { title: string; description:
   );
 }
 
-function Card({ title, badge, description, nestedcard, className = "" }: CardProps) {
+function Card({
+  title,
+  badge,
+  description,
+  nestedcard,
+  className = "",
+}: CardProps) {
+  const hasNestedCards = nestedcard && Array.isArray(nestedcard) && nestedcard.length > 0;
+  const shouldShowDivider = description || hasNestedCards;
+
   return (
-    <div className={`bg-white box-border content-stretch flex flex-col gap-[16px] items-start p-4 md:p-[24px] rounded-[8px] transition-shadow hover:shadow-md h-full ${className}`}>
+    <div
+      className={`bg-white box-border content-stretch flex flex-col gap-[16px] items-stretch p-4 md:p-[24px] rounded-[8px] transition-shadow hover:shadow-md h-full ${className}`}
+    >
       <div className="content-stretch flex gap-[10px] items-start relative shrink-0 w-full">
         <div className="basis-0 flex flex-col font-['IBM_Plex_Sans:Medium',sans-serif] grow justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#161616] text-[20px] md:text-[24px]">
           <p className="leading-[normal]">{title}</p>
         </div>
         <NumberBadge number={badge} />
       </div>
-      
-      <div className="bg-[#ededed] h-px shrink-0 w-full" />
-      
-      <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[16px] md:text-[18px] text-neutral-600 w-full">
-        {description}
-      </p>
-      
-      {nestedcard && Array.isArray(nestedcard) && nestedcard.length > 0 && (
-        <>
+
+      {shouldShowDivider && (
+        <div className="bg-[#ededed] shrink-0 h-px w-full" />
+      )}
+
+      {description && (
+        <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[16px] md:text-[18px] text-neutral-600 w-full">
+          {description}
+        </p>
+      )}
+
+      {hasNestedCards && (
+        <div className="flex flex-col gap-[8px]">
           {nestedcard.map((card, index) => (
-            <NotificationBlock 
+            <NotificationBlock
               key={index}
               title={card.title}
               description={card.description}
             />
           ))}
-        </>
+        </div>
       )}
     </div>
   );
@@ -176,26 +256,56 @@ interface ArrowButtonProps {
   onMouseLeave: () => void;
 }
 
-function ArrowButton({ direction, isExpanded, isHovered, onToggle, onMouseEnter, onMouseLeave }: ArrowButtonProps) {
-  const getArrowIcon = () => {
-    if (direction === "right") {
-      return isExpanded 
-        ? <ArrowRightGrey />
-        : <ArrowRightWhite />;
-    } else if (direction === "left") {
-      return isExpanded 
-        ? <ArrowLeftGrey />
-        : <ArrowLeftWhite />;
-    } else if (direction === "down") {
-      return isExpanded 
-        ? (isHovered ? <ArrowUpGrey /> : <ArrowDownGrey />)
-        : <ArrowDown />;
-    } else { // up
-      return isExpanded 
-        ? (isHovered ? <ArrowDownGrey /> : <ArrowUpGrey />)
-        : <ArrowUpWhite />;
+function ArrowButton({
+  direction,
+  isExpanded,
+  isHovered,
+  onToggle,
+  onMouseEnter,
+  onMouseLeave,
+}: ArrowButtonProps) {
+  // Debug logging
+  useEffect(() => {
+    if (isExpanded && direction === "right") {
+      console.log(`ArrowButton direction=${direction}, isExpanded=${isExpanded}, isHovered=${isHovered}`);
     }
-  };
+  }, [direction, isExpanded, isHovered]);
+
+  // Compute icon directly without memoization
+  let arrowIcon: JSX.Element;
+  
+  if (direction === "right") {
+    if (isExpanded) {
+      if (isHovered) {
+        arrowIcon = <ArrowLeftGrey />; // Hover shows left (will collapse)
+        console.log(`Rendering: isHovered=${isHovered}, rendering ArrowLeftGrey`);
+      } else {
+        arrowIcon = <ArrowRightGrey />; // Default shows right (expanded state)
+        console.log(`Rendering: isHovered=${isHovered}, rendering ArrowRightGrey`);
+      }
+    } else {
+      arrowIcon = <ArrowRightWhite />;
+    }
+  } else if (direction === "left") {
+    if (isExpanded) {
+      arrowIcon = isHovered ? <ArrowRightGrey /> : <ArrowLeftGrey />;
+    } else {
+      arrowIcon = <ArrowLeftWhite />;
+    }
+  } else if (direction === "down") {
+    if (isExpanded) {
+      arrowIcon = isHovered ? <ArrowUpGrey /> : <ArrowDownGrey />;
+    } else {
+      arrowIcon = <ArrowDown />;
+    }
+  } else {
+    // up
+    if (isExpanded) {
+      arrowIcon = isHovered ? <ArrowDownGrey /> : <ArrowUpGrey />;
+    } else {
+      arrowIcon = <ArrowUpWhite />;
+    }
+  }
 
   const isVertical = direction === "up" || direction === "down";
 
@@ -205,20 +315,26 @@ function ArrowButton({ direction, isExpanded, isHovered, onToggle, onMouseEnter,
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       className={`content-stretch size-[40px] flex-col flex isolate items-center justify-center overflow-clip shrink-0 transition-all duration-200 cursor-pointer ${
-        isExpanded 
-          ? 'bg-transparent hover:bg-[#EBEBEB]' 
-          : 'bg-[#7a23d9] hover:bg-[#6a1fc9]'
+        isExpanded
+          ? "bg-transparent hover:bg-[#EBEBEB]"
+          : "bg-[#7a23d9] hover:bg-[#6a1fc9]"
       }`}
     >
       <div className="relative shrink-0 w-full">
         <div className="flex flex-row items-center overflow-clip size-full">
-          <div className={`box-border content-stretch flex isolate items-center justify-center relative w-full ${
-            isExpanded ? 'p-[8px]' : 'p-[12px]'
-          }`}>
-            <div className={`content-stretch flex flex-col items-start overflow-clip relative shrink-0 z-[1] transition-all duration-200 ${
-              isVertical && !isExpanded ? 'size-[16px]' : 'size-[24px]'
-            }`}>
-              {getArrowIcon()}
+          <div
+            className={`box-border content-stretch flex isolate items-center justify-center relative w-full ${
+              isExpanded ? "p-[8px]" : "p-[12px]"
+            }`}
+          >
+            <div
+              className={`content-stretch flex flex-col items-start overflow-clip relative shrink-0 z-[1] transition-all duration-200 ${
+                isVertical && !isExpanded
+                  ? "size-[16px]"
+                  : "size-[24px]"
+              }`}
+            >
+              {arrowIcon}
             </div>
           </div>
         </div>
@@ -235,57 +351,163 @@ interface CardWithArrowsProps {
   hoveredArrows: Map<string, boolean>;
   onHoverArrow: (key: string, isHovered: boolean) => void;
   isLastCard: boolean;
+  scrollToCard?: (cardId: string) => void;
+  cardElementsRef?: React.RefObject<
+    Map<string, HTMLDivElement>
+  >;
 }
 
-function CardWithArrows({ 
-  card, 
-  cardsById, 
-  visibleCards, 
-  onToggleCard, 
+function CardWithArrows({
+  card,
+  cardsById,
+  visibleCards,
+  onToggleCard,
   hoveredArrows,
   onHoverArrow,
-  isLastCard 
+  isLastCard,
+  scrollToCard,
+  cardElementsRef,
 }: CardWithArrowsProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const downArrowRefs = useRef<Map<string, HTMLDivElement>>(
+    new Map(),
+  );
+  const horizontalCardRefs = useRef<Map<string, HTMLDivElement>>(
+    new Map(),
+  );
+
+  // Register this card element in the ref map
+  useEffect(() => {
+    if (cardRef.current && cardElementsRef?.current) {
+      cardElementsRef.current.set(card.id, cardRef.current);
+    }
+    return () => {
+      if (cardElementsRef?.current) {
+        cardElementsRef.current.delete(card.id);
+      }
+    };
+  }, [card.id, cardElementsRef]);
+
+  // Register horizontal card refs
+  useEffect(() => {
+    if (cardElementsRef?.current) {
+      horizontalCardRefs.current.forEach((element, cardId) => {
+        cardElementsRef.current.set(cardId, element);
+      });
+    }
+    return () => {
+      if (cardElementsRef?.current) {
+        horizontalCardRefs.current.forEach((_, cardId) => {
+          cardElementsRef.current.delete(cardId);
+        });
+      }
+    };
+  }, [cardElementsRef, visibleCards]);
 
   // Group arrows by direction
-  const downArrows = card.arrows.filter(a => a.direction === "down");
-  const leftArrows = card.arrows.filter(a => a.direction === "left");
-  const rightArrows = card.arrows.filter(a => a.direction === "right");
+  const downArrows = card.arrows.filter(
+    (a) => a.direction === "down",
+  );
+  const leftArrows = card.arrows.filter(
+    (a) => a.direction === "left",
+  );
+  const rightArrows = card.arrows.filter(
+    (a) => a.direction === "right",
+  );
 
   // Collect all cards in the current horizontal row (including main card and visible left/right cards)
   const allCardsInRow: CardData[] = [card];
-  
-  leftArrows.forEach(arrow => {
-    const targetCard = cardsById.get(arrow.targetCardId);
-    if (visibleCards.has(arrow.targetCardId) && targetCard) {
-      allCardsInRow.push(targetCard);
-    }
-  });
-  
-  rightArrows.forEach(arrow => {
+
+  leftArrows.forEach((arrow) => {
     const targetCard = cardsById.get(arrow.targetCardId);
     if (visibleCards.has(arrow.targetCardId) && targetCard) {
       allCardsInRow.push(targetCard);
     }
   });
 
+  // Recursively collect all right arrow cards (including chained)
+  const collectRightCards = (sourceCard: CardData) => {
+    const cardRightArrows = sourceCard.arrows.filter(
+      (a) => a.direction === "right",
+    );
+    cardRightArrows.forEach((arrow) => {
+      const targetCard = cardsById.get(arrow.targetCardId);
+      if (visibleCards.has(arrow.targetCardId) && targetCard) {
+        allCardsInRow.push(targetCard);
+        collectRightCards(targetCard); // Recurse for chained right cards
+      }
+    });
+  };
+  
+  collectRightCards(card);
+
   // Collect ALL down arrows from all cards in the horizontal row
   const allDownArrows: Array<{
-    arrow: { direction: "down" | "left" | "right"; targetCardId: string };
+    arrow: {
+      direction: "down" | "left" | "right";
+      targetCardId: string;
+    };
     sourceCardId: string;
     arrowIndex: number;
   }> = [];
 
-  allCardsInRow.forEach(cardInRow => {
-    const cardDownArrows = cardInRow.arrows.filter(a => a.direction === "down");
+  allCardsInRow.forEach((cardInRow) => {
+    const cardDownArrows = cardInRow.arrows.filter(
+      (a) => a.direction === "down",
+    );
     cardDownArrows.forEach((arrow, idx) => {
       allDownArrows.push({
         arrow,
         sourceCardId: cardInRow.id,
-        arrowIndex: idx
+        arrowIndex: idx,
       });
     });
+  });
+
+  // Count elements in the current horizontal row
+  let currentRowCards = allCardsInRow.length;
+  let currentRowArrowButtons = 0;
+  
+  // Count left arrow buttons
+  leftArrows.forEach((arrow) => {
+    if (visibleCards.has(arrow.targetCardId)) {
+      currentRowArrowButtons++;
+    }
+  });
+  
+  // Count right arrow buttons (including chained)
+  const countCurrentRightArrowButtons = (sourceCard: CardData): number => {
+    let count = 0;
+    const cardRightArrows = sourceCard.arrows.filter(
+      (a) => a.direction === "right",
+    );
+    cardRightArrows.forEach((arrow) => {
+      if (visibleCards.has(arrow.targetCardId)) {
+        count++; // Arrow button
+        const targetCard = cardsById.get(arrow.targetCardId);
+        if (targetCard) {
+          count += countCurrentRightArrowButtons(targetCard);
+        }
+      }
+    });
+    return count;
+  };
+  
+  currentRowArrowButtons += countCurrentRightArrowButtons(card);
+  
+  const currentRowTotalElements = currentRowCards + currentRowArrowButtons;
+
+  // Check if main card has right arrows pointing to cards with nestedcard content
+  const hasNestedRightArrow = rightArrows.some((arrow) => {
+    const targetCard = cardsById.get(arrow.targetCardId);
+    return (
+      targetCard?.nestedcard && targetCard.nestedcard.length > 0
+    );
+  });
+
+  // Check if main card has any visible right arrow cards
+  const hasVisibleRightCard = rightArrows.some((arrow) => {
+    return visibleCards.has(arrow.targetCardId);
   });
 
   // Build the horizontal row (left arrows + card + right arrows)
@@ -301,19 +523,32 @@ function CardWithArrows({
 
       if (isVisible && targetCard) {
         elements.push(
-          <div key={`left-card-${idx}`} className="flex-1 min-w-0">
+          <div
+            key={`left-card-${idx}`}
+            className="flex-1 min-w-0"
+            ref={(el) => {
+              if (el) {
+                horizontalCardRefs.current.set(targetCard.id, el);
+              } else {
+                horizontalCardRefs.current.delete(targetCard.id);
+              }
+            }}
+          >
             <Card
               title={targetCard.title}
               badge={targetCard.badge}
               description={targetCard.description}
               nestedcard={targetCard.nestedcard}
             />
-          </div>
+          </div>,
         );
       }
 
       elements.push(
-        <div key={`left-arrow-${idx}`} className="flex items-center">
+        <div
+          key={`left-arrow-${idx}`}
+          className="flex items-center justify-center w-[40px]"
+        >
           <ArrowButton
             direction="left"
             isExpanded={isVisible}
@@ -322,87 +557,231 @@ function CardWithArrows({
             onMouseEnter={() => onHoverArrow(hoverKey, true)}
             onMouseLeave={() => onHoverArrow(hoverKey, false)}
           />
-        </div>
+        </div>,
       );
     });
 
     // Main card
     elements.push(
-      <div key="main-card" className="flex-1 min-w-0">
+      <div
+        key="main-card"
+        className={`flex-1 min-w-0 ${hasVisibleRightCard ? "" : "w-full"}`}
+      >
         <Card
           title={card.title}
           badge={card.badge}
           description={card.description}
           nestedcard={card.nestedcard}
         />
-      </div>
+      </div>,
     );
 
-    // Right arrows and their cards
-    rightArrows.forEach((arrow, idx) => {
-      const targetCard = cardsById.get(arrow.targetCardId);
-      const isVisible = visibleCards.has(arrow.targetCardId);
-      const hoverKey = `${card.id}-right-${idx}`;
-      const isHovered = hoveredArrows.get(hoverKey) || false;
-
-      elements.push(
-        <div key={`right-arrow-${idx}`} className="flex items-center">
-          <ArrowButton
-            direction="right"
-            isExpanded={isVisible}
-            isHovered={isHovered}
-            onToggle={() => onToggleCard(arrow.targetCardId)}
-            onMouseEnter={() => onHoverArrow(hoverKey, true)}
-            onMouseLeave={() => onHoverArrow(hoverKey, false)}
-          />
-        </div>
+    // Right arrows - recursively collect all chained right cards
+    const processRightArrows = (sourceCard: CardData, sourceCardId: string, startIdx: number = 0) => {
+      const cardRightArrows = sourceCard.arrows.filter(
+        (a) => a.direction === "right",
       );
+      
+      cardRightArrows.forEach((arrow, idx) => {
+        const targetCard = cardsById.get(arrow.targetCardId);
+        const isVisible = visibleCards.has(arrow.targetCardId);
+        const hoverKey = `${sourceCardId}-right-${startIdx + idx}`;
+        const isHovered = hoveredArrows.get(hoverKey) || false;
 
-      if (isVisible && targetCard) {
+        // Render the arrow button - always centered
         elements.push(
-          <div key={`right-card-${idx}`} className="flex-1 min-w-0">
-            <Card
-              title={targetCard.title}
-              badge={targetCard.badge}
-              description={targetCard.description}
-              nestedcard={targetCard.nestedcard}
+          <div
+            key={`${sourceCardId}-right-arrow-${startIdx + idx}`}
+            className="flex items-center justify-center w-[40px]"
+          >
+            <ArrowButton
+              key={`arrow-${sourceCardId}-right-${startIdx + idx}-${isVisible}`}
+              direction="right"
+              isExpanded={isVisible}
+              isHovered={isHovered}
+              onToggle={() => onToggleCard(arrow.targetCardId)}
+              onMouseEnter={() => onHoverArrow(hoverKey, true)}
+              onMouseLeave={() => onHoverArrow(hoverKey, false)}
             />
-          </div>
+          </div>,
         );
-      }
-    });
+
+        // If visible, render the card and process its right arrows recursively
+        if (isVisible && targetCard) {
+          elements.push(
+            <div
+              key={`${sourceCardId}-right-card-${startIdx + idx}`}
+              className="flex-1 min-w-0"
+              ref={(el) => {
+                if (el) {
+                  horizontalCardRefs.current.set(targetCard.id, el);
+                } else {
+                  horizontalCardRefs.current.delete(targetCard.id);
+                }
+              }}
+            >
+              <Card
+                title={targetCard.title}
+                badge={targetCard.badge}
+                description={targetCard.description}
+                nestedcard={targetCard.nestedcard}
+              />
+            </div>,
+          );
+          
+          // Recursively process this card's right arrows
+          processRightArrows(targetCard, targetCard.id, 0);
+        }
+      });
+    };
+    
+    // Start processing from the main card's right arrows
+    processRightArrows(card, card.id, 0);
 
     return elements;
   };
 
   return (
-    <div className={`w-full ${isLastCard ? 'pb-[64px]' : ''}`} ref={cardRef}>
-      {/* Horizontal row: cards with arrows between them */}
-      <div className="flex flex-col lg:flex-row items-start gap-[8px] w-full">
+    <div
+      className={`w-full ${isLastCard ? "pb-[64px]" : ""}`}
+      ref={cardRef}
+    >
+      {/* Horizontal row: left arrows and main card and right arrows */}
+      <div className="flex flex-col lg:flex-row items-stretch gap-[8px] w-full">
         {renderHorizontalRow()}
       </div>
 
       {/* All down arrows from all cards in the horizontal row - rendered at full width */}
       {allDownArrows.map((item, index) => {
-        const targetCard = cardsById.get(item.arrow.targetCardId);
-        const isVisible = visibleCards.has(item.arrow.targetCardId);
+        const targetCard = cardsById.get(
+          item.arrow.targetCardId,
+        );
+        const isVisible = visibleCards.has(
+          item.arrow.targetCardId,
+        );
         const hoverKey = `${item.sourceCardId}-down-${item.arrowIndex}`;
         const isHovered = hoveredArrows.get(hoverKey) || false;
 
+        // Count how many cards and arrow buttons will be in the horizontal row below
+        let cardsInRowBelow = 1; // The target card itself
+        let arrowButtonsInRowBelow = 0;
+        
+        if (targetCard && isVisible) {
+          // Count visible left arrow cards and their arrow buttons
+          const leftArrowsBelow = targetCard.arrows.filter(
+            (a) => a.direction === "left",
+          );
+          leftArrowsBelow.forEach((arrow) => {
+            if (visibleCards.has(arrow.targetCardId)) {
+              cardsInRowBelow++;
+              arrowButtonsInRowBelow++; // Arrow button before the left card
+            }
+          });
+
+          // Count visible right arrow cards and buttons (including chained right arrows)
+          const countVisibleRightElements = (card: CardData): { cards: number; arrows: number } => {
+            let cards = 0;
+            let arrows = 0;
+            const rightArrows = card.arrows.filter(
+              (a) => a.direction === "right",
+            );
+            rightArrows.forEach((arrow) => {
+              if (visibleCards.has(arrow.targetCardId)) {
+                arrows++; // Arrow button
+                cards++; // The card itself
+                const rightCard = cardsById.get(arrow.targetCardId);
+                if (rightCard) {
+                  const nested = countVisibleRightElements(rightCard);
+                  cards += nested.cards;
+                  arrows += nested.arrows;
+                }
+              }
+            });
+            return { cards, arrows };
+          };
+          
+          const rightElements = countVisibleRightElements(targetCard);
+          cardsInRowBelow += rightElements.cards;
+          arrowButtonsInRowBelow += rightElements.arrows;
+        }
+
+        const totalElements = cardsInRowBelow + arrowButtonsInRowBelow;
+        
+        // Use the maximum of current row and row below to determine container count
+        const maxElements = Math.max(currentRowTotalElements, totalElements);
+
         return (
-          <div key={`down-${item.sourceCardId}-${index}`} className="flex flex-col gap-[8px] w-full mt-[8px]">
-            <div className="flex justify-center w-full px-4 md:px-[24px]">
-              <ArrowButton
-                direction="down"
-                isExpanded={isVisible}
-                isHovered={isHovered}
-                onToggle={() => onToggleCard(item.arrow.targetCardId)}
-                onMouseEnter={() => onHoverArrow(hoverKey, true)}
-                onMouseLeave={() => onHoverArrow(hoverKey, false)}
-              />
-            </div>
+          <div
+            key={`down-${item.sourceCardId}-${index}`}
+            className="flex flex-col gap-[8px] w-full mt-[8px]"
+          >
+            {/* Arrow container - violet buttons always centered, grey buttons use split layout */}
+            {isVisible && (cardsInRowBelow >= 2 || currentRowTotalElements >= 2) ? (
+              // Grey button with split container layout
+              <div className="flex flex-col lg:flex-row items-stretch gap-[8px] w-full">
+                {/* Render containers matching the structure below: cards + arrow buttons */}
+                {Array.from({ length: maxElements }).map((_, idx) => {
+                  // First container gets the arrow button
+                  if (idx === 0) {
+                    return (
+                      <div key={`container-${idx}`} className="flex-1 min-w-0 flex justify-center px-4 md:px-[24px]">
+                        <ArrowButton
+                          direction="down"
+                          isExpanded={isVisible}
+                          isHovered={isHovered}
+                          onToggle={() =>
+                            onToggleCard(item.arrow.targetCardId)
+                          }
+                          onMouseEnter={() =>
+                            onHoverArrow(hoverKey, true)
+                          }
+                          onMouseLeave={() =>
+                            onHoverArrow(hoverKey, false)
+                          }
+                        />
+                      </div>
+                    );
+                  }
+                  
+                  // Pattern below: Card, Arrow, Card, Arrow, Card...\n                  // So: even indices = cards (flex-1), odd indices = arrows (40px)
+                  const isArrowPosition = idx % 2 === 1;
+                  
+                  if (isArrowPosition) {
+                    // Spacer for arrow button - fixed width to match arrow button
+                    return (
+                      <div key={`container-${idx}`} className="flex items-center">
+                        <div className="w-[40px]" /> {/* Match arrow button width */}
+                      </div>
+                    );
+                  } else {
+                    // Spacer for card - flex-1 to match card width
+                    return (
+                      <div key={`container-${idx}`} className="flex-1 min-w-0 px-4 md:px-[24px]" />
+                    );
+                  }
+                })}
+              </div>
+            ) : (
+              // Violet button or single grey button - always centered in full width
+              <div className="flex justify-center w-full px-4 md:px-[24px]">
+                <ArrowButton
+                  direction="down"
+                  isExpanded={isVisible}
+                  isHovered={isHovered}
+                  onToggle={() =>
+                    onToggleCard(item.arrow.targetCardId)
+                  }
+                  onMouseEnter={() =>
+                    onHoverArrow(hoverKey, true)
+                  }
+                  onMouseLeave={() =>
+                    onHoverArrow(hoverKey, false)
+                  }
+                />
+              </div>
+            )}
             {isVisible && targetCard && (
-              <CardWithArrows 
+              <CardWithArrows
                 card={targetCard}
                 cardsById={cardsById}
                 visibleCards={visibleCards}
@@ -410,6 +789,8 @@ function CardWithArrows({
                 hoveredArrows={hoveredArrows}
                 onHoverArrow={onHoverArrow}
                 isLastCard={false}
+                scrollToCard={scrollToCard}
+                cardElementsRef={cardElementsRef}
               />
             )}
           </div>
@@ -424,31 +805,48 @@ interface RequestCardProps {
 }
 
 export function RequestCard({ jsonUrl }: RequestCardProps) {
-  const [cardsData, setCardsData] = useState<CardsData | null>(null);
+  const [cardsData, setCardsData] = useState<CardsData | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [visibleCards, setVisibleCards] = useState<Set<string>>(new Set());
-  const [hoveredArrows, setHoveredArrows] = useState<Map<string, boolean>>(new Map());
+  const [visibleCards, setVisibleCards] = useState<Set<string>>(
+    new Set(),
+  );
+  const [hoveredArrows, setHoveredArrows] = useState<
+    Map<string, boolean>
+  >(new Map());
+  const cardElementsRef = useRef<Map<string, HTMLDivElement>>(
+    new Map(),
+  );
+  const [pendingScrollCardId, setPendingScrollCardId] =
+    useState<string | null>(null);
 
   useEffect(() => {
     async function fetchCards() {
       try {
         setLoading(true);
         setError(null);
-        
+
         const response = await fetch(jsonUrl, {
-          cache: 'reload'
+          cache: "reload",
         });
-        
+
         if (!response.ok) {
-          throw new Error(`Failed to fetch cards: ${response.statusText}`);
+          throw new Error(
+            `Failed to fetch cards: ${response.statusText}`,
+          );
         }
-        
+
         const data = await response.json();
         setCardsData(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load cards');
-        console.error('Error fetching cards:', err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to load cards",
+        );
+        console.error("Error fetching cards:", err);
       } finally {
         setLoading(false);
       }
@@ -456,6 +854,24 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
 
     fetchCards();
   }, [jsonUrl]);
+
+  // Auto-scroll effect when a card becomes available
+  useEffect(() => {
+    if (pendingScrollCardId) {
+      const element = cardElementsRef.current.get(
+        pendingScrollCardId,
+      );
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+          setPendingScrollCardId(null);
+        }, 150);
+      }
+    }
+  }, [pendingScrollCardId, cardElementsRef.current.size]);
 
   if (loading) {
     return (
@@ -477,7 +893,11 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
     );
   }
 
-  if (!cardsData || !cardsData.cards || cardsData.cards.length === 0) {
+  if (
+    !cardsData ||
+    !cardsData.cards ||
+    cardsData.cards.length === 0
+  ) {
     return (
       <div className="pb-[64px] flex items-center justify-center py-12">
         <div className="text-neutral-600 font-['IBM_Plex_Sans:Regular',sans-serif]">
@@ -488,22 +908,78 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
   }
 
   const cardsById = new Map<string, CardData>();
-  cardsData.cards.forEach(card => cardsById.set(card.id, card));
+  cardsData.cards.forEach((card) =>
+    cardsById.set(card.id, card),
+  );
+
+  const scrollToCard = (cardId: string) => {
+    const element = cardElementsRef.current.get(cardId);
+    if (element) {
+      setTimeout(() => {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 100);
+    }
+  };
 
   const onToggleCard = (cardId: string) => {
-    setVisibleCards(prev => {
+    setVisibleCards((prev) => {
       const newSet = new Set(prev);
+      const isExpanding = !newSet.has(cardId);
+
       if (newSet.has(cardId)) {
+        // Collapsing - remove this card and ALL its descendants
         newSet.delete(cardId);
+        
+        // Recursively find and remove all descendant cards
+        const removeDescendants = (parentId: string) => {
+          const parentCard = cardsById.get(parentId);
+          if (!parentCard) return;
+          
+          // Check all arrows from this parent card
+          parentCard.arrows.forEach((arrow) => {
+            const childId = arrow.targetCardId;
+            if (newSet.has(childId)) {
+              newSet.delete(childId);
+              // Recursively remove descendants of this child
+              removeDescendants(childId);
+            }
+          });
+        };
+        
+        removeDescendants(cardId);
       } else {
+        // Expanding - only add this card
         newSet.add(cardId);
       }
+
+      // Scroll to the newly expanded card
+      if (isExpanding) {
+        setPendingScrollCardId(cardId);
+      }
+
       return newSet;
+    });
+    
+    // Clear hover state for all arrows related to this card when toggling
+    setHoveredArrows((prev) => {
+      const newMap = new Map(prev);
+      // Remove hover states for this specific card's arrows
+      const keysToRemove: string[] = [];
+      newMap.forEach((_, key) => {
+        if (key.includes(cardId)) {
+          keysToRemove.push(key);
+        }
+      });
+      keysToRemove.forEach(key => newMap.delete(key));
+      return newMap;
     });
   };
 
   const onHoverArrow = (key: string, isHovered: boolean) => {
-    setHoveredArrows(prev => {
+    setHoveredArrows((prev) => {
       const newMap = new Map(prev);
       newMap.set(key, isHovered);
       return newMap;
@@ -512,7 +988,7 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
 
   return (
     <div>
-      <CardWithArrows 
+      <CardWithArrows
         card={cardsData.cards[0]}
         cardsById={cardsById}
         visibleCards={visibleCards}
@@ -520,6 +996,8 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
         hoveredArrows={hoveredArrows}
         onHoverArrow={onHoverArrow}
         isLastCard={true}
+        scrollToCard={scrollToCard}
+        cardElementsRef={cardElementsRef}
       />
     </div>
   );

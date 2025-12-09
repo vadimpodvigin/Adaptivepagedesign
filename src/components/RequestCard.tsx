@@ -134,7 +134,7 @@ function ArrowRightWhite() {
 function ArrowRightGrey() {
   return (
     <div className="relative shrink-0 size-[24px]">
-      <ArrowLeftGrey159 />
+      <ArrowRightGrey159 />
     </div>
   );
 }
@@ -150,7 +150,7 @@ function ArrowLeftWhite() {
 function ArrowLeftGrey() {
   return (
     <div className="relative shrink-0 size-[24px]">
-      <ArrowRightGrey159 />
+      <ArrowLeftGrey159 />
     </div>
   );
 }
@@ -355,6 +355,7 @@ interface CardWithArrowsProps {
   cardElementsRef?: React.RefObject<
     Map<string, HTMLDivElement>
   >;
+  onCollapseToCard?: (targetCardId: string) => void;
 }
 
 function CardWithArrows({
@@ -367,6 +368,7 @@ function CardWithArrows({
   isLastCard,
   scrollToCard,
   cardElementsRef,
+  onCollapseToCard,
 }: CardWithArrowsProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const downArrowRefs = useRef<Map<string, HTMLDivElement>>(
@@ -595,7 +597,6 @@ function CardWithArrows({
             className="flex items-center justify-center w-[40px]"
           >
             <ArrowButton
-              key={`arrow-${sourceCardId}-right-${startIdx + idx}-${isVisible}`}
               direction="right"
               isExpanded={isVisible}
               isHovered={isHovered}
@@ -755,8 +756,34 @@ function CardWithArrows({
                     );
                   } else {
                     // Spacer for card - flex-1 to match card width
+                    // Check if card 3.2 is visible - show collapse button in the middle container
+                    // of the LAST down arrow row (the one displaying card 3.1 which has the arrow to card31)
+                    const isCard32Visible = visibleCards.has("card31");
+                    const middleIndex = Math.floor(maxElements / 2);
+                    const isMidContainer = idx === middleIndex;
+                    
+                    // Check if this is the row displaying card 3.1 (card3)
+                    // Card 3.1 is the one that has the down arrow to card31
+                    const isCard31Row = targetCard?.id === "card3" && isVisible;
+                    
+                    const collapseHoverKey = "collapse-to-2.1";
+                    const isCollapseHovered = hoveredArrows.get(collapseHoverKey) || false;
+                    
                     return (
-                      <div key={`container-${idx}`} className="flex-1 min-w-0 px-4 md:px-[24px]" />
+                      <div key={`container-${idx}`} className="flex-1 min-w-0 px-4 md:px-[24px] flex items-center">
+                        {isCard32Visible && isCard31Row && isMidContainer && onCollapseToCard && (
+                          <div className="pl-[16px]">
+                            <ArrowButton
+                              direction="down"
+                              isExpanded={true}
+                              isHovered={isCollapseHovered}
+                              onToggle={() => onCollapseToCard("card31")}
+                              onMouseEnter={() => onHoverArrow(collapseHoverKey, true)}
+                              onMouseLeave={() => onHoverArrow(collapseHoverKey, false)}
+                            />
+                          </div>
+                        )}
+                      </div>
                     );
                   }
                 })}
@@ -791,6 +818,7 @@ function CardWithArrows({
                 isLastCard={false}
                 scrollToCard={scrollToCard}
                 cardElementsRef={cardElementsRef}
+                onCollapseToCard={onCollapseToCard}
               />
             )}
           </div>
@@ -925,6 +953,9 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
   };
 
   const onToggleCard = (cardId: string) => {
+    // Clear ALL hover states when toggling to prevent stuck hover states
+    setHoveredArrows(new Map());
+    
     setVisibleCards((prev) => {
       const newSet = new Set(prev);
       const isExpanding = !newSet.has(cardId);
@@ -962,28 +993,43 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
 
       return newSet;
     });
-    
-    // Clear hover state for all arrows related to this card when toggling
+  };
+
+  const onHoverArrow = (key: string, isHovered: boolean) => {
+    console.log(`onHoverArrow called: key=${key}, isHovered=${isHovered}`);
     setHoveredArrows((prev) => {
       const newMap = new Map(prev);
-      // Remove hover states for this specific card's arrows
-      const keysToRemove: string[] = [];
-      newMap.forEach((_, key) => {
-        if (key.includes(cardId)) {
-          keysToRemove.push(key);
-        }
-      });
-      keysToRemove.forEach(key => newMap.delete(key));
+      newMap.set(key, isHovered);
+      console.log(`Hover state set: ${key} = ${isHovered}`);
       return newMap;
     });
   };
 
-  const onHoverArrow = (key: string, isHovered: boolean) => {
-    setHoveredArrows((prev) => {
-      const newMap = new Map(prev);
-      newMap.set(key, isHovered);
-      return newMap;
+  const onCollapseToCard = (targetCardId: string) => {
+    setVisibleCards((prev) => {
+      const newSet = new Set(prev);
+      
+      // Collapse the target card and all its descendants
+      const collapseCardAndDescendants = (cardId: string) => {
+        newSet.delete(cardId);
+        const card = cardsById.get(cardId);
+        if (!card) return;
+        
+        card.arrows.forEach((arrow) => {
+          const childId = arrow.targetCardId;
+          if (newSet.has(childId)) {
+            collapseCardAndDescendants(childId);
+          }
+        });
+      };
+      
+      collapseCardAndDescendants(targetCardId);
+      
+      return newSet;
     });
+    
+    // Clear hover states
+    setHoveredArrows(new Map());
   };
 
   return (
@@ -998,6 +1044,7 @@ export function RequestCard({ jsonUrl }: RequestCardProps) {
         isLastCard={true}
         scrollToCard={scrollToCard}
         cardElementsRef={cardElementsRef}
+        onCollapseToCard={onCollapseToCard}
       />
     </div>
   );

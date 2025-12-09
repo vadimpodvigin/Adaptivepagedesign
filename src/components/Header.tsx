@@ -23,8 +23,9 @@ function CustomSelect() {
   
   const options = [
     "CoreFlow (Mint Digital Asset)",
-    "Workflow 2",
-    "Workflow 3"
+    "CoreFlow (Stripe Payment Workflow)",
+    "CoreIgnite User Account Creation",
+    "New Core Banking Space Activation"
   ];
   
   return (
@@ -51,27 +52,21 @@ function CustomSelect() {
         <>
           <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
           <div className="absolute left-0 top-[42px] w-full bg-white shadow-lg z-20">
-            {options.map((option, index) => {
-              const isDisabled = option !== "CoreFlow (Mint Digital Asset)";
-              return (
-                <div
-                  key={index}
-                  className={`px-[16px] py-[12px] font-['IBM_Plex_Sans:Regular',sans-serif] text-[14px] tracking-[0.16px] ${
-                    isDisabled 
-                      ? 'text-[#c6c6c6] cursor-not-allowed' 
-                      : 'text-[#161616] hover:bg-[#e0e0e0] cursor-pointer'
-                  }`}
-                  onClick={() => {
-                    if (!isDisabled) {
-                      setSelected(option);
-                      setIsOpen(false);
-                    }
-                  }}
-                >
-                  {option}
-                </div>
-              );
-            })}
+            {options.map((option, index) => (
+              <div
+                key={index}
+                className="px-[16px] py-[12px] font-['IBM_Plex_Sans:Regular',sans-serif] text-[14px] tracking-[0.16px] text-[#161616] hover:bg-[#e0e0e0] cursor-pointer"
+                onClick={() => {
+                  setSelected(option);
+                  setIsOpen(false);
+                  // Trigger navigation
+                  const event = new CustomEvent('workflowChange', { detail: { workflow: option } });
+                  window.dispatchEvent(event);
+                }}
+              >
+                {option}
+              </div>
+            ))}
           </div>
         </>
       )}

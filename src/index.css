@@ -492,6 +492,10 @@
     }
   }
 
+  .m-\[16px\] {
+    margin: 16px;
+  }
+
   .mx-auto {
     margin-inline: auto;
   }
@@ -536,6 +540,10 @@
     height: 100%;
   }
 
+  .h-5 {
+    height: calc(var(--spacing) * 5);
+  }
+
   .h-\[18px\] {
     height: 18px;
   }
@@ -562,6 +570,10 @@
 
   .min-h-screen {
     min-height: 100vh;
+  }
+
+  .w-5 {
+    width: calc(var(--spacing) * 5);
   }
 
   .w-\[40px\] {
@@ -641,6 +653,10 @@
     align-items: stretch;
   }
 
+  .justify-between {
+    justify-content: space-between;
+  }
+
   .justify-center {
     justify-content: center;
   }
@@ -659,6 +675,10 @@
 
   .gap-\[10px\] {
     gap: 10px;
+  }
+
+  .gap-\[12px\] {
+    gap: 12px;
   }
 
   .gap-\[14px\] {
@@ -705,6 +725,11 @@
     border-width: 0 0 1px;
   }
 
+  .border-\[1\.5px\] {
+    border-style: var(--tw-border-style);
+    border-width: 1.5px;
+  }
+
   .border-solid {
     --tw-border-style: solid;
     border-style: solid;
@@ -724,6 +749,14 @@
 
   .border-\[\#393939\] {
     border-color: #393939;
+  }
+
+  .border-\[\#d4bbff\] {
+    border-color: #d4bbff;
+  }
+
+  .border-\[\#e0e0e0\] {
+    border-color: #e0e0e0;
   }
 
   .bg-\[\#7a23d9\] {
@@ -748,6 +781,10 @@
 
   .bg-\[\#f4f4f4\] {
     background-color: #f4f4f4;
+  }
+
+  .bg-\[\#f6f2ff\] {
+    background-color: #f6f2ff;
   }
 
   .bg-\[rgba\(255\,255\,255\,0\)\] {
@@ -907,6 +944,10 @@
     color: #393939;
   }
 
+  .text-\[\#a56eff\] {
+    color: #a56eff;
+  }
+
   .text-neutral-600 {
     color: var(--color-neutral-600);
   }
@@ -976,6 +1017,12 @@
   @media (hover: hover) {
     .hover\:bg-\[\#e0e0e0\]:hover {
       background-color: #e0e0e0;
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-\[\#f4f4f4\]:hover {
+      background-color: #f4f4f4;
     }
   }
 
@@ -1053,6 +1100,12 @@
   }
 
   @media (width >= 48rem) {
+    .md\:p-\[16px\] {
+      padding: 16px;
+    }
+  }
+
+  @media (width >= 48rem) {
     .md\:p-\[24px\] {
       padding: 24px;
     }
@@ -1086,6 +1139,12 @@
     .md\:text-3xl {
       font-size: var(--text-3xl);
       line-height: var(--tw-leading, var(--text-3xl--line-height));
+    }
+  }
+
+  @media (width >= 48rem) {
+    .md\:text-\[16px\] {
+      font-size: 16px;
     }
   }
 

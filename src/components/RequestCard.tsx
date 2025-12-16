@@ -1,13 +1,9 @@
-import svgPaths from "../imports/svg-xpebenqrq1";
 import svgPathsGrey from "../imports/svg-cne0z3qkwz";
 import svgPathsUpGrey from "../imports/svg-9j3qgonek1";
-import ArrowDown from "../imports/ArrowDown";
-import ArrowRight from "../imports/ArrowRight";
-import ArrowLeft from "../imports/ArrowLeft";
-import ArrowUp from "../imports/ArrowUp";
 import ArrowRightGrey159 from "../imports/ArrowRight-159-390";
 import ArrowLeftGrey159 from "../imports/ArrowLeft-159-371";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
+import yaml from "js-yaml";
 
 // TypeScript type for card data structure
 export interface CardData {
@@ -68,10 +64,7 @@ function SectionNumberBadge({ number }: { number: string }) {
 
 function ArrowDownGrey() {
   return (
-    <div
-      className="relative shrink-0 size-[24px]"
-      data-name="Arrow--down"
-    >
+    <div className="relative shrink-0 size-[24px]" data-name="Arrow--down">
       <div
         className="absolute inset-0"
         style={
@@ -107,10 +100,7 @@ function ArrowDownGrey() {
 
 function ArrowUpGrey() {
   return (
-    <div
-      className="relative shrink-0 size-[24px]"
-      data-name="Arrow--up"
-    >
+    <div className="relative shrink-0 size-[24px]" data-name="Arrow--up">
       <div
         className="absolute inset-0"
         style={
@@ -144,26 +134,10 @@ function ArrowUpGrey() {
   );
 }
 
-function ArrowRightWhite() {
-  return (
-    <div className="relative shrink-0 size-[24px]">
-      <ArrowRight />
-    </div>
-  );
-}
-
 function ArrowRightGrey() {
   return (
     <div className="relative shrink-0 size-[24px]">
       <ArrowRightGrey159 />
-    </div>
-  );
-}
-
-function ArrowLeftWhite() {
-  return (
-    <div className="relative shrink-0 size-[24px]">
-      <ArrowLeft />
     </div>
   );
 }
@@ -174,30 +148,6 @@ function ArrowLeftGrey() {
       <ArrowLeftGrey159 />
     </div>
   );
-}
-
-function ArrowUpWhite() {
-  return (
-    <div className="relative shrink-0 size-[24px]">
-      <ArrowUp />
-    </div>
-  );
-}
-
-interface CardProps {
-  title: string;
-  badge: string;
-  description: string;
-  nestedcard?: Array<{
-    title: string;
-    description: string;
-  }>;
-  sections?: Array<{
-    title: string;
-    badge: string;
-    description: string;
-  }>;
-  className?: string;
 }
 
 function NotificationBlock({
@@ -257,6 +207,22 @@ function SectionCard({
       )}
     </div>
   );
+}
+
+interface CardProps {
+  title: string;
+  badge: string;
+  description: string;
+  nestedcard?: Array<{
+    title: string;
+    description: string;
+  }>;
+  sections?: Array<{
+    title: string;
+    badge: string;
+    description: string;
+  }>;
+  className?: string;
 }
 
 function Card({
@@ -325,214 +291,76 @@ function Card({
   );
 }
 
-interface ArrowButtonProps {
-  direction: "up" | "down" | "left" | "right";
-  isExpanded: boolean;
-  isHovered: boolean;
-  onToggle: () => void;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
-}
-
-function ArrowButton({
-  direction,
-  isExpanded,
-  isHovered,
-  onToggle,
-  onMouseEnter,
-  onMouseLeave,
-}: ArrowButtonProps) {
-  // Debug logging
-  useEffect(() => {
-    if (isExpanded && direction === "right") {
-      console.log(
-        `ArrowButton direction=${direction}, isExpanded=${isExpanded}, isHovered=${isHovered}`,
-      );
-    }
-  }, [direction, isExpanded, isHovered]);
-
-  // Compute icon directly without memoization
-  let arrowIcon: JSX.Element;
-
-  if (direction === "right") {
-    if (isExpanded) {
-      if (isHovered) {
-        arrowIcon = <ArrowLeftGrey />; // Hover shows left (will collapse)
-        console.log(
-          `Rendering: isHovered=${isHovered}, rendering ArrowLeftGrey`,
-        );
-      } else {
-        arrowIcon = <ArrowRightGrey />; // Default shows right (expanded state)
-        console.log(
-          `Rendering: isHovered=${isHovered}, rendering ArrowRightGrey`,
-        );
-      }
-    } else {
-      arrowIcon = <ArrowRightWhite />;
-    }
-  } else if (direction === "left") {
-    if (isExpanded) {
-      arrowIcon = isHovered ? (
-        <ArrowRightGrey />
-      ) : (
-        <ArrowLeftGrey />
-      );
-    } else {
-      arrowIcon = <ArrowLeftWhite />;
-    }
-  } else if (direction === "down") {
-    if (isExpanded) {
-      arrowIcon = isHovered ? (
-        <ArrowUpGrey />
-      ) : (
-        <ArrowDownGrey />
-      );
-    } else {
-      arrowIcon = <ArrowDown />;
-    }
-  } else {
-    // up
-    if (isExpanded) {
-      arrowIcon = isHovered ? (
-        <ArrowDownGrey />
-      ) : (
-        <ArrowUpGrey />
-      );
-    } else {
-      arrowIcon = <ArrowUpWhite />;
-    }
+// Static arrow component (non-interactive)
+function StaticArrow({ direction }: { direction: "down" | "left" | "right" | "up" }) {
+  let ArrowComponent;
+  
+  switch (direction) {
+    case "down":
+      ArrowComponent = ArrowDownGrey;
+      break;
+    case "up":
+      ArrowComponent = ArrowUpGrey;
+      break;
+    case "left":
+      ArrowComponent = ArrowLeftGrey;
+      break;
+    case "right":
+      ArrowComponent = ArrowRightGrey;
+      break;
   }
 
   const isVertical = direction === "up" || direction === "down";
 
   return (
-    <button
-      onClick={onToggle}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      className={`content-stretch size-[40px] flex-col flex isolate items-center justify-center overflow-clip shrink-0 transition-all duration-200 cursor-pointer ${
-        isExpanded
-          ? "bg-transparent hover:bg-[#EBEBEB]"
-          : "bg-[#7a23d9] hover:bg-[#6a1fc9]"
-      }`}
-    >
+    <div className="content-stretch size-[40px] flex-col flex isolate items-center justify-center overflow-clip shrink-0 bg-transparent">
       <div className="relative shrink-0 w-full">
         <div className="flex flex-row items-center overflow-clip size-full">
-          <div
-            className={`box-border content-stretch flex isolate items-center justify-center relative w-full ${
-              isExpanded ? "p-[8px]" : "p-[12px]"
-            }`}
-          >
-            <div
-              className={`content-stretch flex flex-col items-start overflow-clip relative shrink-0 z-[1] transition-all duration-200 ${
-                isVertical && !isExpanded
-                  ? "size-[16px]"
-                  : "size-[24px]"
-              }`}
-            >
-              {arrowIcon}
+          <div className="box-border content-stretch flex isolate items-center justify-center relative w-full p-[8px]">
+            <div className="flex items-center justify-center shrink-0">
+              <ArrowComponent />
             </div>
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
 interface CardWithArrowsProps {
   card: CardData;
   cardsById: Map<string, CardData>;
-  visibleCards: Set<string>;
-  onToggleCard: (cardId: string) => void;
-  hoveredArrows: Map<string, boolean>;
-  onHoverArrow: (key: string, isHovered: boolean) => void;
   isLastCard: boolean;
-  scrollToCard?: (cardId: string) => void;
-  cardElementsRef?: React.RefObject<
-    Map<string, HTMLDivElement>
-  >;
-  onCollapseToCard?: (targetCardId: string) => void;
 }
 
 function CardWithArrows({
   card,
   cardsById,
-  visibleCards,
-  onToggleCard,
-  hoveredArrows,
-  onHoverArrow,
   isLastCard,
-  scrollToCard,
-  cardElementsRef,
-  onCollapseToCard,
 }: CardWithArrowsProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const downArrowRefs = useRef<Map<string, HTMLDivElement>>(
-    new Map(),
-  );
-  const horizontalCardRefs = useRef<
-    Map<string, HTMLDivElement>
-  >(new Map());
-
-  // Register this card element in the ref map
-  useEffect(() => {
-    if (cardRef.current && cardElementsRef?.current) {
-      cardElementsRef.current.set(card.id, cardRef.current);
-    }
-    return () => {
-      if (cardElementsRef?.current) {
-        cardElementsRef.current.delete(card.id);
-      }
-    };
-  }, [card.id, cardElementsRef]);
-
-  // Register horizontal card refs
-  useEffect(() => {
-    if (cardElementsRef?.current) {
-      horizontalCardRefs.current.forEach((element, cardId) => {
-        cardElementsRef.current.set(cardId, element);
-      });
-    }
-    return () => {
-      if (cardElementsRef?.current) {
-        horizontalCardRefs.current.forEach((_, cardId) => {
-          cardElementsRef.current.delete(cardId);
-        });
-      }
-    };
-  }, [cardElementsRef, visibleCards]);
-
   // Group arrows by direction
-  const downArrows = card.arrows.filter(
-    (a) => a.direction === "down",
-  );
-  const leftArrows = card.arrows.filter(
-    (a) => a.direction === "left",
-  );
-  const rightArrows = card.arrows.filter(
-    (a) => a.direction === "right",
-  );
+  const leftArrows = card.arrows.filter((a) => a.direction === "left");
 
-  // Collect all cards in the current horizontal row (including main card and visible left/right cards)
+  // Collect all cards in the current horizontal row
   const allCardsInRow: CardData[] = [card];
 
   leftArrows.forEach((arrow) => {
     const targetCard = cardsById.get(arrow.targetCardId);
-    if (visibleCards.has(arrow.targetCardId) && targetCard) {
+    if (targetCard) {
       allCardsInRow.push(targetCard);
     }
   });
 
-  // Recursively collect all right arrow cards (including chained)
+  // Recursively collect all right arrow cards
   const collectRightCards = (sourceCard: CardData) => {
     const cardRightArrows = sourceCard.arrows.filter(
       (a) => a.direction === "right",
     );
     cardRightArrows.forEach((arrow) => {
       const targetCard = cardsById.get(arrow.targetCardId);
-      if (visibleCards.has(arrow.targetCardId) && targetCard) {
+      if (targetCard) {
         allCardsInRow.push(targetCard);
-        collectRightCards(targetCard); // Recurse for chained right cards
+        collectRightCards(targetCard);
       }
     });
   };
@@ -546,100 +374,31 @@ function CardWithArrows({
       targetCardId: string;
     };
     sourceCardId: string;
-    arrowIndex: number;
   }> = [];
 
   allCardsInRow.forEach((cardInRow) => {
     const cardDownArrows = cardInRow.arrows.filter(
       (a) => a.direction === "down",
     );
-    cardDownArrows.forEach((arrow, idx) => {
+    cardDownArrows.forEach((arrow) => {
       allDownArrows.push({
         arrow,
         sourceCardId: cardInRow.id,
-        arrowIndex: idx,
       });
     });
   });
 
-  // Count elements in the current horizontal row
-  let currentRowCards = allCardsInRow.length;
-  let currentRowArrowButtons = 0;
-
-  // Count left arrow buttons
-  leftArrows.forEach((arrow) => {
-    if (visibleCards.has(arrow.targetCardId)) {
-      currentRowArrowButtons++;
-    }
-  });
-
-  // Count right arrow buttons (including chained)
-  const countCurrentRightArrowButtons = (
-    sourceCard: CardData,
-  ): number => {
-    let count = 0;
-    const cardRightArrows = sourceCard.arrows.filter(
-      (a) => a.direction === "right",
-    );
-    cardRightArrows.forEach((arrow) => {
-      if (visibleCards.has(arrow.targetCardId)) {
-        count++; // Arrow button
-        const targetCard = cardsById.get(arrow.targetCardId);
-        if (targetCard) {
-          count += countCurrentRightArrowButtons(targetCard);
-        }
-      }
-    });
-    return count;
-  };
-
-  currentRowArrowButtons += countCurrentRightArrowButtons(card);
-
-  const currentRowTotalElements =
-    currentRowCards + currentRowArrowButtons;
-
-  // Check if main card has right arrows pointing to cards with nestedcard content
-  const hasNestedRightArrow = rightArrows.some((arrow) => {
-    const targetCard = cardsById.get(arrow.targetCardId);
-    return (
-      targetCard?.nestedcard && targetCard.nestedcard.length > 0
-    );
-  });
-
-  // Check if main card has any visible right arrow cards
-  const hasVisibleRightCard = rightArrows.some((arrow) => {
-    return visibleCards.has(arrow.targetCardId);
-  });
-
-  // Build the horizontal row (left arrows + card + right arrows)
+  // Build the horizontal row
   const renderHorizontalRow = () => {
     const elements: JSX.Element[] = [];
 
     // Left arrows and their cards
     leftArrows.forEach((arrow, idx) => {
       const targetCard = cardsById.get(arrow.targetCardId);
-      const isVisible = visibleCards.has(arrow.targetCardId);
-      const hoverKey = `${card.id}-left-${idx}`;
-      const isHovered = hoveredArrows.get(hoverKey) || false;
-
-      if (isVisible && targetCard) {
+      
+      if (targetCard) {
         elements.push(
-          <div
-            key={`left-card-${idx}`}
-            className="flex-1 min-w-0"
-            ref={(el) => {
-              if (el) {
-                horizontalCardRefs.current.set(
-                  targetCard.id,
-                  el,
-                );
-              } else {
-                horizontalCardRefs.current.delete(
-                  targetCard.id,
-                );
-              }
-            }}
-          >
+          <div key={`left-card-${idx}`} className="flex-1 min-w-0">
             <Card
               title={targetCard.title}
               badge={targetCard.badge}
@@ -647,7 +406,7 @@ function CardWithArrows({
               nestedcard={targetCard.nestedcard}
               sections={targetCard.sections}
             />
-          </div>,
+          </div>
         );
       }
 
@@ -656,24 +415,14 @@ function CardWithArrows({
           key={`left-arrow-${idx}`}
           className="flex items-center justify-center w-[40px]"
         >
-          <ArrowButton
-            direction="left"
-            isExpanded={isVisible}
-            isHovered={isHovered}
-            onToggle={() => onToggleCard(arrow.targetCardId)}
-            onMouseEnter={() => onHoverArrow(hoverKey, true)}
-            onMouseLeave={() => onHoverArrow(hoverKey, false)}
-          />
-        </div>,
+          <StaticArrow direction="left" />
+        </div>
       );
     });
 
     // Main card
     elements.push(
-      <div
-        key="main-card"
-        className={`flex-1 min-w-0 ${hasVisibleRightCard ? "" : "w-full"}`}
-      >
+      <div key="main-card" className="flex-1 min-w-0">
         <Card
           title={card.title}
           badge={card.badge}
@@ -681,60 +430,34 @@ function CardWithArrows({
           nestedcard={card.nestedcard}
           sections={card.sections}
         />
-      </div>,
+      </div>
     );
 
     // Right arrows - recursively collect all chained right cards
-    const processRightArrows = (
-      sourceCard: CardData,
-      sourceCardId: string,
-      startIdx: number = 0,
-    ) => {
+    const processRightArrows = (sourceCard: CardData, sourceCardId: string, startIdx: number = 0) => {
       const cardRightArrows = sourceCard.arrows.filter(
         (a) => a.direction === "right",
       );
 
       cardRightArrows.forEach((arrow, idx) => {
         const targetCard = cardsById.get(arrow.targetCardId);
-        const isVisible = visibleCards.has(arrow.targetCardId);
-        const hoverKey = `${sourceCardId}-right-${startIdx + idx}`;
-        const isHovered = hoveredArrows.get(hoverKey) || false;
 
-        // Render the arrow button - always centered
+        // Render the static arrow
         elements.push(
           <div
             key={`${sourceCardId}-right-arrow-${startIdx + idx}`}
             className="flex items-center justify-center w-[40px]"
           >
-            <ArrowButton
-              direction="right"
-              isExpanded={isVisible}
-              isHovered={isHovered}
-              onToggle={() => onToggleCard(arrow.targetCardId)}
-              onMouseEnter={() => onHoverArrow(hoverKey, true)}
-              onMouseLeave={() => onHoverArrow(hoverKey, false)}
-            />
-          </div>,
+            <StaticArrow direction="right" />
+          </div>
         );
 
-        // If visible, render the card and process its right arrows recursively
-        if (isVisible && targetCard) {
+        // Render the card and process its right arrows recursively
+        if (targetCard) {
           elements.push(
             <div
               key={`${sourceCardId}-right-card-${startIdx + idx}`}
               className="flex-1 min-w-0"
-              ref={(el) => {
-                if (el) {
-                  horizontalCardRefs.current.set(
-                    targetCard.id,
-                    el,
-                  );
-                } else {
-                  horizontalCardRefs.current.delete(
-                    targetCard.id,
-                  );
-                }
-              }}
             >
               <Card
                 title={targetCard.title}
@@ -743,7 +466,7 @@ function CardWithArrows({
                 nestedcard={targetCard.nestedcard}
                 sections={targetCard.sections}
               />
-            </div>,
+            </div>
           );
 
           // Recursively process this card's right arrows
@@ -752,238 +475,37 @@ function CardWithArrows({
       });
     };
 
-    // Start processing from the main card's right arrows
     processRightArrows(card, card.id, 0);
 
     return elements;
   };
 
   return (
-    <div
-      className={`w-full ${isLastCard ? "pb-[64px]" : ""}`}
-      ref={cardRef}
-    >
-      {/* Horizontal row: left arrows and main card and right arrows */}
+    <div className={`w-full ${isLastCard ? "pb-[64px]" : ""}`}>
+      {/* Horizontal row */}
       <div className="flex flex-col lg:flex-row items-stretch gap-[8px] w-full">
         {renderHorizontalRow()}
       </div>
 
-      {/* All down arrows from all cards in the horizontal row - rendered at full width */}
+      {/* Down arrows and their target cards */}
       {allDownArrows.map((item, index) => {
-        const targetCard = cardsById.get(
-          item.arrow.targetCardId,
-        );
-        const isVisible = visibleCards.has(
-          item.arrow.targetCardId,
-        );
-        const hoverKey = `${item.sourceCardId}-down-${item.arrowIndex}`;
-        const isHovered = hoveredArrows.get(hoverKey) || false;
-
-        // Count how many cards and arrow buttons will be in the horizontal row below
-        let cardsInRowBelow = 1; // The target card itself
-        let arrowButtonsInRowBelow = 0;
-
-        if (targetCard && isVisible) {
-          // Count visible left arrow cards and their arrow buttons
-          const leftArrowsBelow = targetCard.arrows.filter(
-            (a) => a.direction === "left",
-          );
-          leftArrowsBelow.forEach((arrow) => {
-            if (visibleCards.has(arrow.targetCardId)) {
-              cardsInRowBelow++;
-              arrowButtonsInRowBelow++; // Arrow button before the left card
-            }
-          });
-
-          // Count visible right arrow cards and buttons (including chained right arrows)
-          const countVisibleRightElements = (
-            card: CardData,
-          ): { cards: number; arrows: number } => {
-            let cards = 0;
-            let arrows = 0;
-            const rightArrows = card.arrows.filter(
-              (a) => a.direction === "right",
-            );
-            rightArrows.forEach((arrow) => {
-              if (visibleCards.has(arrow.targetCardId)) {
-                arrows++; // Arrow button
-                cards++; // The card itself
-                const rightCard = cardsById.get(
-                  arrow.targetCardId,
-                );
-                if (rightCard) {
-                  const nested =
-                    countVisibleRightElements(rightCard);
-                  cards += nested.cards;
-                  arrows += nested.arrows;
-                }
-              }
-            });
-            return { cards, arrows };
-          };
-
-          const rightElements =
-            countVisibleRightElements(targetCard);
-          cardsInRowBelow += rightElements.cards;
-          arrowButtonsInRowBelow += rightElements.arrows;
-        }
-
-        const totalElements =
-          cardsInRowBelow + arrowButtonsInRowBelow;
-
-        // Use the maximum of current row and row below to determine container count
-        const maxElements = Math.max(
-          currentRowTotalElements,
-          totalElements,
-        );
+        const targetCard = cardsById.get(item.arrow.targetCardId);
 
         return (
           <div
             key={`down-${item.sourceCardId}-${index}`}
             className="flex flex-col gap-[8px] w-full mt-[8px]"
           >
-            {/* Arrow container - violet buttons always centered, grey buttons use split layout */}
-            {isVisible &&
-            (cardsInRowBelow >= 2 ||
-              currentRowTotalElements >= 2) ? (
-              // Grey button with split container layout
-              <div className="flex flex-col lg:flex-row items-stretch gap-[8px] w-full">
-                {/* Render containers matching the structure below: cards + arrow buttons */}
-                {Array.from({ length: maxElements }).map(
-                  (_, idx) => {
-                    // First container gets the arrow button
-                    if (idx === 0) {
-                      return (
-                        <div
-                          key={`container-${idx}`}
-                          className="flex-1 min-w-0 flex justify-center px-4 md:px-[24px]"
-                        >
-                          <ArrowButton
-                            direction="down"
-                            isExpanded={isVisible}
-                            isHovered={isHovered}
-                            onToggle={() =>
-                              onToggleCard(
-                                item.arrow.targetCardId,
-                              )
-                            }
-                            onMouseEnter={() =>
-                              onHoverArrow(hoverKey, true)
-                            }
-                            onMouseLeave={() =>
-                              onHoverArrow(hoverKey, false)
-                            }
-                          />
-                        </div>
-                      );
-                    }
-
-                    // Pattern below: Card, Arrow, Card, Arrow, Card...\n                  // So: even indices = cards (flex-1), odd indices = arrows (40px)
-                    const isArrowPosition = idx % 2 === 1;
-
-                    if (isArrowPosition) {
-                      // Spacer for arrow button - fixed width to match arrow button
-                      return (
-                        <div
-                          key={`container-${idx}`}
-                          className="flex items-center"
-                        >
-                          <div className="w-[40px]" />{" "}
-                          {/* Match arrow button width */}
-                        </div>
-                      );
-                    } else {
-                      // Spacer for card - flex-1 to match card width
-                      // Check if card 3.2 is visible - show collapse button in the middle container
-                      // of the LAST down arrow row (the one displaying card 3.1 which has the arrow to card31)
-                      const isCard32Visible =
-                        visibleCards.has("card31");
-                      const middleIndex = Math.floor(
-                        maxElements / 2,
-                      );
-                      const isMidContainer =
-                        idx === middleIndex;
-
-                      // Check if this is the row displaying card 3.1 (card3)
-                      // Card 3.1 is the one that has the down arrow to card31
-                      const isCard31Row =
-                        targetCard?.id === "card3" && isVisible;
-
-                      const collapseHoverKey =
-                        "collapse-to-2.1";
-                      const isCollapseHovered =
-                        hoveredArrows.get(collapseHoverKey) ||
-                        false;
-
-                      return (
-                        <div
-                          key={`container-${idx}`}
-                          className="flex-1 min-w-0 px-4 md:px-[24px] flex items-center"
-                        >
-                          {isCard32Visible &&
-                            isCard31Row &&
-                            isMidContainer &&
-                            onCollapseToCard && (
-                              <div className="pl-[16px]">
-                                <ArrowButton
-                                  direction="down"
-                                  isExpanded={true}
-                                  isHovered={isCollapseHovered}
-                                  onToggle={() =>
-                                    onCollapseToCard("card31")
-                                  }
-                                  onMouseEnter={() =>
-                                    onHoverArrow(
-                                      collapseHoverKey,
-                                      true,
-                                    )
-                                  }
-                                  onMouseLeave={() =>
-                                    onHoverArrow(
-                                      collapseHoverKey,
-                                      false,
-                                    )
-                                  }
-                                />
-                              </div>
-                            )}
-                        </div>
-                      );
-                    }
-                  },
-                )}
-              </div>
-            ) : (
-              // Violet button or single grey button - always centered in full width
-              <div className="flex justify-center w-full px-4 md:px-[24px]">
-                <ArrowButton
-                  direction="down"
-                  isExpanded={isVisible}
-                  isHovered={isHovered}
-                  onToggle={() =>
-                    onToggleCard(item.arrow.targetCardId)
-                  }
-                  onMouseEnter={() =>
-                    onHoverArrow(hoverKey, true)
-                  }
-                  onMouseLeave={() =>
-                    onHoverArrow(hoverKey, false)
-                  }
-                />
-              </div>
-            )}
-            {isVisible && targetCard && (
+            {/* Arrow container - always centered */}
+            <div className="flex justify-center w-full px-4 md:px-[24px] py-2">
+              <StaticArrow direction="down" />
+            </div>
+            
+            {targetCard && (
               <CardWithArrows
                 card={targetCard}
                 cardsById={cardsById}
-                visibleCards={visibleCards}
-                onToggleCard={onToggleCard}
-                hoveredArrows={hoveredArrows}
-                onHoverArrow={onHoverArrow}
                 isLastCard={false}
-                scrollToCard={scrollToCard}
-                cardElementsRef={cardElementsRef}
-                onCollapseToCard={onCollapseToCard}
               />
             )}
           </div>
@@ -995,26 +517,12 @@ function CardWithArrows({
 
 interface RequestCardProps {
   jsonUrl: string;
-  expandAll?: boolean;
 }
 
-export function RequestCard({ jsonUrl, expandAll = false }: RequestCardProps) {
-  const [cardsData, setCardsData] = useState<CardsData | null>(
-    null,
-  );
+export function RequestCard({ jsonUrl }: RequestCardProps) {
+  const [cardsData, setCardsData] = useState<CardsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [visibleCards, setVisibleCards] = useState<Set<string>>(
-    new Set(),
-  );
-  const [hoveredArrows, setHoveredArrows] = useState<
-    Map<string, boolean>
-  >(new Map());
-  const cardElementsRef = useRef<Map<string, HTMLDivElement>>(
-    new Map(),
-  );
-  const [pendingScrollCardId, setPendingScrollCardId] =
-    useState<string | null>(null);
 
   useEffect(() => {
     async function fetchCards() {
@@ -1032,7 +540,17 @@ export function RequestCard({ jsonUrl, expandAll = false }: RequestCardProps) {
           );
         }
 
-        const data = await response.json();
+        const text = await response.text();
+        
+        let data;
+        if (jsonUrl.endsWith('.yaml') || jsonUrl.endsWith('.yml')) {
+          // Parse YAML - returns JS object
+          data = yaml.load(text);
+        } else {
+          // Parse JSON - returns JS object
+          data = JSON.parse(text);
+        }
+        
         setCardsData(data);
       } catch (err) {
         setError(
@@ -1049,59 +567,6 @@ export function RequestCard({ jsonUrl, expandAll = false }: RequestCardProps) {
     fetchCards();
   }, [jsonUrl]);
 
-  // Handle expand all toggle
-  useEffect(() => {
-    if (!cardsData) return;
-
-    const cardsById = new Map<string, CardData>();
-    cardsData.cards.forEach((card) =>
-      cardsById.set(card.id, card),
-    );
-
-    if (expandAll) {
-      // Expand all cards - collect all card IDs except the first one
-      const allCardIds = new Set<string>();
-      
-      const collectAllCardIds = (card: CardData) => {
-        card.arrows.forEach((arrow) => {
-          const targetCard = cardsById.get(arrow.targetCardId);
-          if (targetCard) {
-            allCardIds.add(targetCard.id);
-            collectAllCardIds(targetCard); // Recursively collect descendants
-          }
-        });
-      };
-
-      // Start from the first card
-      if (cardsData.cards.length > 0) {
-        collectAllCardIds(cardsData.cards[0]);
-      }
-
-      setVisibleCards(allCardIds);
-    } else {
-      // Collapse all - only show the first card (no cards in visibleCards)
-      setVisibleCards(new Set());
-    }
-  }, [expandAll, cardsData]);
-
-  // Auto-scroll effect when a card becomes available
-  useEffect(() => {
-    if (pendingScrollCardId) {
-      const element = cardElementsRef.current.get(
-        pendingScrollCardId,
-      );
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-          setPendingScrollCardId(null);
-        }, 150);
-      }
-    }
-  }, [pendingScrollCardId, cardElementsRef.current.size]);
-
   if (loading) {
     return (
       <div className="pb-[64px] flex items-center justify-center py-12">
@@ -1114,9 +579,14 @@ export function RequestCard({ jsonUrl, expandAll = false }: RequestCardProps) {
 
   if (error) {
     return (
-      <div className="pb-[64px] flex items-center justify-center py-12">
-        <div className="text-red-600 font-['IBM_Plex_Sans:Regular',sans-serif]">
-          Error: {error}
+      <div className="pb-[64px] flex flex-col items-center justify-center py-12 gap-4">
+        <div className="text-red-600 font-['IBM_Plex_Sans:SemiBold',sans-serif] text-lg">
+          Failed to Load Workflow
+        </div>
+        <div className="text-neutral-600 font-['IBM_Plex_Sans:Regular',sans-serif] text-sm max-w-[600px] text-center">
+          {error.includes("indentation") || error.includes("YAML") 
+            ? "The workflow file has formatting errors. Please check the YAML file for proper indentation."
+            : error}
         </div>
       </div>
     );
@@ -1141,113 +611,12 @@ export function RequestCard({ jsonUrl, expandAll = false }: RequestCardProps) {
     cardsById.set(card.id, card),
   );
 
-  const scrollToCard = (cardId: string) => {
-    const element = cardElementsRef.current.get(cardId);
-    if (element) {
-      setTimeout(() => {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }, 100);
-    }
-  };
-
-  const onToggleCard = (cardId: string) => {
-    // Clear ALL hover states when toggling to prevent stuck hover states
-    setHoveredArrows(new Map());
-
-    setVisibleCards((prev) => {
-      const newSet = new Set(prev);
-      const isExpanding = !newSet.has(cardId);
-
-      if (newSet.has(cardId)) {
-        // Collapsing - remove this card and ALL its descendants
-        newSet.delete(cardId);
-
-        // Recursively find and remove all descendant cards
-        const removeDescendants = (parentId: string) => {
-          const parentCard = cardsById.get(parentId);
-          if (!parentCard) return;
-
-          // Check all arrows from this parent card
-          parentCard.arrows.forEach((arrow) => {
-            const childId = arrow.targetCardId;
-            if (newSet.has(childId)) {
-              newSet.delete(childId);
-              // Recursively remove descendants of this child
-              removeDescendants(childId);
-            }
-          });
-        };
-
-        removeDescendants(cardId);
-      } else {
-        // Expanding - only add this card
-        newSet.add(cardId);
-      }
-
-      // Scroll to the newly expanded card
-      if (isExpanding) {
-        setPendingScrollCardId(cardId);
-      }
-
-      return newSet;
-    });
-  };
-
-  const onHoverArrow = (key: string, isHovered: boolean) => {
-    console.log(
-      `onHoverArrow called: key=${key}, isHovered=${isHovered}`,
-    );
-    setHoveredArrows((prev) => {
-      const newMap = new Map(prev);
-      newMap.set(key, isHovered);
-      console.log(`Hover state set: ${key} = ${isHovered}`);
-      return newMap;
-    });
-  };
-
-  const onCollapseToCard = (targetCardId: string) => {
-    setVisibleCards((prev) => {
-      const newSet = new Set(prev);
-
-      // Collapse the target card and all its descendants
-      const collapseCardAndDescendants = (cardId: string) => {
-        newSet.delete(cardId);
-        const card = cardsById.get(cardId);
-        if (!card) return;
-
-        card.arrows.forEach((arrow) => {
-          const childId = arrow.targetCardId;
-          if (newSet.has(childId)) {
-            collapseCardAndDescendants(childId);
-          }
-        });
-      };
-
-      collapseCardAndDescendants(targetCardId);
-
-      return newSet;
-    });
-
-    // Clear hover states
-    setHoveredArrows(new Map());
-  };
-
   return (
     <div>
       <CardWithArrows
         card={cardsData.cards[0]}
         cardsById={cardsById}
-        visibleCards={visibleCards}
-        onToggleCard={onToggleCard}
-        hoveredArrows={hoveredArrows}
-        onHoverArrow={onHoverArrow}
         isLastCard={true}
-        scrollToCard={scrollToCard}
-        cardElementsRef={cardElementsRef}
-        onCollapseToCard={onCollapseToCard}
       />
     </div>
   );

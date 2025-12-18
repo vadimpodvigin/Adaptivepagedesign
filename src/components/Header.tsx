@@ -1,10 +1,36 @@
 import svgPaths from "../imports/svg-ge5nv5v5ru";
-import overflowMenuPaths from "../imports/svg-ec4s719mx2";
+import overflowMenuPaths from "../imports/svg-4l2a964jjw";
 import { X } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 
 function Help() {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const timeoutRef = useRef<number | null>(null);
+
+  const handleMouseEnter = () => {
+    timeoutRef.current = window.setTimeout(() => {
+      setShowTooltip(true);
+    }, 1000);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setShowTooltip(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="relative shrink-0 size-[16px]" data-name="Help">
+    <div className="relative shrink-0 size-[16px]" data-name="Help" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <div className="absolute inset-0" style={{ "--fill-0": "rgba(255, 255, 255, 1)" } as React.CSSProperties}>
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
           <g id="Help">
@@ -17,6 +43,12 @@ function Help() {
           </g>
         </svg>
       </div>
+      {showTooltip && (
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[#161616] text-white text-[12px] rounded whitespace-nowrap pointer-events-none z-50">
+          tooltip
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-[#161616]" />
+        </div>
+      )}
     </div>
   );
 }
@@ -75,11 +107,11 @@ function OverflowMenuHorizontal({ isOpen }: { isOpen?: boolean }) {
 function MenuTrigger({ onClick, isOpen }: { onClick?: () => void; isOpen?: boolean }) {
   return (
     <div 
-      className="bg-white content-stretch flex items-center justify-center p-[10.5px] size-[60px] cursor-pointer hover:bg-[#f4f4f4] transition-colors" 
+      className="bg-white content-stretch flex items-center justify-center p-[10.5px] size-[60px] cursor-pointer hover:bg-[#f4f4f4] transition-colors relative" 
       data-name="Menu trigger"
       onClick={onClick}
     >
-      <div aria-hidden="true" className="absolute border-[#ededed] border-[1px_1px_0px] border-solid inset-0 pointer-events-none" />
+      <div aria-hidden="true" className="absolute border-[#ededed] border-solid border-b inset-0 pointer-events-none" />
       <OverflowMenuHorizontal isOpen={isOpen} />
     </div>
   );
@@ -95,7 +127,7 @@ export function Header({ onMenuClick, isMenuOpen, onLogoClick }: { onMenuClick?:
           className="absolute flex flex-col font-['IBM_Plex_Mono:SemiBold',sans-serif] justify-center leading-[0] left-[68px] not-italic text-[#161616] text-[24px] text-nowrap top-[30px] translate-y-[-50%] cursor-pointer hover:opacity-80 transition-opacity"
           onClick={onLogoClick}
         >
-          <p className="font-['IBM_Plex_Mono:Medium',sans-serif] leading-[normal]">
+          <p className="font-['IBM_Plex_Mono:Medium',sans-serif] leading-[normal] font-[IBM_Plex_Mono] font-medium text-[16px]">
             CoreIgnite/<span className="text-[#7a23d9]">Docs</span>
           </p>
         </div>

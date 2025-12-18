@@ -2,6 +2,29 @@
 
 @import 'carbon-components/css/carbon-components.min.css';
 
+/* Custom font loading for IBM Plex Sans and IBM Plex Mono to override Carbon defaults */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+/* Force IBM Plex Mono to use correct font weights */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Override Carbon's IBM Plex Mono font-weight defaults */
+body,
+html {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Ensure IBM Plex Mono elements use the correct weight */
+code,
+pre,
+.mono,
+[style*="IBM Plex Mono"] {
+  font-family: 'IBM Plex Mono', 'Courier New', monospace !important;
+}
+
 :root {
   --font-size: 16px;
   --background: #ffffff;

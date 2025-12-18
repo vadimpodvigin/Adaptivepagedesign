@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ChevronRight, X } from 'lucide-react';
+import { WorkflowMetadata } from '../App';
 
 interface MenuItem {
   id: string;
@@ -7,49 +8,15 @@ interface MenuItem {
   type: 'item' | 'parent' | 'section';
   children?: MenuItem[];
   workflow?: string;
+  color?: string;
 }
-
-const menuData: MenuItem[] = [
-  {
-    id: 'explore',
-    label: 'Explore',
-    type: 'section',
-    children: [
-      { id: 'home', label: 'Home', type: 'item', workflow: '__HOME__' },
-    ]
-  },
-  {
-    id: 'workflows',
-    label: 'Workflows',
-    type: 'section',
-    children: [
-      {
-        id: 'coreignite-setup',
-        label: 'CoreIgnite Setup',
-        type: 'parent',
-        children: [
-          { id: 'account-creation', label: 'Account Creation', type: 'item', workflow: 'CoreIgnite User Account Creation' },
-          { id: 'bank-setup', label: 'Bank Setup', type: 'item', workflow: 'New Core Banking Space Activation' },
-        ]
-      },
-      {
-        id: 'coreflow',
-        label: 'CoreFlow',
-        type: 'parent',
-        children: [
-          { id: 'coreflow-mint', label: 'Digital Assets', type: 'item', workflow: 'Digital Assets' },
-          { id: 'coreflow-stripe', label: 'Stripe Payment', type: 'item', workflow: 'Stripe Payment' },
-        ]
-      },
-    ]
-  }
-];
 
 export interface SidebarProps {
   currentWorkflow: string | null;
   onWorkflowChange: (workflow: string) => void;
   isOpen?: boolean;
   onClose?: () => void;
+  workflows: WorkflowMetadata[];
 }
 
 export function Sidebar({
@@ -57,10 +24,95 @@ export function Sidebar({
   onWorkflowChange,
   isOpen,
   onClose,
+  workflows,
 }: SidebarProps) {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
     new Set()
   );
+
+  // Build menu data dynamically from workflows
+  const menuItems = useMemo(() => {
+    if (!workflows || workflows.length === 0) return [];
+
+    const categoryMap = new Map<string, WorkflowMetadata[]>();
+    
+    if (workflows) {
+      workflows.forEach(workflow => {
+        const category = workflow.category || 'Other';
+        if (!categoryMap.has(category)) {
+          categoryMap.set(category, []);
+        }
+        categoryMap.get(category)!.push(workflow);
+      });
+
+      // Define color rotation list
+      const colorList = ['#7A23D9', '#3BAB5A', '#4589FF', '#FF9D00', '#FF0000'];
+
+      // Build parent menu items for each category
+      return Array.from(categoryMap.entries()).map(([categoryName, categoryWorkflows], index) => {
+        // Assign color based on index, rotating through the color list
+        const color = colorList[index % colorList.length];
+        
+        return {
+          id: categoryName.toLowerCase().replace(/\s+/g, '-'),
+          label: categoryName,
+          type: 'parent' as const,
+          color,
+          children: categoryWorkflows.map(workflow => ({
+            id: workflow.name.toLowerCase().replace(/\s+/g, '-'),
+            label: workflow.title,
+            type: 'item' as const,
+            workflow: workflow.name,
+          }))
+        };
+      });
+    }
+    return [];
+  }, [workflows]);
+
+  const menuData: MenuItem[] = [
+    {
+      id: 'explore',
+      label: 'Explore',
+      type: 'section',
+      children: [
+        { id: 'home', label: 'Home', type: 'item', workflow: '__HOME__' },
+      ]
+    },
+    {
+      id: 'workflows',
+      label: 'Workflows',
+      type: 'section',
+      children: menuItems
+    }
+  ];
+
+  // Auto-expand category containing current workflow
+  useEffect(() => {
+    if (!currentWorkflow || currentWorkflow === '__HOME__') return;
+    
+    // Find which parent category contains the current workflow
+    const findParentCategory = (items: MenuItem[]): string | null => {
+      for (const item of items) {
+        if (item.type === 'parent' && item.children) {
+          const hasWorkflow = item.children.some(
+            child => child.workflow === currentWorkflow
+          );
+          if (hasWorkflow) return item.id;
+        }
+        if (item.children) {
+          const found = findParentCategory(item.children);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const parentId = findParentCategory(menuData);
+    if (parentId && !expandedCategories.has(parentId)) {
+      setExpandedCategories(new Set([...expandedCategories, parentId]));
+    }
+  }, [currentWorkflow, workflows]);
 
   const toggleCategory = (category: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -81,7 +133,7 @@ export function Sidebar({
     }
   };
 
-  const renderMenuItem = (item: MenuItem, depth: number = 0) => {
+  const renderMenuItem = (item: MenuItem, depth: number = 0, parentColor?: string) => {
     if (item.type === 'section') {
       return (
         <div key={item.id} className="mb-4">
@@ -90,7 +142,7 @@ export function Sidebar({
           </div>
           {item.children && (
             <div className="space-y-3">
-              {item.children.map(child => renderMenuItem(child, depth + 1))}
+              {item.children.map(child => renderMenuItem(child, depth + 1, parentColor))}
             </div>
           )}
         </div>
@@ -102,7 +154,7 @@ export function Sidebar({
       return (
         <div key={item.id} className="mb-3">
           <div
-            className="font-['IBM_Plex_Sans:SemiBold',sans-serif] text-[14px] text-[#161616] cursor-pointer hover:bg-[#f4f4f4] transition-all flex items-center gap-1 py-1 px-2 -mx-2 rounded"
+            className="font-['IBM_Plex_Sans:Medium',sans-serif] text-[14px] text-[#161616] cursor-pointer hover:bg-[#f4f4f4] transition-all flex items-center gap-1 py-1 px-2 -mx-2 rounded"
             onClick={() => toggleCategory(item.id)}
           >
             <ChevronRight 
@@ -112,7 +164,7 @@ export function Sidebar({
           </div>
           {isExpanded && item.children && (
             <div className="ml-5 mt-2 space-y-2">
-              {item.children.map(child => renderMenuItem(child, depth + 1))}
+              {item.children.map(child => renderMenuItem(child, depth + 1, item.color))}
             </div>
           )}
         </div>
@@ -123,18 +175,38 @@ export function Sidebar({
     const isActive = item.workflow === '__HOME__' 
       ? currentWorkflow === null 
       : item.workflow === currentWorkflow;
+    
+    // Color mapping for parent/active background pairs
+    const colorMap: { [key: string]: string } = {
+      '#7A23D9': '#E5D3F8',
+      '#3BAB5A': '#E8FCEE',
+      '#4589FF': '#E5EFFF',
+      '#FF9D00': '#FFF5E5',
+      '#FF0000': '#FFCCCC'
+    };
+    
+    // Use parent color if available, otherwise default to purple
+    const activeColor = parentColor || '#7A23D9';
+    const activeBgColor = parentColor && colorMap[parentColor.toUpperCase()]
+      ? colorMap[parentColor.toUpperCase()]
+      : '#E5D3F8';
+    
     return (
       <div
         key={item.id}
         className={`font-['IBM_Plex_Sans:Regular',sans-serif] text-[12px] py-1 px-2 -mx-2 rounded transition-all ${
           isActive 
-            ? 'text-[#7a23d9] font-["IBM_Plex_Sans:SemiBold",sans-serif] bg-[#f0e6ff]' 
+            ? 'font-["IBM_Plex_Sans:SemiBold",sans-serif]' 
             : 'text-[#161616]'
         } ${
           item.workflow 
             ? 'cursor-pointer hover:bg-[#f4f4f4]' 
             : 'text-[#8d8d8d] cursor-default'
         }`}
+        style={isActive ? {
+          color: activeColor,
+          backgroundColor: activeBgColor
+        } : {}}
         onClick={() => handleItemClick(item)}
       >
         {item.label}
@@ -159,7 +231,12 @@ export function Sidebar({
         }`}
       >
         <div className="h-full overflow-y-auto p-6">
-          {menuData.map(item => renderMenuItem(item))}
+          {menuData.map((item, index) => (
+            <div key={item.id}>
+              {renderMenuItem(item)}
+              {(index === 0 || index === 1) && <div className="border-b border-[#e0e0e0] my-4" />}
+            </div>
+          ))}
         </div>
       </div>
     </>

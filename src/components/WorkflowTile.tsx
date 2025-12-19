@@ -119,7 +119,7 @@ export function WorkflowTile({ title, icon, iconColor = '#7A23D9', onClick }: Wo
         <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
           <div className="overflow-clip rounded-[inherit] size-full">
             <div className="content-stretch flex flex-col items-start pl-[16px] pr-[8px] py-[16px] relative w-full">
-              <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[18px] not-italic relative shrink-0 text-[#161616] text-[14px] tracking-[0.16px] w-full font-[IBM_Plex_Sans]">
+              <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[18px] not-italic relative shrink-0 text-[#161616] text-[14px] tracking-[0.16px] w-full font-[IBM_Plex_Sans] font-bold font-normal">
                 {title}
               </p>
             </div>

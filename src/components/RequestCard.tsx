@@ -1,12 +1,13 @@
-import svgPathsGrey from "../imports/svg-cne0z3qkwz";
-import svgPathsUpGrey from "../imports/svg-9j3qgonek1";
-import ArrowRightGrey159 from "../imports/ArrowRight-159-390";
-import ArrowLeftGrey159 from "../imports/ArrowLeft-159-371";
 import { useState, useEffect } from "react";
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
+import svgPathsRight from "../imports/svg-gc1pv1i3ew";
+import svgPathsLeft from "../imports/svg-k2avt48rcz";
 import { CodeSnippet } from "./CodeSnippet";
 import { Tabs, TabItem } from "./Tabs";
 import { Button } from "./Button";
+import { Tag } from "./Tag";
+import { List, ListItem } from "./List";
+import Network from "../imports/Network";
 
 // TypeScript type for card data structure
 export interface CardData {
@@ -15,7 +16,14 @@ export interface CardData {
   badge: string;
   description: string;
   icon?: string; // Optional icon for side cards
+  tags?: Array<{ label: string; color?: string }>; // Optional tags
+  list?: {
+    type?: "ordered" | "unordered";
+    items: ListItem[];
+    nestedType?: "alpha" | "bullet";
+  }; // Optional list
   sideCardRef?: string; // Reference to shared side cards
+  sideCardSpanEnd?: string; // ID of the card where shared cards span should end
   button?: {
     label: string;
     url: string;
@@ -35,6 +43,13 @@ export interface CardData {
       title: string;
       badge: string;
       description?: string;
+      icon?: string; // Add icon support for section items
+      tags?: Array<{ label: string; color?: string }>; // Optional tags for section items
+      list?: {
+        type?: "ordered" | "unordered";
+        items: ListItem[];
+        nestedType?: "alpha" | "bullet";
+      }; // Optional list for section items
       button?: {
         label: string;
         url: string;
@@ -53,6 +68,7 @@ export interface CardData {
   arrows: Array<{
     direction: "down" | "left" | "right" | "up";
     targetCardId: string;
+    rowIndex?: number; // Optional: for right arrows, specifies vertical alignment (0 = top, 1 = middle, etc.)
   }>;
 }
 
@@ -181,7 +197,7 @@ function ArrowDownGrey() {
               width="24"
             />
             <path
-              d={svgPathsGrey.p2324eb80}
+              d={svgPathsRight.p2324eb80}
               fill="var(--fill-0, #525252)"
               id="Vector"
             />
@@ -220,7 +236,7 @@ function ArrowUpGrey() {
               width="16"
             />
             <path
-              d={svgPathsUpGrey.p14ab8500}
+              d={svgPathsLeft.p14ab8500}
               fill="var(--fill-0, #525252)"
               id="Vector"
             />
@@ -233,16 +249,72 @@ function ArrowUpGrey() {
 
 function ArrowRightGrey() {
   return (
-    <div className="relative shrink-0 size-[24px]">
-      <ArrowRightGrey159 />
+    <div className="relative shrink-0 size-[24px]" data-name="Arrow--right">
+      <div
+        className="absolute inset-0"
+        style={
+          {
+            "--fill-0": "rgba(82, 82, 82, 1)",
+          } as React.CSSProperties
+        }
+      >
+        <svg
+          className="block size-full"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 16 16"
+        >
+          <g id="Arrow--right">
+            <rect
+              fill="white"
+              fillOpacity="0.01"
+              height="16"
+              width="16"
+            />
+            <path
+              d={svgPathsRight.pfec3600}
+              fill="var(--fill-0, #525252)"
+              id="Vector"
+            />
+          </g>
+        </svg>
+      </div>
     </div>
   );
 }
 
 function ArrowLeftGrey() {
   return (
-    <div className="relative shrink-0 size-[24px]">
-      <ArrowLeftGrey159 />
+    <div className="relative shrink-0 size-[24px]" data-name="Arrow--left">
+      <div
+        className="absolute inset-0"
+        style={
+          {
+            "--fill-0": "rgba(82, 82, 82, 1)",
+          } as React.CSSProperties
+        }
+      >
+        <svg
+          className="block size-full"
+          fill="none"
+          preserveAspectRatio="none"
+          viewBox="0 0 16 16"
+        >
+          <g id="Arrow--left">
+            <rect
+              fill="white"
+              fillOpacity="0.01"
+              height="16"
+              width="16"
+            />
+            <path
+              d={svgPathsLeft.p3efc6f00}
+              fill="var(--fill-0, #525252)"
+              id="Vector"
+            />
+          </g>
+        </svg>
+      </div>
     </div>
   );
 }
@@ -280,6 +352,9 @@ function SectionCard({
   title,
   badge,
   description,
+  icon,
+  tags,
+  list,
   button,
   nestedcards,
   tabs,
@@ -289,6 +364,13 @@ function SectionCard({
   title: string;
   badge: string;
   description?: string;
+  icon?: string;
+  tags?: Array<{ label: string; color?: string }>;
+  list?: {
+    type?: "ordered" | "unordered";
+    items: ListItem[];
+    nestedType?: "alpha" | "bullet";
+  };
   button?: {
     label: string;
     url: string;
@@ -315,7 +397,15 @@ function SectionCard({
   return (
     <div className="bg-white box-border content-stretch flex flex-col gap-[12px] items-stretch p-4 md:p-[16px] rounded-[8px] transition-shadow hover:shadow-md border border-[#ededed] w-full min-w-0 h-full">
       <div className="content-stretch flex gap-[10px] items-center relative shrink-0 w-full">
-        <SectionNumberBadge number={badge} color={color} />
+        {icon ? (
+          <Network
+            icon={icon as any}
+            iconColor={color}
+            className="!size-[24px] !m-0"
+          />
+        ) : (
+          <SectionNumberBadge number={badge} color={color} />
+        )}
         <div className="flex-1 flex flex-col font-['IBM_Plex_Sans:Medium',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#161616] text-[14px] md:text-[16px]">
           <p className="leading-[normal]">{title}</p>
         </div>
@@ -329,6 +419,22 @@ function SectionCard({
         <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[12px] md:text-[14px] text-neutral-600 w-full">
           {description}
         </p>
+      )}
+
+      {tags && tags.length > 0 && (
+        <div className="flex flex-wrap gap-[4px]">
+          {tags.map((tag, index) => (
+            <Tag key={index} label={tag.label} color={tag.color} />
+          ))}
+        </div>
+      )}
+
+      {list && (
+        <List
+          type={list.type}
+          items={list.items}
+          nestedType={list.nestedType}
+        />
       )}
 
       {hasButton && (
@@ -363,6 +469,13 @@ interface CardProps {
   title: string;
   badge: string;
   description: string;
+  icon?: string; // Add icon support
+  tags?: Array<{ label: string; color?: string }>; // Optional tags
+  list?: {
+    type?: "ordered" | "unordered";
+    items: ListItem[];
+    nestedType?: "alpha" | "bullet";
+  }; // Optional list
   button?: {
     label: string;
     url: string;
@@ -382,6 +495,13 @@ interface CardProps {
       title: string;
       badge: string;
       description?: string;
+      icon?: string; // Add icon support for section items
+      tags?: Array<{ label: string; color?: string }>; // Optional tags for section items
+      list?: {
+        type?: "ordered" | "unordered";
+        items: ListItem[];
+        nestedType?: "alpha" | "bullet";
+      }; // Optional list for section items
       button?: {
         label: string;
         url: string;
@@ -406,6 +526,9 @@ function Card({
   title,
   badge,
   description,
+  icon,
+  tags,
+  list,
   button,
   codeSnippet,
   tabs,
@@ -442,7 +565,15 @@ function Card({
       className={`bg-white box-border content-stretch flex flex-col gap-[16px] items-stretch p-[16px] rounded-[8px] transition-shadow hover:shadow-md ${heightClass} max-w-full ${className}`}
     >
       <div className="content-stretch flex flex-row gap-[8px] items-center relative shrink-0 w-full">
-        <NumberBadge number={badge} color={color} />
+        {icon ? (
+          <Network
+            icon={icon as any}
+            iconColor={color}
+            className="!size-[24px] !m-0"
+          />
+        ) : (
+          <NumberBadge number={badge} color={color} />
+        )}
         <div className="basis-0 flex flex-col font-['IBM_Plex_Sans:Medium',sans-serif] grow justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#161616] text-[20px] md:text-[24px]">
           <p className="leading-[normal] text-[18px] font-['IBM_Plex_Sans:Medium',sans-serif]">
             {title}
@@ -458,6 +589,22 @@ function Card({
         <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[normal] not-italic relative shrink-0 text-[16px] md:text-[16px] text-neutral-600 w-full">
           {description}
         </p>
+      )}
+
+      {tags && tags.length > 0 && (
+        <div className="flex flex-wrap gap-[4px]">
+          {tags.map((tag, index) => (
+            <Tag key={index} label={tag.label} color={tag.color} />
+          ))}
+        </div>
+      )}
+
+      {list && (
+        <List
+          type={list.type}
+          items={list.items}
+          nestedType={list.nestedType}
+        />
       )}
 
       {hasButton && (
@@ -495,6 +642,9 @@ function Card({
               title={section.title}
               badge={section.badge}
               description={section.description}
+              icon={section.icon} // Add icon support for section items
+              tags={section.tags} // Add tags support for section items
+              list={section.list} // Add list support for section items
               button={section.button}
               nestedcards={section.nestedcards}
               tabs={section.tabs}
@@ -549,6 +699,9 @@ function renderTabContent(content: TabItem['content'], color: string): React.Rea
                 title={section.title}
                 badge={section.badge}
                 description={section.description}
+                icon={section.icon} // Add icon support for section items
+                tags={section.tags} // Add tags support for section items
+                list={section.list} // Add list support for section items
                 button={section.button}
                 nestedcards={section.nestedcards}
                 tabs={section.tabs}
@@ -592,7 +745,7 @@ function StaticArrow({
     <div className="content-stretch size-[40px] flex-col flex isolate items-center justify-center overflow-clip shrink-0 bg-transparent">
       <div className="relative shrink-0 w-full">
         <div className="flex flex-row items-center overflow-clip size-full">
-          <div className="box-border content-stretch flex isolate items-center justify-center relative w-full p-[8px] px-[0px] py-[8px]">
+          <div className="box-border content-stretch flex isolate items-center justify-center relative w-full">
             <div className="flex items-center justify-center shrink-0">
               <ArrowComponent />
             </div>
@@ -644,12 +797,9 @@ function CardWithArrows({
   let shouldSpanVertically = false;
 
   if (hasSharedSideCards) {
-    // Find the down arrow from this card to determine span end
-    const downArrow = card.arrows.find(
-      (a) => a.direction === "down",
-    );
-    if (downArrow) {
-      spanToCardId = downArrow.targetCardId;
+    // Use the explicit sideCardSpanEnd property if available
+    if (card.sideCardSpanEnd) {
+      spanToCardId = card.sideCardSpanEnd;
       shouldSpanVertically = true;
     }
   }
@@ -766,6 +916,7 @@ function CardWithArrows({
               title={targetCard.title}
               badge={targetCard.badge}
               description={targetCard.description}
+              icon={targetCard.icon}
               codeSnippet={targetCard.codeSnippet}
               tabs={targetCard.tabs}
               nestedcards={targetCard.nestedcards}
@@ -795,6 +946,7 @@ function CardWithArrows({
           title={card.title}
           badge={card.badge}
           description={card.description}
+          icon={card.icon}
           codeSnippet={card.codeSnippet}
           tabs={card.tabs}
           nestedcards={card.nestedcards}
@@ -858,6 +1010,7 @@ function CardWithArrows({
                 title={targetCard.title}
                 badge={targetCard.badge}
                 description={targetCard.description}
+                icon={targetCard.icon}
                 codeSnippet={targetCard.codeSnippet}
                 tabs={targetCard.tabs}
                 nestedcards={targetCard.nestedcards}
@@ -906,18 +1059,36 @@ function CardWithArrows({
               {renderHorizontalRow()}
             </div>
 
-            {/* Row 1, Col 2: Right arrow */}
-            <div
-              className="flex flex-col items-center justify-center gap-0"
-              style={{ gridRow: "1", gridColumn: "2" }}
-            >
-              <div className="flex items-center justify-center">
-                <StaticArrow direction="right" />
-              </div>
-              <div className="flex items-center justify-center">
-                <StaticArrow direction="right" />
-              </div>
-            </div>
+            {/* Row 1, Col 2: Right arrows - auto-generated for spanning layout */}
+            {(() => {
+              // Get the span end card to check if it exists
+              const spanEndCard = spanToCardId ? cardsById.get(spanToCardId) : null;
+              
+              // Get shared cards count to determine arrow positions
+              const sharedCardsGroup = card.sideCardRef && sharedSideCards[card.sideCardRef] ? sharedSideCards[card.sideCardRef] : [];
+              const hasSharedCards = sharedCardsGroup.length > 0;
+              
+              // If we have both the first card (current card) and span end card, render arrows
+              if (hasSharedCards) {
+                return (
+                  <div
+                    className="flex flex-col items-center justify-between"
+                    style={{ gridRow: "1", gridColumn: "2" }}
+                  >
+                    {/* Arrow from first card - positioned at bottom with 8px gap */}
+                    <div className="flex items-center justify-center mt-[8px]">
+                      <StaticArrow direction="right" />
+                    </div>
+                    {/* Arrow from span end card - positioned at bottom with 8px gap */}
+                    <div className="flex items-center justify-center mb-[8px]">
+                      <StaticArrow direction="right" />
+                    </div>
+                  </div>
+                );
+              }
+              
+              return <div style={{ gridRow: "1", gridColumn: "2" }} />;
+            })()}
 
             {/* Row 1-3, Col 3: Right column spanning all rows */}
             <div
@@ -989,7 +1160,10 @@ function CardWithArrows({
                   }
                 }
 
-                // Render right cards with natural height (hug content)
+                // Check if there are shared side cards below these cards
+                const hasSharedCardsBelow = card.sideCardRef && sharedSideCards[card.sideCardRef] && sharedSideCards[card.sideCardRef].length > 0;
+
+                // Render right cards with natural height (hug content) if shared cards exist below
                 return (
                   <>
                     {rightElements.map((targetCard) => (
@@ -998,12 +1172,13 @@ function CardWithArrows({
                         title={targetCard.title}
                         badge={targetCard.badge}
                         description={targetCard.description}
+                        icon={targetCard.icon}
                         codeSnippet={targetCard.codeSnippet}
                         tabs={targetCard.tabs}
                         nestedcards={targetCard.nestedcards}
                         sections={targetCard.sections}
                         color={color}
-                        hugHeight={true}
+                        hugHeight={hasSharedCardsBelow}
                       />
                     ))}
 
@@ -1029,6 +1204,7 @@ function CardWithArrows({
                             title={sharedCard.title}
                             badge={sharedCard.badge}
                             description={sharedCard.description}
+                            icon={sharedCard.icon}
                             color={color}
                           />
                         </div>
@@ -1060,6 +1236,7 @@ function CardWithArrows({
                     title={targetCard.title}
                     badge={targetCard.badge}
                     description={targetCard.description}
+                    icon={targetCard.icon}
                     codeSnippet={targetCard.codeSnippet}
                     tabs={targetCard.tabs}
                     nestedcards={targetCard.nestedcards}
@@ -1094,14 +1271,34 @@ function CardWithArrows({
               );
               if (!nextCard) return null;
 
+              // Card3 is in a spanning grid layout, so it only uses 50% width (column 1 of the 3-column grid)
+              // Therefore, the down arrow from card3 should always align with the narrower card3 width
+              const card3IsHalfWidth = true; // Card3 is in column 1 of the grid
+
+              // Check if next card (below) has right arrows
+              const nextCardHasRightArrows = nextCard.arrows.some((a) => a.direction === "right");
+
+              // Use narrower width if card3 is half-width OR if next card uses two-column layout
+              const useNarrowWidth = card3IsHalfWidth || nextCardHasRightArrows;
+
               return (
                 <div
                   key={`card3-down-${index}`}
                   className="flex flex-col w-full"
                 >
-                  <div className="flex justify-center w-full">
-                    <StaticArrow direction="down" />
-                  </div>
+                  {/* Arrow container - adjust width based on adjacent cards */}
+                  {useNarrowWidth ? (
+                    <div className="flex flex-row w-full gap-[40px]">
+                      <div className="flex justify-center w-1/2">
+                        <StaticArrow direction="down" />
+                      </div>
+                      <div className="w-1/2" />
+                    </div>
+                  ) : (
+                    <div className="flex justify-center w-full">
+                      <StaticArrow direction="down" />
+                    </div>
+                  )}
                   <CardWithArrows
                     card={nextCard}
                     cardsById={cardsById}
@@ -1118,81 +1315,114 @@ function CardWithArrows({
         <div className="flex flex-col items-stretch w-full">
           {/* Main row cards */}
           {useTwoColumnLayout ? (
-            /* Two-column layout for cards with right arrows */
-            <div
-              className="grid w-full gap-0"
-              style={{
-                gridTemplateColumns: "1fr 40px 1fr",
-                gridTemplateRows: "auto",
-              }}
-            >
-              {/* Left column: Main card */}
-              <div
-                className="flex flex-row items-stretch w-full"
-                style={{ gridRow: "1", gridColumn: "1" }}
-              >
-                {renderHorizontalRow()}
-              </div>
+            /* Two-column layout for cards with right arrows - supports multiple arrows at different vertical positions */
+            (() => {
+              // Group right arrows by rowIndex
+              const rightArrows = card.arrows.filter((a) => a.direction === "right");
+              
+              // Group arrows by rowIndex (default to sequential if no rowIndex specified)
+              const arrowsByRow = new Map<number, typeof rightArrows>();
+              rightArrows.forEach((arrow, index) => {
+                const rowIdx = arrow.rowIndex !== undefined ? arrow.rowIndex : index;
+                if (!arrowsByRow.has(rowIdx)) {
+                  arrowsByRow.set(rowIdx, []);
+                }
+                arrowsByRow.get(rowIdx)!.push(arrow);
+              });
 
-              {/* Middle column: Right arrow */}
-              <div
-                className="flex items-center justify-center"
-                style={{ gridRow: "1", gridColumn: "2" }}
-              >
-                <StaticArrow direction="right" />
-              </div>
+              const numRows = arrowsByRow.size;
+              
+              // Create grid template with rows: card row, gap, arrow row, gap, arrow row, ...
+              const gridRows: string[] = [];
+              const rowIndices = Array.from(arrowsByRow.keys()).sort((a, b) => a - b);
+              
+              rowIndices.forEach((_, index) => {
+                gridRows.push("auto"); // Card row
+                if (index < rowIndices.length - 1) {
+                  gridRows.push("40px"); // Gap between rows
+                }
+              });
 
-              {/* Right column: Right arrow cards stacked vertically with 4px gaps */}
-              <div
-                className="flex flex-row items-stretch gap-[4px]"
-                style={{ gridRow: "1", gridColumn: "3" }}
-              >
-                {(() => {
-                  const rightElements: CardData[] = [];
+              return (
+                <div
+                  className="grid w-full gap-0"
+                  style={{
+                    gridTemplateColumns: "1fr 40px 1fr",
+                    gridTemplateRows: gridRows.join(" "),
+                  }}
+                >
+                  {/* Left column: Main card (spanning all rows) */}
+                  <div
+                    className="flex flex-row items-stretch w-full"
+                    style={{ gridRow: `1 / ${gridRows.length + 1}`, gridColumn: "1" }}
+                  >
+                    {renderHorizontalRow()}
+                  </div>
 
-                  const processRightChain = (
-                    sourceCard: CardData,
-                    depth: number = 0,
-                  ) => {
-                    const cardRightArrows =
-                      sourceCard.arrows.filter(
-                        (a) => a.direction === "right",
-                      );
+                  {/* Render each arrow row */}
+                  {rowIndices.map((rowIdx, arrayIdx) => {
+                    const arrows = arrowsByRow.get(rowIdx)!;
+                    const gridRowNum = arrayIdx * 2 + 1; // 1, 3, 5, ... (skipping gap rows)
 
-                    cardRightArrows.forEach((arrow) => {
-                      const targetCard = cardsById.get(
-                        arrow.targetCardId,
-                      );
-                      if (!targetCard) return;
-
-                      rightElements.push(targetCard);
-                      processRightChain(targetCard, depth + 1);
+                    // Get all target cards for this row and process chained arrows
+                    const allCardsInRow: CardData[] = [];
+                    arrows.forEach((arrow) => {
+                      const targetCard = cardsById.get(arrow.targetCardId);
+                      if (targetCard) {
+                        allCardsInRow.push(targetCard);
+                        
+                        // Recursively collect chained right arrows
+                        const processChain = (card: CardData) => {
+                          const rightArrows = card.arrows.filter((a) => a.direction === "right");
+                          rightArrows.forEach((rightArrow) => {
+                            const chainedCard = cardsById.get(rightArrow.targetCardId);
+                            if (chainedCard) {
+                              allCardsInRow.push(chainedCard);
+                              processChain(chainedCard);
+                            }
+                          });
+                        };
+                        processChain(targetCard);
+                      }
                     });
-                  };
 
-                  processRightChain(card, 0);
+                    return (
+                      <div key={`row-${rowIdx}`} className="contents">
+                        {/* Middle column: Right arrow */}
+                        <div
+                          className="flex items-center justify-center"
+                          style={{ gridRow: `${gridRowNum}`, gridColumn: "2" }}
+                        >
+                          <StaticArrow direction="right" />
+                        </div>
 
-                  if (rightElements.length === 0) return null;
-
-                  // Render right cards stacked vertically with 4px gaps
-                  return rightElements.map((targetCard) => (
-                    <div key={targetCard.id} className="flex-1">
-                      <Card
-                        key={targetCard.id}
-                        title={targetCard.title}
-                        badge={targetCard.badge}
-                        description={targetCard.description}
-                        codeSnippet={targetCard.codeSnippet}
-                        tabs={targetCard.tabs}
-                        nestedcards={targetCard.nestedcards}
-                        sections={targetCard.sections}
-                        color={color}
-                      />
-                    </div>
-                  ));
-                })()}
-              </div>
-            </div>
+                        {/* Right column: All cards in this row (including chained) */}
+                        <div
+                          className="flex flex-row items-stretch gap-[4px]"
+                          style={{ gridRow: `${gridRowNum}`, gridColumn: "3" }}
+                        >
+                          {allCardsInRow.map((targetCard) => (
+                            <div key={targetCard.id} className="flex-1">
+                              <Card
+                                title={targetCard.title}
+                                badge={targetCard.badge}
+                                description={targetCard.description}
+                                icon={targetCard.icon}
+                                codeSnippet={targetCard.codeSnippet}
+                                tabs={targetCard.tabs}
+                                nestedcards={targetCard.nestedcards}
+                                sections={targetCard.sections}
+                                color={color}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()
           ) : (
             /* Standard full-width layout for cards without right arrows */
             <div className="flex flex-row items-stretch w-full h-full">
@@ -1244,23 +1474,34 @@ function CardWithArrows({
             countTargetRightCards(targetCard);
         }
 
-        // Simple logic: when going from fewer cards to more cards, split 50/50
-        // When going from more to fewer (or equal), arrow takes full width
-        const currentRowCards = totalCardsInRow;
-        const targetRowCards = targetRowCardCount;
+        // Check if source card (the card above the arrow) has right arrows (uses two-column layout)
+        const sourceCard = cardsById.get(item.sourceCardId);
+        const sourceHasRightArrows = sourceCard?.arrows.some((a) => a.direction === "right") || false;
 
-        // Remove fixed 50% positioning - arrows will align naturally with card flow
-        const needsSpacer = false;
+        // Check if target card (the card below the arrow) has right arrows (uses two-column layout)
+        const targetHasRightArrows = targetCard?.arrows.some((a) => a.direction === "right") || false;
+
+        // Use narrower width if either card above or below uses two-column layout
+        const useNarrowWidth = sourceHasRightArrows || targetHasRightArrows;
 
         return (
           <div
             key={`down-${item.sourceCardId}-${index}`}
             className="flex flex-col w-full"
           >
-            {/* Arrow container - full width, natural alignment */}
-            <div className="flex justify-center w-full">
-              <StaticArrow direction="down" />
-            </div>
+            {/* Arrow container - adjust width based on adjacent cards */}
+            {useNarrowWidth ? (
+              <div className="flex flex-row w-full gap-[40px]">
+                <div className="flex justify-center w-1/2">
+                  <StaticArrow direction="down" />
+                </div>
+                <div className="w-1/2" />
+              </div>
+            ) : (
+              <div className="flex justify-center w-full">
+                <StaticArrow direction="down" />
+              </div>
+            )}
 
             {targetCard && (
               <CardWithArrows

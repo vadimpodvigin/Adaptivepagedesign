@@ -1,4 +1,5 @@
 import svgPaths from "../imports/svg-ju1waauq4r";
+import copyIconPaths from "../imports/svg-tv6jofgkbo";
 import { useState } from "react";
 
 interface CodeSnippetProps {
@@ -36,8 +37,27 @@ function ChevronDown() {
   );
 }
 
+function CopyIcon() {
+  return (
+    <div className="relative shrink-0 size-[16px]" data-name="Copy">
+      <div className="absolute inset-0" style={{ "--fill-0": "rgba(255, 255, 255, 1)" } as React.CSSProperties}>
+        <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+          <g id="Copy">
+            <rect fill="white" fillOpacity="0.01" height="16" style={{ mixBlendMode: "multiply" }} width="16" />
+            <g id="Vector">
+              <path d={copyIconPaths.p35c00080} fill="#161616" />
+              <path d={copyIconPaths.p2aaf9200} fill="#161616" />
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export function CodeSnippet({ code, caption }: CodeSnippetProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showCopyTooltip, setShowCopyTooltip] = useState(false);
 
   const codeLines = code.split('\n');
   const shouldCollapse = codeLines.length > 15;
@@ -45,6 +65,16 @@ export function CodeSnippet({ code, caption }: CodeSnippetProps) {
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setShowCopyTooltip(true);
+      setTimeout(() => setShowCopyTooltip(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
   };
 
   return (
@@ -110,6 +140,26 @@ export function CodeSnippet({ code, caption }: CodeSnippetProps) {
                   </button>
                 </div>
               )}
+            </div>
+
+            {/* Copy Button */}
+            <div className="absolute right-[8px] top-[8px] z-[5] pointer-events-auto" data-name="Copy button">
+              <div className="relative">
+                <button
+                  onClick={handleCopy}
+                  className="bg-[#f4f4f4] content-stretch flex flex-col items-start overflow-clip relative shrink-0 hover:bg-[#e8e8e8] transition-colors cursor-pointer p-[8px]"
+                  data-name="Button"
+                  aria-label="Copy code"
+                >
+                  <CopyIcon />
+                </button>
+                {showCopyTooltip && (
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-[#161616] text-white text-[12px] rounded whitespace-nowrap pointer-events-none z-50">
+                    Copied!
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-[#161616]" />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

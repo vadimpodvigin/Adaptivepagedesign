@@ -1,9 +1,9 @@
 @custom-variant dark (&:is(.dark *));
 
-@import 'carbon-components/css/carbon-components.min.css';
+/* @import 'carbon-components/css/carbon-components.min.css'; */
 
 /* Custom font loading for IBM Plex Sans and IBM Plex Mono to override Carbon defaults */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap");
 
 /* Force IBM Plex Mono to use correct font weights */
 * {
@@ -14,7 +14,13 @@
 /* Override Carbon's IBM Plex Mono font-weight defaults */
 body,
 html {
-  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    "IBM Plex Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
 }
 
 /* Ensure IBM Plex Mono elements use the correct weight */
@@ -22,7 +28,8 @@ code,
 pre,
 .mono,
 [style*="IBM Plex Mono"] {
-  font-family: 'IBM Plex Mono', 'Courier New', monospace !important;
+  font-family:
+    "IBM Plex Mono", "Courier New", monospace !important;
 }
 
 :root {
@@ -137,9 +144,13 @@ pre,
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary-foreground: var(
+    --sidebar-primary-foreground
+  );
   --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent-foreground: var(
+    --sidebar-accent-foreground
+  );
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
@@ -158,7 +169,9 @@ pre,
  * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
  */
 @layer base {
-  :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) {
+  :where(
+    :not(:has([class*=" text-"]), :not(:has([class^="text-"])))
+  ) {
     h1 {
       font-size: var(--text-2xl);
       font-weight: var(--font-weight-medium);

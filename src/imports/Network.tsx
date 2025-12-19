@@ -1,13 +1,24 @@
 import svgPaths from "./svg-k16lngyc97";
 import svgPathsIcons from "./svg-7hyl6ocycq";
+import { Settings, Database, Wallet } from "lucide-react";
 
 interface NetworkProps {
-  icon?: 'piggy-bank' | 'fragments' | 'finance' | 'money' | 'book' | 'application-mobile' | 'user-profile';
+  icon?: 'piggy-bank' | 'fragments' | 'finance' | 'money' | 'book' | 'application-mobile' | 'user-profile' | 'settings' | 'database' | 'wallet';
   iconColor?: string;
   className?: string;
 }
 
 export default function Network({ icon = 'fragments', iconColor = '#7A23D9', className }: NetworkProps) {
+  // If it's a lucide-react icon, render it directly
+  if (icon === 'settings' || icon === 'database' || icon === 'wallet') {
+    const IconComponent = icon === 'settings' ? Settings : icon === 'database' ? Database : Wallet;
+    return (
+      <div className={`relative size-[32px] mt-[0px] mr-[8px] mb-[0px] ml-[0px] ${className || ''}`} data-name="Network">
+        <IconComponent size={24} color={iconColor} className="size-full" />
+      </div>
+    );
+  }
+
   const renderIcon = () => {
     switch (icon) {
       case 'piggy-bank':

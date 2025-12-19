@@ -41,8 +41,8 @@ export default function App() {
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/accountCreationVer2.json",
     "New Core Banking Space Activation":
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/BankSetupVer2.json",
-    "Example Workflow":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/example.json",
+    // "Example Workflow":
+    //   "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/example.json",
     "Card Transaction":
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/CardTransaction.yaml",
     "Direct Account":
@@ -155,6 +155,7 @@ export default function App() {
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         isMenuOpen={sidebarOpen}
         onLogoClick={() => handleWorkflowClick("__HOME__")}
+        themeColor={currentColor}
       />
       <Sidebar
         currentWorkflow={currentWorkflow}
@@ -163,7 +164,7 @@ export default function App() {
         onClose={() => setSidebarOpen(false)}
         workflows={allWorkflows}
       />
-      <div className="pt-[61px] flex-grow">
+      <div className="py-[61px] flex-grow">
         {!currentWorkflow ? (
           <WorkflowsLanding
             onWorkflowClick={handleWorkflowClick}

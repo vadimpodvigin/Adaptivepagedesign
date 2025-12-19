@@ -117,18 +117,19 @@ function MenuTrigger({ onClick, isOpen }: { onClick?: () => void; isOpen?: boole
   );
 }
 
-export function Header({ onMenuClick, isMenuOpen, onLogoClick }: { onMenuClick?: () => void; isMenuOpen?: boolean; onLogoClick?: () => void }) {
+export function Header({ onMenuClick, isMenuOpen, onLogoClick, themeColor = "#7a23d9" }: { onMenuClick?: () => void; isMenuOpen?: boolean; onLogoClick?: () => void; themeColor?: string }) {
   return (
     <div className="w-full bg-white fixed top-0 left-0 right-0 z-20 border-[#ededed] border-[0px_0px_1px] border-solid h-[60px]">
       <div className="relative size-full">
         <MenuTrigger onClick={onMenuClick} isOpen={isMenuOpen} />
         
+        {/* Logo on the left */}
         <div 
-          className="absolute flex flex-col font-['IBM_Plex_Mono:SemiBold',sans-serif] justify-center leading-[0] left-[68px] not-italic text-[#161616] text-[24px] text-nowrap top-[30px] translate-y-[-50%] cursor-pointer hover:opacity-80 transition-opacity"
+          className="absolute left-[60px] top-1/2 -translate-y-1/2 flex items-center cursor-pointer"
           onClick={onLogoClick}
         >
-          <p className="font-['IBM_Plex_Mono:Medium',sans-serif] leading-[normal] font-[IBM_Plex_Mono] font-medium text-[16px]">
-            CoreIgnite/<span className="text-[#7a23d9]">Docs</span>
+          <p className="font-['IBM_Plex_Sans:Regular',sans-serif] text-[14px] text-[#161616] font-[IBM_Plex_Mono] font-bold">
+            CoreIgnite/<span style={{ color: themeColor }}>Docs</span>
           </p>
         </div>
         

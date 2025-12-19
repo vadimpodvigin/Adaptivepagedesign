@@ -61,15 +61,15 @@ export function Button({
   return (
     <button
       onClick={handleClick}
-      className="content-stretch flex flex-col items-start overflow-clip relative shrink-0 cursor-pointer hover:opacity-90 transition-opacity"
+      className="content-stretch flex flex-col items-start overflow-clip relative shrink-0 cursor-pointer hover:opacity-90 transition-opacity w-fit"
       style={{ backgroundColor: color }}
       data-name="Button"
     >
-      <div className="relative shrink-0 w-full" data-name="Button content">
-        <div className="flex flex-row items-center overflow-clip rounded-[inherit] size-full">
-          <div className="content-stretch flex isolate items-center pl-[16px] pr-[64px] py-[11px] relative w-full">
+      <div className="relative shrink-0" data-name="Button content">
+        <div className="flex flex-row items-center overflow-clip rounded-[inherit] h-full">
+          <div className="content-stretch flex isolate items-center gap-6 px-[16px] py-[11px] relative">
             <p
-              className="font-['IBM_Plex_Sans:SemiBold',sans-serif] not-italic relative shrink-0 text-nowrap text-white tracking-[0.16px] z-[2]"
+              className="font-['IBM_Plex_Sans:SemiBold',sans-serif] not-italic relative shrink-0 text-nowrap text-white tracking-[0.16px]"
               style={{
                 fontSize: `${fontSize}px`,
                 lineHeight: `${lineHeight}px`,
@@ -78,7 +78,7 @@ export function Button({
               {label}
             </p>
             <div
-              className="absolute content-stretch flex flex-col items-start overflow-clip right-[16px] top-1/2 translate-y-[-50%] z-[1]"
+              className="content-stretch flex flex-col items-start overflow-clip shrink-0"
               data-name="Icon"
             >
               <AddIcon />

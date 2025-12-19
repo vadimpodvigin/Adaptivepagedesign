@@ -117,7 +117,7 @@ export function CodeSnippet({ code, caption }: CodeSnippetProps) {
 
       {/* Caption */}
       {caption && (
-        <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[normal] not-italic text-[14px] text-[#525252] w-full">
+        <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[normal] not-italic text-[12px] text-[#525252] w-full">
           {caption}
         </p>
       )}

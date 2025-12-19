@@ -4,18 +4,17 @@ workflow:
   category: "CoreFlow"
   icon: "money"
 
-# Define shared side cards that can be referenced by multiple main cards
 sharedSideCards:
   coreBankGroup:
-    - id: "side-core-bank"
+    - id: "card31"
       title: "Core Bank Plugin (Hogan)"
       badge: ""
       description: "Pellentesque sit amet nunc sodales, condimentum metus ac, porttitor libero. Sed feugiat suscipit enim ut sollicitudin."
       icon: "settings"
       arrows:
         - direction: "down"
-          targetCardId: "side-core-dda"
-    - id: "side-core-dda"
+          targetCardId: "card32"
+    - id: "card32"
       title: "CORE: DDA"
       badge: ""
       description: ""
@@ -38,24 +37,23 @@ cards:
     sideCardRef: "coreBankGroup"
     arrows:
       - direction: "right"
-        targetCardId: "side-oms-funds"
+        targetCardId: "card21"
       - direction: "down"
         targetCardId: "card3"
 
-  - id: "side-oms-funds"
+  - id: "card21"
     title: "OMS Funds"
     badge: ""
     description: ""
     icon: "wallet"
     arrows:
       - direction: "down"
-        targetCardId: "side-core-bank"
+        targetCardId: "card31"
 
   - id: "card3"
     title: "Validate & Reserve Funds"
     badge: "3"
     description: "Fusce euis oci nunc. Aenean dui libero, pharetra nec rutrum vitae, rutrum eu felis. In dictum posuere nisl eu consectetur. Sed cursus condimentum ante, eget tempor nisl blandit quis. Ut pretium risus et nibero ultrices, a congue felis aliquet. Donec nec aliquet dolor, non volutpat odio. Proin et diam mattis enim rutrum mattis vitae eu libero. Donec quis erat dignissim, semper sem euis, malesuada nulla."
-    # Removed sideCardRef - the shared cards from card2 will span down to this row
     arrows:
       - direction: "down"
         targetCardId: "card4"
@@ -74,20 +72,20 @@ cards:
     description: "Vestibulum non elit eget odio bibendum maximus. Donec volutpat nulla ante, et volutpat enim pulvinar molestie. Nullam eae neque vitae dui pretium lacinia. Aliquam euismod eros ut massa mattis bibendum. In nec pulvinar tellus."
     arrows:
       - direction: "right"
-        targetCardId: "side-digital-asset"
+        targetCardId: "card51"
       - direction: "down"
         targetCardId: "card6"
 
-  - id: "side-digital-asset"
+  - id: "card51"
     title: "Digital Asset Plugin (example: Ripple)"
     badge: ""
     description: "Pellentesque sit amet nunc sodales, condimentum metus ac, porttitor libero."
     icon: "application-mobile"
     arrows:
       - direction: "right"
-        targetCardId: "side-mint"
+        targetCardId: "card52"
 
-  - id: "side-mint"
+  - id: "card52"
     title: "Mint"
     badge: ""
     description: ""
@@ -100,11 +98,11 @@ cards:
     description: "Donec nec aliquet dolor, non sodales odio. Proin et diam mattis enim rutrum mattis vitae eu libero. Donec quis erat dignissim, semper sem euis, malesuada nulla."
     arrows:
       - direction: "right"
-        targetCardId: "side-shadow-ledger"
+        targetCardId: "card61"
       - direction: "down"
         targetCardId: "card7"
 
-  - id: "side-shadow-ledger"
+  - id: "card61"
     title: "Shadow Ledger"
     badge: ""
     description: ""
@@ -124,9 +122,9 @@ cards:
     description: "Mauris laoreet ligula sem, vel faucibus ipsum mollis esit. Duis nisl massa, malesuada at lectus at, ullamcorper."
     arrows:
       - direction: "right"
-        targetCardId: "side-financial-institution"
+        targetCardId: "card71"
 
-  - id: "side-financial-institution"
+  - id: "card71"
     title: "Financial Institution (Wealth management) (Bank's App)"
     badge: ""
     description: ""

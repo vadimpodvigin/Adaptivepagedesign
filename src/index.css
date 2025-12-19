@@ -637,6 +637,14 @@
     display: flex;
   }
 
+  .grid {
+    display: grid;
+  }
+
+  .inline {
+    display: inline;
+  }
+
   .size-\[16px\] {
     width: 16px;
     height: 16px;
@@ -681,12 +689,12 @@
     height: calc(var(--spacing) * 4);
   }
 
-  .h-\[18px\] {
-    height: 18px;
-  }
-
   .h-\[32px\] {
     height: 32px;
+  }
+
+  .h-\[40px\] {
+    height: 40px;
   }
 
   .h-\[48px\] {
@@ -894,8 +902,16 @@
     justify-content: flex-end;
   }
 
+  .gap-0 {
+    gap: calc(var(--spacing) * 0);
+  }
+
   .gap-1 {
     gap: calc(var(--spacing) * 1);
+  }
+
+  .gap-2 {
+    gap: calc(var(--spacing) * 2);
   }
 
   .gap-4 {
@@ -1110,6 +1126,10 @@
     padding: 16px;
   }
 
+  .p-\[24px\] {
+    padding: 24px;
+  }
+
   .px-0 {
     padding-inline: calc(var(--spacing) * 0);
   }
@@ -1162,6 +1182,10 @@
     padding-block: 2px;
   }
 
+  .py-\[8px\] {
+    padding-block: 8px;
+  }
+
   .py-\[11px\] {
     padding-block: 11px;
   }
@@ -1196,6 +1220,10 @@
 
   .pr-\[16px\] {
     padding-right: 16px;
+  }
+
+  .pr-\[64px\] {
+    padding-right: 64px;
   }
 
   .pb-\[0px\] {
@@ -1266,6 +1294,10 @@
   .text-sm {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+
+  .text-\[10px\] {
+    font-size: 10px;
   }
 
   .text-\[12px\] {
@@ -1358,10 +1390,6 @@
 
   .text-\[\#525252\] {
     color: #525252;
-  }
-
-  .text-black {
-    color: var(--color-black);
   }
 
   .text-neutral-600 {
@@ -1458,6 +1486,12 @@
   }
 
   @media (hover: hover) {
+    .hover\:opacity-90:hover {
+      opacity: .9;
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:shadow-lg:hover {
       --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -1484,6 +1518,12 @@
   }
 
   @media (width >= 48rem) {
+    .md\:text-\[12px\] {
+      font-size: 12px;
+    }
+  }
+
+  @media (width >= 48rem) {
     .md\:text-\[14px\] {
       font-size: 14px;
     }
@@ -1496,32 +1536,8 @@
   }
 
   @media (width >= 48rem) {
-    .md\:text-\[18px\] {
-      font-size: 18px;
-    }
-  }
-
-  @media (width >= 48rem) {
     .md\:text-\[24px\] {
       font-size: 24px;
-    }
-  }
-
-  @media (width >= 64rem) {
-    .lg\:w-1\/2 {
-      width: 50%;
-    }
-  }
-
-  @media (width >= 64rem) {
-    .lg\:flex-none {
-      flex: none;
-    }
-  }
-
-  @media (width >= 64rem) {
-    .lg\:flex-row {
-      flex-direction: row;
     }
   }
 }

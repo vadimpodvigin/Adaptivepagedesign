@@ -1,8 +1,24 @@
 workflow:
   title: "CoreFlow (Mint Digital Asset)"
-  description: "Example workflow with shared side cards that demonstrate how Card 2 and Card 3 can share the same side cards (OMS Funds, Core Bank Plugin, and CORE DDA)."
+  description: "Example workflow with shared side cards that demonstrate how Card 2 and Card 3 can share the same side cards (Core Bank Plugin and CORE DDA)."
   category: "CoreFlow"
   icon: "money"
+
+# Define shared side cards that can be referenced by multiple main cards
+sharedSideCards:
+  coreBankGroup:
+    - id: "side-core-bank"
+      title: "Core Bank Plugin (Hogan)"
+      badge: ""
+      description: "Pellentesque sit amet nunc sodales, condimentum metus ac."
+      arrows:
+        - direction: "down"
+          targetCardId: "side-core-dda"
+    - id: "side-core-dda"
+      title: "CORE: DDA"
+      badge: ""
+      description: ""
+      arrows: []
 
 cards:
   - id: "card1"
@@ -17,6 +33,7 @@ cards:
     title: "Funding Source"
     badge: "2"
     description: "Vivamus arcu nunc, luctus ut lacinia ut, venenatis vitae massa."
+    sideCardRef: "coreBankGroup"
     arrows:
       - direction: "right"
         targetCardId: "side-oms"
@@ -31,24 +48,11 @@ cards:
       - direction: "down"
         targetCardId: "side-core-bank"
 
-  - id: "side-core-bank"
-    title: "Core Bank Plugin (Hogan)"
-    badge: ""
-    description: "Pellentesque sit amet nunc sodales, condimentum metus ac."
-    arrows:
-      - direction: "right"
-        targetCardId: "side-core-dda"
-
-  - id: "side-core-dda"
-    title: "CORE: DDA"
-    badge: ""
-    description: ""
-    arrows: []
-
   - id: "card3"
     title: "Validate & Reserve Funds"
     badge: "3"
     description: "Fusce euis oci nunc. Aenean dui libero, pharetra nec rutrum vitae."
+    # Removed sideCardRef - the shared cards from card2 will span down to this row
     arrows:
       - direction: "down"
         targetCardId: "card4"

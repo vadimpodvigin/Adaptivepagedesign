@@ -1,23 +1,51 @@
 import { useState } from "react";
+import { ListItem } from "./List";
+import { Step, StepDirection } from "./Stepper";
+import { CheckboxItem } from "./Checkbox";
+import { AccordionItem } from "./Accordion";
+import { NotificationProps } from "./Notification";
 
 export interface TabItem {
   label: string;
   content: {
     description?: string;
-    button?: {
+    buttons?: Array<{
       label: string;
       url: string;
-    };
+      type?: 'primary' | 'tertiary';
+    }>;
     sections?: {
       direction: "col" | "row";
       items: Array<{
         title: string;
         badge: string;
         description?: string;
-        button?: {
+        icon?: string;
+        tags?: Array<{ label: string; color?: string }>;
+        list?: {
+          type?: "ordered" | "unordered";
+          items: ListItem[];
+          nestedType?: "alpha" | "bullet";
+        };
+        table?: {
+          headers: string[];
+          rows: string[][];
+        };
+        stepper?: {
+          steps: Step[];
+          direction?: StepDirection;
+        };
+        checkboxGroup?: {
+          title?: string;
+          items: CheckboxItem[];
+        };
+        accordion?: AccordionItem[];
+        notifications?: NotificationProps[];
+        buttons?: Array<{
           label: string;
           url: string;
-        };
+          type?: 'primary' | 'tertiary';
+        }>;
         nestedcards?: Array<{
           title: string;
           subtext?: string;
@@ -88,7 +116,7 @@ export function Tabs({
             <button
               key={index}
               onClick={() => setActiveTab(index)}
-              className="flex-1 content-stretch flex items-center justify-center px-[16px] py-[11px] relative bg-transparent cursor-pointer hover:bg-gray-50 transition-colors"
+              className="flex-1 content-stretch flex items-center justify-center px-[16px] py-[11px] relative bg-transparent cursor-pointer hover:bg-[#f4f4f4] transition-colors"
               data-name="_Horizontal tabs items"
             >
               <div
@@ -106,7 +134,7 @@ export function Tabs({
                 data-name="Text overflow"
               >
                 <p
-                  className={`font-['IBM_Plex_Sans:SemiBold',sans-serif] leading-[18px] not-italic relative shrink-0 text-[12px] tracking-[0.16px] w-full text-center ${
+                  className={`font-['IBM_Plex_Sans',sans-serif] font-medium leading-[18px] not-italic relative shrink-0 text-[14px] tracking-[0.16px] w-full text-center ${
                     isActive
                       ? "text-[#161616]"
                       : "text-[#525252]"
@@ -122,16 +150,9 @@ export function Tabs({
 
       {/* Tab Content */}
       <div
-        className="min-h-[200px] relative shrink-0 w-full p-[24px] gap-2"
+        className="relative shrink-0 w-full gap-2"
         data-name="Tab Content"
-        style={{
-          borderColor: inactiveBorderColor,
-        }}
       >
-        <div
-          aria-hidden="true"
-          className="absolute border border-solid inset-0 pointer-events-none w-full gap-2"
-        />
         {renderContent(tabs[activeTab].content, color)}
       </div>
     </div>

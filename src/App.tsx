@@ -6,6 +6,7 @@ import {
 } from "./components/RequestCard";
 import { WorkflowsLanding } from "./components/WorkflowsLanding";
 import { Footer } from "./components/Footer";
+import { ScrollToTop } from "./components/ScrollToTop";
 import Network from "./imports/Network";
 import { useState, useEffect } from "react";
 import yaml from "js-yaml";
@@ -30,9 +31,8 @@ export default function App() {
 
   // Map workflows to their JSON/YAML URLs
   const workflowJsonUrls: Record<string, string> = {
-    "Digital Assets (FIXED)":
-      "/coreflowDigitalAsset-fixed.yaml",
-    "Test Shared Cards": "/cards-with-shared-sides.yaml",
+    "Test Components": 
+      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/test_components.yaml",
     "Digital Assets":
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/coreflowDigitalAsset.yaml",
     "Stripe Payment":
@@ -41,15 +41,13 @@ export default function App() {
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/accountCreationVer2.json",
     "New Core Banking Space Activation":
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/BankSetupVer2.json",
-    // "Example Workflow":
-    //   "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/example.json",
     "Card Transaction":
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/CardTransaction.yaml",
     "Direct Account":
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/DirectAccount.yaml",
     "Direct Debit":
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/DirectDebit.yaml",
-    BNPL: "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/BNPL.yaml",
+    "BNPL": "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/BNPL.yaml",
   };
 
   // Color mapping function (matching WorkflowsLanding and Sidebar)
@@ -113,11 +111,13 @@ export default function App() {
                 url,
                 name,
               });
+            } else {
+              console.warn(`${name}: Missing workflow key in data structure`);
             }
           } catch (parseError) {
-            console.warn(
+            console.error(
               `Failed to parse ${name}:`,
-              parseError,
+              parseError instanceof Error ? parseError.message : parseError,
             );
             continue;
           }
@@ -164,7 +164,7 @@ export default function App() {
         onClose={() => setSidebarOpen(false)}
         workflows={allWorkflows}
       />
-      <div className="py-[61px] flex-grow">
+      <div className="py-[61px] flex-grow pt-[61px] pr-[0px] pb-[0px] pl-[0px]">
         {!currentWorkflow ? (
           <WorkflowsLanding
             onWorkflowClick={handleWorkflowClick}
@@ -195,6 +195,7 @@ export default function App() {
         )}
       </div>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }

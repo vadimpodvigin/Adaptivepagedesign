@@ -1,14 +1,58 @@
 import svgPaths from "../imports/svg-7hyl6ocycq";
+import * as CarbonIcons from "@carbon/icons-react";
 
 interface WorkflowTileProps {
   title: string;
-  icon: 'piggy-bank' | 'fragments' | 'finance' | 'money' | 'book' | 'application-mobile' | 'user-profile';
+  description?: string;
+  icon: string;
   iconColor?: string;
   onClick?: () => void;
 }
 
-export function WorkflowTile({ title, icon, iconColor = '#7A23D9', onClick }: WorkflowTileProps) {
+export function WorkflowTile({ title, description, icon, iconColor = '#7A23D9', onClick }: WorkflowTileProps) {
+  // Try to get icon from @carbon/icons-react
+  const getCarbonIcon = (iconName: string) => {
+    // Try exact match first (PascalCase)
+    if ((CarbonIcons as any)[iconName]) {
+      return (CarbonIcons as any)[iconName];
+    }
+    
+    // Try with size suffix (Carbon icons come in different sizes, default to 20)
+    const iconName20 = iconName.endsWith('20') ? iconName : `${iconName}20`;
+    if ((CarbonIcons as any)[iconName20]) {
+      return (CarbonIcons as any)[iconName20];
+    }
+    
+    // Convert kebab-case or snake_case to PascalCase
+    const pascalCase = iconName
+      .split(/[-_]/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('');
+    
+    if ((CarbonIcons as any)[pascalCase]) {
+      return (CarbonIcons as any)[pascalCase];
+    }
+    
+    const pascalCase20 = `${pascalCase}20`;
+    if ((CarbonIcons as any)[pascalCase20]) {
+      return (CarbonIcons as any)[pascalCase20];
+    }
+    
+    return null;
+  };
+
   const renderIcon = () => {
+    // Try Carbon icons first
+    const CarbonIcon = getCarbonIcon(icon);
+    if (CarbonIcon) {
+      return (
+        <div className="size-full flex items-center justify-center">
+          <CarbonIcon size={20} fill={iconColor} />
+        </div>
+      );
+    }
+
+    // Fallback to custom SVG icons
     switch (icon) {
       case 'piggy-bank':
         return (
@@ -105,6 +149,16 @@ export function WorkflowTile({ title, icon, iconColor = '#7A23D9', onClick }: Wo
             </g>
           </svg>
         );
+      default:
+        // Default to fragments icon if nothing matches
+        return (
+          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+            <g id="Fragments">
+              <rect fill="white" fillOpacity="0.01" height="20" width="20" />
+              <path d={svgPaths.p4e1fc00} fill={iconColor} id="Vector" />
+            </g>
+          </svg>
+        );
     }
   };
 
@@ -118,10 +172,15 @@ export function WorkflowTile({ title, icon, iconColor = '#7A23D9', onClick }: Wo
       <div className="basis-0 content-stretch flex grow items-start min-h-px min-w-px relative shrink-0 w-full z-[8]">
         <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
           <div className="overflow-clip rounded-[inherit] size-full">
-            <div className="content-stretch flex flex-col items-start pl-[16px] pr-[8px] py-[16px] relative w-full">
-              <p className="font-['IBM_Plex_Sans:Regular',sans-serif] leading-[18px] not-italic relative shrink-0 text-[#161616] text-[14px] tracking-[0.16px] w-full font-[IBM_Plex_Sans] font-bold font-normal">
+            <div className="content-stretch flex flex-col items-start pl-[16px] pr-[8px] py-[16px] relative w-full gap-[4px]">
+              <p className="font-['IBM_Plex_Sans',sans-serif] font-bold leading-[18px] not-italic relative shrink-0 text-[#161616] text-[14px] tracking-[0.16px] w-full">
                 {title}
               </p>
+              {description && (
+                <p className="font-['IBM_Plex_Sans',sans-serif] leading-[16px] not-italic relative text-[#525252] text-[12px] tracking-[0.16px] w-full line-clamp-2">
+                  {description}
+                </p>
+              )}
             </div>
           </div>
         </div>

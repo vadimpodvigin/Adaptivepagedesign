@@ -1,8 +1,10 @@
-import { WorkflowTile } from "./WorkflowTile";
 import { WorkflowMetadata } from "../App";
+import { WorkflowTile } from "./WorkflowTile";
+import { WorkflowTileSkeleton } from "./WorkflowTileSkeleton";
+import { Loading } from "./Loading";
 
 interface WorkflowCategory {
-  name: string;
+  category: string;
   workflows: WorkflowMetadata[];
 }
 
@@ -23,10 +25,10 @@ export function WorkflowsLanding({
   // Group workflows by category
   const categories: WorkflowCategory[] = workflows.reduce((acc, workflow) => {
     const categoryName = workflow.category || "Other";
-    let category = acc.find(cat => cat.name === categoryName);
+    let category = acc.find(cat => cat.category === categoryName);
     
     if (!category) {
-      category = { name: categoryName, workflows: [] };
+      category = { category: categoryName, workflows: [] };
       acc.push(category);
     }
     
@@ -37,17 +39,31 @@ export function WorkflowsLanding({
   if (loading) {
     return (
       <div className="max-w-[1200px] mx-auto px-[32px] py-[24px]">
-        <div className="flex items-center justify-center py-12">
-          <div className="text-neutral-600 font-['IBM_Plex_Sans:Regular',sans-serif]">
-            Loading workflows...
-          </div>
+        <div className="flex flex-col gap-[24px]">
+          {/* Skeleton for categories */}
+          {[1, 2].map((categoryIndex) => (
+            <div
+              key={categoryIndex}
+              className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full"
+            >
+              {/* Category title skeleton */}
+              <div className="h-[18px] w-[150px] bg-gray-200 animate-pulse rounded mb-2" />
+              
+              {/* Workflow tiles skeleton */}
+              <div className="content-start flex flex-wrap gap-[8px] items-start relative shrink-0 w-full">
+                {[1, 2, 3].map((tileIndex) => (
+                  <WorkflowTileSkeleton key={tileIndex} />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto px-[32px] py-[24px]">
+    <div className="max-w-[1200px] mx-auto px-[32px] py-[24px] pt-[24px] pr-[32px] pb-[0px] pl-[32px]">
       <div className="flex flex-col gap-[24px]">
         {categories.map((category, index) => {
           // Assign color based on category index, rotating through the color list
@@ -55,12 +71,12 @@ export function WorkflowsLanding({
           
           return (
             <div
-              key={`${category.name}-${index}`}
+              key={`${category.category}-${index}`}
               className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full"
             >
               <div className="flex flex-col font-['IBM_Plex_Sans:Medium',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#161616] text-[18px] w-full">
-                <p className="leading-[normal]">
-                  {category.name}
+                <p className="leading-[normal] font-[IBM_Plex_Sans] font-bold font-normal">
+                  {category.category}
                 </p>
               </div>
               <div className="content-start flex flex-wrap gap-[8px] items-start relative shrink-0 w-full">
@@ -69,6 +85,7 @@ export function WorkflowsLanding({
                     <WorkflowTile
                       key={`${workflow.name}-${idx}`}
                       title={workflow.title}
+                      description={workflow.description}
                       icon={workflow.icon as any}
                       iconColor={categoryColor}
                       onClick={() => onWorkflowClick(workflow.name)}

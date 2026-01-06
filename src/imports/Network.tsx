@@ -1,24 +1,57 @@
 import svgPaths from "./svg-k16lngyc97";
 import svgPathsIcons from "./svg-7hyl6ocycq";
-import { Settings, Database, Wallet } from "lucide-react";
+import * as CarbonIcons from "@carbon/icons-react";
 
 interface NetworkProps {
-  icon?: 'piggy-bank' | 'fragments' | 'finance' | 'money' | 'book' | 'application-mobile' | 'user-profile' | 'settings' | 'database' | 'wallet';
+  icon?: string;
   iconColor?: string;
   className?: string;
 }
 
 export default function Network({ icon = 'fragments', iconColor = '#7A23D9', className }: NetworkProps) {
-  // If it's a lucide-react icon, render it directly
-  if (icon === 'settings' || icon === 'database' || icon === 'wallet') {
-    const IconComponent = icon === 'settings' ? Settings : icon === 'database' ? Database : Wallet;
+  // Try to get icon from @carbon/icons-react
+  // Carbon icons are in PascalCase, so we need to handle different naming conventions
+  const getCarbonIcon = (iconName: string) => {
+    // Try exact match first (PascalCase)
+    if ((CarbonIcons as any)[iconName]) {
+      return (CarbonIcons as any)[iconName];
+    }
+    
+    // Try with size suffix (Carbon icons come in different sizes, default to 24)
+    const iconName24 = iconName.endsWith('24') ? iconName : `${iconName}24`;
+    if ((CarbonIcons as any)[iconName24]) {
+      return (CarbonIcons as any)[iconName24];
+    }
+    
+    // Convert kebab-case or snake_case to PascalCase
+    const pascalCase = iconName
+      .split(/[-_]/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('');
+    
+    if ((CarbonIcons as any)[pascalCase]) {
+      return (CarbonIcons as any)[pascalCase];
+    }
+    
+    const pascalCase24 = `${pascalCase}24`;
+    if ((CarbonIcons as any)[pascalCase24]) {
+      return (CarbonIcons as any)[pascalCase24];
+    }
+    
+    return null;
+  };
+
+  const CarbonIcon = getCarbonIcon(icon);
+  
+  if (CarbonIcon) {
     return (
       <div className={`relative size-[32px] mt-[0px] mr-[8px] mb-[0px] ml-[0px] ${className || ''}`} data-name="Network">
-        <IconComponent size={24} color={iconColor} className="size-full" />
+        <CarbonIcon size={24} fill={iconColor} className="size-full" />
       </div>
     );
   }
 
+  // Fallback to custom SVG icons
   const renderIcon = () => {
     switch (icon) {
       case 'piggy-bank':
@@ -79,6 +112,9 @@ export default function Network({ icon = 'fragments', iconColor = '#7A23D9', cla
             <path d="M16 17.6C21.3024 17.6 25.6 22.6976 25.6 28" stroke={iconColor} strokeWidth="2.4" strokeLinecap="round" fill="none" />
           </>
         );
+      default:
+        // Default to fragments icon if nothing matches
+        return <path d={svgPathsIcons.p4e1fc00} fill={iconColor} />;
     }
   };
 

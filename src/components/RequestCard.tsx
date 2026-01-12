@@ -889,7 +889,7 @@ function Card({
       )}
 
       {hasButtons && (
-        <div className="flex flex-wrap gap-[8px]">
+        <div className="flex flex-wrap gap-[8px] p-2">
           {buttons.map((btn, index) => (
             <Button
               key={index}
@@ -2158,49 +2158,8 @@ export function RequestCard({
 
   if (loading) {
     return (
-      <div className="pb-[64px]">
-        <div className="max-w-[1200px] mx-auto px-[32px] py-[24px]">
-          {/* Skeleton loading layout */}
-          <div className="flex flex-col gap-[40px]">
-            {/* First row with 3 cards */}
-            <div className="flex gap-[40px] items-stretch">
-              <div className="flex-1">
-                <CardSkeleton
-                  hasDescription={true}
-                  hasContent={true}
-                />
-              </div>
-              <div className="flex-1">
-                <CardSkeleton
-                  hasDescription={true}
-                  hasContent={true}
-                />
-              </div>
-              <div className="flex-1">
-                <CardSkeleton
-                  hasDescription={false}
-                  hasContent={true}
-                />
-              </div>
-            </div>
-
-            {/* Second row with 2 cards */}
-            <div className="flex gap-[40px] items-stretch">
-              <div className="flex-1">
-                <CardSkeleton
-                  hasDescription={true}
-                  hasContent={true}
-                />
-              </div>
-              <div className="flex-1">
-                <CardSkeleton
-                  hasDescription={true}
-                  hasContent={false}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loading size={40} color={themeColor} />
       </div>
     );
   }

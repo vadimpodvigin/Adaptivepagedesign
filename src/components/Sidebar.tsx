@@ -9,6 +9,7 @@ interface MenuItem {
   children?: MenuItem[];
   workflow?: string;
   color?: string;
+  externalUrl?: string; // Add support for external URLs
 }
 
 export interface SidebarProps {
@@ -34,10 +35,15 @@ export function Sidebar({
   const menuItems = useMemo(() => {
     if (!workflows || workflows.length === 0) return [];
 
+    // Filter out the "CoreIgnite Team: Add New Workflow" from dynamic menu
+    const filteredWorkflows = workflows.filter(
+      workflow => workflow.name !== 'CoreIgnite Team: Add New Workflow'
+    );
+
     const categoryMap = new Map<string, WorkflowMetadata[]>();
     
-    if (workflows) {
-      workflows.forEach(workflow => {
+    if (filteredWorkflows) {
+      filteredWorkflows.forEach(workflow => {
         const category = workflow.category || 'Other';
         if (!categoryMap.has(category)) {
           categoryMap.set(category, []);
@@ -84,6 +90,16 @@ export function Sidebar({
       label: 'Workflows',
       type: 'section',
       children: menuItems
+    },
+    {
+      id: 'about',
+      label: 'About',
+      type: 'section',
+      children: [
+        { id: 'faqs', label: 'FAQs', type: 'item', workflow: '__FAQS__' },
+        { id: 'add-new-workflow', label: 'CoreIgnite Team: Add New Workflow', type: 'item', workflow: 'CoreIgnite Team: Add New Workflow' },
+        { id: 'api-docs', label: 'API Docs', type: 'item', externalUrl: '' }, // URL to be configured later
+      ]
     }
   ];
 
@@ -125,7 +141,16 @@ export function Sidebar({
   };
 
   const handleItemClick = (item: MenuItem) => {
-    if (item.workflow) {
+    if (item.externalUrl !== undefined) {
+      // Handle external URL clicks
+      if (item.externalUrl) {
+        window.open(item.externalUrl, '_blank', 'noopener,noreferrer');
+      }
+      // Close sidebar after clicking
+      if (onClose) {
+        onClose();
+      }
+    } else if (item.workflow) {
       onWorkflowChange(item.workflow);
       if (onClose) {
         onClose();
@@ -199,7 +224,7 @@ export function Sidebar({
             ? 'font-["IBM_Plex_Sans:SemiBold",sans-serif]' 
             : 'text-[#161616]'
         } ${
-          item.workflow 
+          item.workflow || item.externalUrl !== undefined
             ? 'cursor-pointer hover:bg-[#f4f4f4]' 
             : 'text-[#8d8d8d] cursor-default'
         }`}
@@ -234,7 +259,7 @@ export function Sidebar({
           {menuData.map((item, index) => (
             <div key={item.id}>
               {renderMenuItem(item)}
-              {(index === 0 || index === 1) && <div className="border-b border-[#e0e0e0] my-4" />}
+              {index < menuData.length - 1 && <div className="border-b border-[#e0e0e0] my-4" />}
             </div>
           ))}
         </div>

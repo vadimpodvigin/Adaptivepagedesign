@@ -31,8 +31,6 @@ export default function App() {
 
   // Map workflows to their JSON/YAML URLs
   const workflowJsonUrls: Record<string, string> = {
-    "Test Components": 
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/test_components.yaml",
     "Digital Assets":
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/coreflowDigitalAsset.yaml",
     "Stripe Payment":
@@ -47,7 +45,9 @@ export default function App() {
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/DirectAccount.yaml",
     "Direct Debit":
       "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/DirectDebit.yaml",
-    "BNPL": "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/BNPL.yaml",
+    BNPL: "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/BNPL.yaml",
+    "CoreIgnite Team: Add New Workflow":
+      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/exampleCardComponents.yaml",
   };
 
   // Color mapping function (matching WorkflowsLanding and Sidebar)
@@ -69,7 +69,10 @@ export default function App() {
   };
 
   // Get current workflow's color
-  const currentColor = workflowData?.category
+  // Non-workflow pages (Home, FAQs) always use purple
+  const currentColor = !currentWorkflow || currentWorkflow === "__FAQS__" || currentWorkflow === "CoreIgnite Team: Add New Workflow"
+    ? "#7A23D9"
+    : workflowData?.category
     ? getCategoryColor(workflowData.category)
     : "#7A23D9";
 
@@ -112,12 +115,16 @@ export default function App() {
                 name,
               });
             } else {
-              console.warn(`${name}: Missing workflow key in data structure`);
+              console.warn(
+                `${name}: Missing workflow key in data structure`,
+              );
             }
           } catch (parseError) {
             console.error(
               `Failed to parse ${name}:`,
-              parseError instanceof Error ? parseError.message : parseError,
+              parseError instanceof Error
+                ? parseError.message
+                : parseError,
             );
             continue;
           }
@@ -142,9 +149,12 @@ export default function App() {
     if (workflowName === "__HOME__") {
       setCurrentWorkflow(null);
       setWorkflowData(null);
+    } else if (workflowName === "__FAQS__") {
+      setCurrentWorkflow("__FAQS__");
+      setWorkflowData(null);
     } else {
       setCurrentWorkflow(workflowName);
-      setWorkflowData(null); // Reset workflow data when switching
+      // Don't reset workflowData here - let it stay null/loading until data loads
     }
     setSidebarOpen(false);
   };
@@ -171,6 +181,12 @@ export default function App() {
             workflows={allWorkflows}
             loading={loading}
           />
+        ) : currentWorkflow === "__FAQS__" ? (
+          <div className="max-w-[1200px] mx-auto px-[32px] pt-[24px] md:px-8">
+            <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[24px] font-medium text-center mt-[0px]">
+              CoreIgnite FAQs
+            </h1>
+          </div>
         ) : (
           <div className="max-w-[1200px] mx-auto px-[32px] pt-[24px] md:px-8">
             <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[24px] font-medium text-center flex items-center justify-center mt-[0px] mr-[0px] ml-[0px]">

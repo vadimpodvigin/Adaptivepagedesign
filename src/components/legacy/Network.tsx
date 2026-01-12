@@ -1,5 +1,5 @@
-import svgPaths from "./svg-k16lngyc97";
-import svgPathsIcons from "./svg-7hyl6ocycq";
+import svgPaths from "../../assets/svg/svg-k16lngyc97";
+import svgPathsIcons from "../../assets/svg/svg-7hyl6ocycq";
 import * as CarbonIcons from "@carbon/icons-react";
 
 interface NetworkProps {

@@ -1,14 +1,13 @@
-/**
- * Application-wide constants
- */
+// Application constants
 
-export const DEFAULT_THEME_COLOR = "#7A23D9";
+export const SPECIAL_PAGES = {
+  HOME: null,
+  FAQS: '__FAQS__',
+  EXAMPLE_CARDS: 'CoreIgnite Team: Add New Workflow',
+} as const;
 
-export const CATEGORY_COLORS = [
-  "#7A23D9",
-  "#3BAB5A",
-  "#4589FF",
-  "#FF9D00",
-  "#FF0000",
+export const NON_WORKFLOW_PAGES = [
+  SPECIAL_PAGES.HOME,
+  SPECIAL_PAGES.FAQS,
+  SPECIAL_PAGES.EXAMPLE_CARDS,
 ];
-

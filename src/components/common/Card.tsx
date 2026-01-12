@@ -1,15 +1,15 @@
 import React from 'react';
 import { Tag } from './Tag';
-import { List } from './List';
-import { Table } from './Table';
-import { Stepper } from './Stepper';
-import { Checkbox } from './Checkbox';
-import { Accordion } from './Accordion';
-import { Notifications } from './Notifications';
+import { List } from '../content/List';
+import { Table } from '../content/Table';
+import { Stepper } from '../content/Stepper';
+import { Checkbox } from '../content/Checkbox';
+import { Accordion } from '../content/Accordion';
+import { Notifications } from '../content/Notifications';
 import { Button } from './Button';
-import { CodeSnippet } from './CodeSnippet';
-import { Tabs } from './Tabs';
-import Network from '../imports/Network';
+import { CodeSnippet } from '../content/CodeSnippet';
+import { Tabs } from '../content/Tabs';
+import Network from '../legacy/Network';
 
 interface CardProps {
   title?: string;

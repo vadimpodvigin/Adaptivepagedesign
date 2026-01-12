@@ -1,25 +1,23 @@
-import { WorkflowMetadata } from "../types";
+// Color utility functions
 
-/**
- * Get a color for a category based on its index in the list of all categories
- */
-export const getCategoryColor = (
-  category: string,
-  allWorkflows: WorkflowMetadata[]
-): string => {
-  const colorList = [
-    "#7A23D9",
-    "#3BAB5A",
-    "#4589FF",
-    "#FF9D00",
-    "#FF0000",
-  ];
+import { WorkflowMetadata } from '../types';
+
+export const COLOR_LIST = [
+  '#7A23D9', // Purple - Default/Non-workflow pages
+  '#3BAB5A', // Green
+  '#4589FF', // Blue
+  '#FF9D00', // Orange
+  '#FF0000', // Red
+];
+
+export const DEFAULT_COLOR = '#7A23D9'; // Purple
+
+export function getCategoryColor(category: string, allWorkflows: WorkflowMetadata[]): string {
   const categories = Array.from(
     new Set(allWorkflows.map((w) => w.category))
   );
   const categoryIndex = categories.indexOf(category);
   return categoryIndex >= 0
-    ? colorList[categoryIndex % colorList.length]
-    : "#7A23D9";
-};
-
+    ? COLOR_LIST[categoryIndex % COLOR_LIST.length]
+    : DEFAULT_COLOR;
+}

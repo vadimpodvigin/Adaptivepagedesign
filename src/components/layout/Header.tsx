@@ -129,7 +129,7 @@ export function Header({ onMenuClick, isMenuOpen, onLogoClick, themeColor = "#7a
           onClick={onLogoClick}
         >
           <p className="font-['IBM_Plex_Sans:Regular',sans-serif] text-[14px] text-[#161616] font-[IBM_Plex_Mono] font-bold">
-            CoreIgnite/<span style={{ color: themeColor }}>Docs</span>
+            CoreIgnite/<span style={{ color: "#7A23D9" }}>Docs</span>
           </p>
         </div>
         

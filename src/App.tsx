@@ -1,13 +1,13 @@
-import { Header } from "./components/Header";
-import { Sidebar } from "./components/Sidebar";
+import { Header } from "./components/layout/Header";
+import { Sidebar } from "./components/layout/Sidebar";
 import {
   RequestCard,
   WorkflowData,
 } from "./components/RequestCard";
-import { WorkflowsLanding } from "./components/WorkflowsLanding";
-import { Footer } from "./components/Footer";
-import { ScrollToTop } from "./components/ScrollToTop";
-import Network from "./imports/Network";
+import { WorkflowsLanding } from "./components/features/WorkflowsLanding";
+import { Footer } from "./components/layout/Footer";
+import { ScrollToTop } from "./components/common/ScrollToTop";
+import Network from "./components/legacy/Network";
 import { useState, useEffect } from "react";
 import yaml from "js-yaml";
 

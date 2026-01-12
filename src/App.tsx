@@ -1,21 +1,16 @@
-import { Header } from "./components/Header";
-import { Sidebar } from "./components/Sidebar";
-import {
-  RequestCard,
-  WorkflowData,
-} from "./components/RequestCard";
-import { WorkflowsLanding } from "./components/WorkflowsLanding";
-import { Footer } from "./components/Footer";
-import { ScrollToTop } from "./components/ScrollToTop";
-import Network from "./imports/Network";
+import { Header } from "./components/layout/Header";
+import { Sidebar } from "./components/layout/Sidebar";
+import { Footer } from "./components/layout/Footer";
+import { ScrollToTop } from "./components/common/ScrollToTop";
+import { RequestCard } from "./components/features/RequestCard";
+import { WorkflowsLanding } from "./components/features/WorkflowsLanding";
+import Network from "./assets/icons/Network";
+import { WorkflowData, WorkflowMetadata } from "./types";
+import { workflowJsonUrls } from "./config";
+import { getCategoryColor } from "./utils";
+import { DEFAULT_THEME_COLOR } from "./config/constants";
 import { useState, useEffect } from "react";
 import yaml from "js-yaml";
-
-// Extended interface to include URL
-export interface WorkflowMetadata extends WorkflowData {
-  url: string;
-  name: string; // Used as the key/identifier
-}
 
 export default function App() {
   const [currentWorkflow, setCurrentWorkflow] = useState<
@@ -29,52 +24,13 @@ export default function App() {
   >([]);
   const [loading, setLoading] = useState(true);
 
-  // Map workflows to their JSON/YAML URLs
-  const workflowJsonUrls: Record<string, string> = {
-    "Digital Assets":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/coreflowDigitalAsset.yaml",
-    "Stripe Payment":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/coreflowStripe.json",
-    "CoreIgnite User Account Creation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/accountCreationVer2.json",
-    "New Core Banking Space Activation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/BankSetupVer2.json",
-    "Card Transaction":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/CardTransaction.yaml",
-    "Direct Account":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/DirectAccount.yaml",
-    "Direct Debit":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/DirectDebit.yaml",
-    BNPL: "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/BNPL.yaml",
-    "CoreIgnite Team: Add New Workflow":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/exampleCardComponents.yaml",
-  };
-
-  // Color mapping function (matching WorkflowsLanding and Sidebar)
-  const getCategoryColor = (category: string): string => {
-    const colorList = [
-      "#7A23D9",
-      "#3BAB5A",
-      "#4589FF",
-      "#FF9D00",
-      "#FF0000",
-    ];
-    const categories = Array.from(
-      new Set(allWorkflows.map((w) => w.category)),
-    );
-    const categoryIndex = categories.indexOf(category);
-    return categoryIndex >= 0
-      ? colorList[categoryIndex % colorList.length]
-      : "#7A23D9";
-  };
-
   // Get current workflow's color
   // Non-workflow pages (Home, FAQs) always use purple
   const currentColor = !currentWorkflow || currentWorkflow === "__FAQS__" || currentWorkflow === "CoreIgnite Team: Add New Workflow"
-    ? "#7A23D9"
+    ? DEFAULT_THEME_COLOR
     : workflowData?.category
-    ? getCategoryColor(workflowData.category)
-    : "#7A23D9";
+    ? getCategoryColor(workflowData.category, allWorkflows)
+    : DEFAULT_THEME_COLOR;
 
   // Fetch workflow metadata on mount
   useEffect(() => {
@@ -154,7 +110,7 @@ export default function App() {
       setWorkflowData(null);
     } else {
       setCurrentWorkflow(workflowName);
-      // Don't reset workflowData here - let it stay null/loading until data loads
+      setWorkflowData(null); // Reset workflow data when switching
     }
     setSidebarOpen(false);
   };

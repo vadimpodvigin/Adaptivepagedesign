@@ -32,22 +32,22 @@ export default function App() {
   // Map workflows to their JSON/YAML URLs
   const workflowJsonUrls: Record<string, string> = {
     "Digital Assets":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/coreflowDigitalAsset.yaml",
+      "/data/coreflowDigitalAsset.yaml",
     "Stripe Payment":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/coreflowStripe.json",
+      "/data/coreflowStripe.json",
     "CoreIgnite User Account Creation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/accountCreationVer2.json",
+      "/data/accountCreationVer2.json",
     "New Core Banking Space Activation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/JSON/BankSetupVer2.json",
+      "/data/BankSetupVer2.json",
     "Card Transaction":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/CardTransaction.yaml",
+      "/data/CardTransaction.yaml",
     "Direct Account":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/DirectAccount.yaml",
+      "/data/DirectAccount.yaml",
     "Direct Debit":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/DirectDebit.yaml",
-    BNPL: "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/BNPL.yaml",
+      "/data/DirectDebit.yaml",
+    BNPL: "/data/BNPL.yaml",
     "CoreIgnite Team: Add New Workflow":
-      "https://raw.githubusercontent.com/vadimpodvigin/Corelgnite_test/refs/heads/main/YAML/exampleCardComponents.yaml",
+      "/data/exampleCardComponents.yaml",
   };
 
   // Color mapping function (matching WorkflowsLanding and Sidebar)

@@ -1,0 +1,70 @@
+workflow:
+  title: Buy Now, Pay Later
+  description: |
+    Suspendisse consectetur accumsan turpis et venenatis. Vivamus auctor viverra ultrices. Vestibulum ac justo eget sapien tincidunt consequat.
+  category: Buy Now Pay Later
+  icon: money
+
+cards:
+  - id: card1
+    title: Customer Enrollment
+    badge: "1"
+    description: |
+      Suspendisse consectetur accumsan turpis et venenatis. Duis imperdiet ante ut felis condimentum ultrices. Vivamus auctor viverra ultrices. Vestibulum ac justo eget sapien tincidunt consequat. Proin tempor sem in purus faucibus facilisis.
+    arrows:
+      - direction: right
+        targetCardId: card2
+
+  - id: card2
+    title: Transaction Enrollment
+    badge: "2"
+    description: Suspendisse consectetur accumsan turpis et venenatis. Duis imperdiet ante ut felis condimentum ultrices. Vivamus auctor viverra ultrices.
+    arrows: []
+    tabs:
+      - label: Point of Sale
+        content:
+          sections:
+            direction: col
+            items:
+              - title: Transaction Eligibilty Check
+                badge: "2.1"
+                description: Suspendisse consectetur accumsan turpis et venenatis.
+                button:
+                  label: Transaction Eligibility API
+                  url: /
+              - title: BNPL Plan Offer
+                badge: "2.2"
+                description: Suspendisse consectetur accumsan turpis et venenatis. Duis imperdiet ante ut felis condimentum ultrices.
+                button:
+                  label: Offer Eligibility API
+                  url: /
+              - title: Submit BNPL Request
+                badge: "2.3"
+                description: Suspendisse consectetur accumsan turpis et venenatis. Duis imperdiet ante ut felis condimentum ultrices.
+                button:
+                  label: BNPL Request API
+                  url: /
+      - label: Past Purchase
+        content:
+          sections:
+            direction: row
+            items:
+              - title: Transaction Selection
+                badge: "2.1"
+                description: Suspendisse consectetur accumsan turpis et venenatis.
+                tabs:
+                  - label: Filter Based
+                    content:
+                      text: Suspendisse consectetur accumsan turpis et venenatis. Duis imperdiet ante ut felis condimentum ultrices.
+                      button:
+                        label: Some Link
+                        url: /
+                  - label: User-Composed Basket
+                    content:
+                      text: Suspendisse consectetur accumsan turpis et venenatis.
+                      button:
+                        label: Create Basket Link
+                        url: /
+              - title: Submit BNPL Request
+                badge: "2.2"
+                description: Suspendisse consectetur accumsan turpis et venenatis.

@@ -31,21 +31,16 @@ export default function App() {
 
   // Map workflows to their JSON/YAML URLs
   const workflowJsonUrls: Record<string, string> = {
-    "Digital Assets":
-      "/data/coreflowDigitalAsset.yaml",
-    "Stripe Payment":
-      "/data/coreflowStripe.json",
+    "Digital Assets": "/public/data/digitalAsset.yaml",
+    "Stripe Payment": "/public/data/stripePayment.yaml",
     "CoreIgnite User Account Creation":
-      "/data/accountCreationVer2.json",
+      "/public/data/accountCreation.yaml",
     "New Core Banking Space Activation":
-      "/data/BankSetupVer2.json",
-    "Card Transaction":
-      "/data/CardTransaction.yaml",
-    "Direct Account":
-      "/data/DirectAccount.yaml",
-    "Direct Debit":
-      "/data/DirectDebit.yaml",
-    BNPL: "/data/BNPL.yaml",
+      "/public/data/initiateBank.yaml",
+    "Card Transaction": "/public/data/cardTransaction.yaml",
+    "Direct Account": "/public/data/directAccount.yaml",
+    "Direct Debit": "/public/data/directDebit.yaml",
+    BNPL: "public/data/bnpl.yaml",
     "CoreIgnite Team: Add New Workflow":
       "/data/exampleCardComponents.yaml",
   };
@@ -70,11 +65,14 @@ export default function App() {
 
   // Get current workflow's color
   // Non-workflow pages (Home, FAQs) always use purple
-  const currentColor = !currentWorkflow || currentWorkflow === "__FAQS__" || currentWorkflow === "CoreIgnite Team: Add New Workflow"
-    ? "#7A23D9"
-    : workflowData?.category
-    ? getCategoryColor(workflowData.category)
-    : "#7A23D9";
+  const currentColor =
+    !currentWorkflow ||
+    currentWorkflow === "__FAQS__" ||
+    currentWorkflow === "CoreIgnite Team: Add New Workflow"
+      ? "#7A23D9"
+      : workflowData?.category
+        ? getCategoryColor(workflowData.category)
+        : "#7A23D9";
 
   // Fetch workflow metadata on mount
   useEffect(() => {

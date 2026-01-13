@@ -32,22 +32,22 @@ export default function App() {
   // Map workflows to their JSON/YAML URLs
   const workflowJsonUrls: Record<string, string> = {
     "Digital Assets":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/digitalAsset.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/digitalAsset.yaml",
     "Stripe Payment":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/stripePayment.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/stripePayment.yaml",
     "CoreIgnite User Account Creation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/accountCreation.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/accountCreation.yaml",
     "New Core Banking Space Activation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/initiateBank.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/initiateBank.yaml",
     "Card Transaction":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/cardTransaction.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/cardTransaction.yaml",
     "Direct Account":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/directAccount.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/directAccount.yaml",
     "Direct Debit":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/directDebit.yaml",
-    BNPL: "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/bnpl.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/directDebit.yaml",
+    BNPL: "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/bnpl.yaml",
     "CoreIgnite Team: Add New Workflow":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/exampleCardComponent.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/exampleCardComponent.yaml",
   };
 
   // Color mapping function (matching WorkflowsLanding and Sidebar)
@@ -69,10 +69,10 @@ export default function App() {
   };
 
   // Get current workflow's color
-  // Non-workflow pages (Home, FAQs) always use purple
+  // Non-workflow pages (Home, Questions) always use purple
   const currentColor =
     !currentWorkflow ||
-    currentWorkflow === "__FAQS__" ||
+    currentWorkflow === "__QUESTIONS__" ||
     currentWorkflow === "CoreIgnite Team: Add New Workflow"
       ? "#7A23D9"
       : workflowData?.category
@@ -152,8 +152,8 @@ export default function App() {
     if (workflowName === "__HOME__") {
       setCurrentWorkflow(null);
       setWorkflowData(null);
-    } else if (workflowName === "__FAQS__") {
-      setCurrentWorkflow("__FAQS__");
+    } else if (workflowName === "__QUESTIONS__") {
+      setCurrentWorkflow("__QUESTIONS__");
       setWorkflowData(null);
     } else {
       setCurrentWorkflow(workflowName);
@@ -184,10 +184,10 @@ export default function App() {
             workflows={allWorkflows}
             loading={loading}
           />
-        ) : currentWorkflow === "__FAQS__" ? (
+        ) : currentWorkflow === "__QUESTIONS__" ? (
           <div className="max-w-[1200px] mx-auto px-[32px] pt-[24px] md:px-8">
             <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[24px] font-medium text-center mt-[0px]">
-              CoreIgnite FAQs
+              Questions
             </h1>
           </div>
         ) : (

@@ -96,7 +96,7 @@ export function Sidebar({
       label: 'About',
       type: 'section',
       children: [
-        { id: 'faqs', label: 'FAQs', type: 'item', workflow: '__FAQS__' },
+        { id: 'questions', label: 'Questions', type: 'item', workflow: '__QUESTIONS__' },
         { id: 'add-new-workflow', label: 'CoreIgnite Team: Add New Workflow', type: 'item', workflow: 'CoreIgnite Team: Add New Workflow' },
         { id: 'api-docs', label: 'API Docs', type: 'item', externalUrl: '' }, // URL to be configured later
       ]

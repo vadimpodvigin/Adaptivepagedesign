@@ -31,20 +31,19 @@ export default function App() {
 
   // Map workflows to their JSON/YAML URLs
   const workflowJsonUrls: Record<string, string> = {
-    "Digital Assets": "/public/data/digitalAsset.yaml",
-    "Stripe Payment": "/public/data/stripePayment.yaml",
+    "Digital Assets": "/data/digitalAsset.yaml",
+    "Stripe Payment": "/data/stripePayment.yaml",
     "CoreIgnite User Account Creation":
-      "/public/data/accountCreation.yaml",
+      "/data/accountCreation.yaml",
     "New Core Banking Space Activation":
-      "/public/data/initiateBank.yaml",
-    "Card Transaction": "/public/data/cardTransaction.yaml",
-    "Direct Account": "/public/data/directAccount.yaml",
-    "Direct Debit": "/public/data/directDebit.yaml",
-    BNPL: "public/data/bnpl.yaml",
+      "/data/initiateBank.yaml",
+    "Card Transaction": "/data/cardTransaction.yaml",
+    "Direct Account": "/data/directAccount.yaml",
+    "Direct Debit": "/data/directDebit.yaml",
+    BNPL: "/data/bnpl.yaml",
     "CoreIgnite Team: Add New Workflow":
-      "/data/exampleCardComponents.yaml",
+      "/data/exampleCardComponent.yaml",
   };
-
   // Color mapping function (matching WorkflowsLanding and Sidebar)
   const getCategoryColor = (category: string): string => {
     const colorList = [

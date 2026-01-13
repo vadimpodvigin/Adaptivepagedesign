@@ -31,19 +31,25 @@ export default function App() {
 
   // Map workflows to their JSON/YAML URLs
   const workflowJsonUrls: Record<string, string> = {
-    "Digital Assets": "/data/digitalAsset.yaml",
-    "Stripe Payment": "/data/stripePayment.yaml",
+    "Digital Assets":
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/digitalAsset.yaml",
+    "Stripe Payment":
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/stripePayment.yaml",
     "CoreIgnite User Account Creation":
-      "/data/accountCreation.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/accountCreation.yaml",
     "New Core Banking Space Activation":
-      "/data/initiateBank.yaml",
-    "Card Transaction": "/data/cardTransaction.yaml",
-    "Direct Account": "/data/directAccount.yaml",
-    "Direct Debit": "/data/directDebit.yaml",
-    BNPL: "/data/bnpl.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/initiateBank.yaml",
+    "Card Transaction":
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/cardTransaction.yaml",
+    "Direct Account":
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/directAccount.yaml",
+    "Direct Debit":
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/directDebit.yaml",
+    BNPL: "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/bnpl.yaml",
     "CoreIgnite Team: Add New Workflow":
-      "/data/exampleCardComponent.yaml",
+      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/main/public/data/exampleCardComponent.yaml",
   };
+
   // Color mapping function (matching WorkflowsLanding and Sidebar)
   const getCategoryColor = (category: string): string => {
     const colorList = [

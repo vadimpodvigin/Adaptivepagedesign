@@ -1,0 +1,175 @@
+workflow:
+  title: Example Cards & Components
+  description: This workflow demonstrates all available card types and features in CoreIgnite. Use this as a reference when building new workflows.
+  category: CoreIgnite Team
+  icon: document
+
+cards:
+  - id: card1
+    title: Basic Card
+    badge: "1"
+    description: This is a basic card with a title, badge, and description. It has a down arrow connecting to the next card in the workflow.
+    arrows:
+      - direction: down
+        targetCardId: card2
+
+  - id: card2
+    title: Card with Multiple Arrows
+    badge: "2"
+    description: This card demonstrates multiple arrow directions. It connects downward to the next card and to the right to a side card.
+    arrows:
+      - direction: down
+        targetCardId: card3
+      - direction: right
+        targetCardId: card21
+
+  - id: card21
+    title: Side Card with Icon
+    badge: ""
+    description: This is a side card that appears to the right of the main workflow. It uses a custom icon.
+    arrows: []
+    icon: wallet
+
+  - id: card3
+    title: Card with Sections (Column Layout)
+    badge: "3"
+    description: This card demonstrates sections with a column layout. Sections break down complex steps into smaller sub-steps.
+    arrows:
+      - direction: down
+        targetCardId: card4
+    sections:
+      direction: col
+      items:
+        - title: First Section Item
+          badge: "3.1"
+          description: This is the first item in a column-oriented section layout.
+        - title: Second Section Item
+          badge: "3.2"
+          description: This is the second item. Notice how they stack vertically.
+        - title: Third Section Item with Button
+          badge: "3.3"
+          description: This section item includes a button that links to additional resources.
+          button:
+            label: View Documentation
+            url: /
+
+  - id: card4
+    title: Card with Sections (Row Layout)
+    badge: "4"
+    description: This card demonstrates sections with a row layout, where items appear side by side.
+    arrows:
+      - direction: down
+        targetCardId: card5
+    sections:
+      direction: row
+      items:
+        - title: Left Section
+          badge: "4.1"
+          description: This section appears on the left side when using row layout.
+        - title: Right Section
+          badge: "4.2"
+          description: This section appears on the right side when using row layout.
+
+  - id: card5
+    title: Card with Nested Cards
+    badge: "5"
+    description: This card demonstrates nested cards, which are useful for showing related information or sub-processes.
+    arrows:
+      - direction: down
+        targetCardId: card6
+    nestedcards:
+      - title: Nested Card 1
+        subtext: Additional information for nested card 1
+      - title: Nested Card 2
+        subtext: Additional information for nested card 2
+      - title: Nested Card 3
+        subtext: Notice how nested cards display in a compact format
+
+  - id: card6
+    title: Card with Tabs
+    badge: "6"
+    description: This card demonstrates the tabs feature, allowing multiple views or options within a single card.
+    arrows:
+      - direction: down
+        targetCardId: card7
+    tabs:
+      - label: Option A
+        content:
+          text: This is the content for Option A. Tabs are useful for showing different approaches or variations of a process.
+          button:
+            label: Learn More About Option A
+            url: /
+      - label: Option B
+        content:
+          text: This is the content for Option B. Users can switch between tabs to see different information.
+          button:
+            label: Learn More About Option B
+            url: /
+
+  - id: card7
+    title: Card with Tab Sections
+    badge: "7"
+    description: This card demonstrates tabs with section layouts, combining two powerful features.
+    arrows:
+      - direction: down
+        targetCardId: card8
+    tabs:
+      - label: Column Sections
+        content:
+          sections:
+            direction: col
+            items:
+              - title: Step 1
+                badge: "7.1"
+                description: First step in column layout within a tab
+                button:
+                  label: API Reference
+                  url: /
+              - title: Step 2
+                badge: "7.2"
+                description: Second step in column layout within a tab
+      - label: Row Sections
+        content:
+          sections:
+            direction: row
+            items:
+              - title: Parallel Process A
+                badge: "7.1"
+                description: This process runs in parallel with Process B
+              - title: Parallel Process B
+                badge: "7.2"
+                description: This process runs in parallel with Process A
+
+  - id: card8
+    title: Card with Nested Tabs
+    badge: "8"
+    description: This advanced card demonstrates nested tabs - tabs within sections within tabs!
+    arrows: []
+    tabs:
+      - label: Main Option 1
+        content:
+          sections:
+            direction: col
+            items:
+              - title: Sub-Process with Choices
+                badge: "8.1"
+                description: This sub-process has multiple implementation options
+                tabs:
+                  - label: Implementation A
+                    content:
+                      text: Details about Implementation A approach
+                      button:
+                        label: Implementation A Guide
+                        url: /
+                  - label: Implementation B
+                    content:
+                      text: Details about Implementation B approach
+                      button:
+                        label: Implementation B Guide
+                        url: /
+              - title: Continuation Step
+                badge: "8.2"
+                description: This step follows after choosing an implementation
+      - label: Main Option 2
+        content:
+          text: This is a simpler alternative path that doesn't require sub-choices

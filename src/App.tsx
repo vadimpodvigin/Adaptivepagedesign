@@ -8,6 +8,7 @@ import { WorkflowsLanding } from "./components/features/WorkflowsLanding";
 import { Footer } from "./components/layout/Footer";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Network from "./components/legacy/Network";
+import { LoginPage } from "./components/auth/LoginPage";
 import { useState, useEffect } from "react";
 import yaml from "js-yaml";
 
@@ -18,6 +19,7 @@ export interface WorkflowMetadata extends WorkflowData {
 }
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentWorkflow, setCurrentWorkflow] = useState<
     string | null
   >(null);
@@ -50,37 +52,18 @@ export default function App() {
       "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/exampleCardComponent.yaml",
   };
 
-  // Color mapping function (matching WorkflowsLanding and Sidebar)
-  const getCategoryColor = (category: string): string => {
-    const colorList = [
-      "#7A23D9",
-      "#3BAB5A",
-      "#4589FF",
-      "#FF9D00",
-      "#FF0000",
-    ];
-    const categories = Array.from(
-      new Set(allWorkflows.map((w) => w.category)),
-    );
-    const categoryIndex = categories.indexOf(category);
-    return categoryIndex >= 0
-      ? colorList[categoryIndex % colorList.length]
-      : "#7A23D9";
-  };
-
-  // Get current workflow's color
-  // Non-workflow pages (Home, Questions) always use purple
-  const currentColor =
-    !currentWorkflow ||
-    currentWorkflow === "__QUESTIONS__" ||
-    currentWorkflow === "CoreIgnite Team: Add New Workflow"
-      ? "#7A23D9"
-      : workflowData?.category
-        ? getCategoryColor(workflowData.category)
-        : "#7A23D9";
-
-  // Fetch workflow metadata on mount
+  // Check sessionStorage for authentication on mount
   useEffect(() => {
+    const authStatus = sessionStorage.getItem("coreIgniteAuth");
+    if (authStatus === "authenticated") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  // Fetch workflow metadata on mount (only when authenticated)
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
     async function fetchAllWorkflowMetadata() {
       setLoading(true);
       const workflows: WorkflowMetadata[] = [];
@@ -141,7 +124,51 @@ export default function App() {
     }
 
     fetchAllWorkflowMetadata();
-  }, []);
+  }, [isAuthenticated]);
+
+  // Handle successful login
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    sessionStorage.setItem("coreIgniteAuth", "authenticated");
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem("coreIgniteAuth");
+    setCurrentWorkflow(null);
+    setWorkflowData(null);
+    setSidebarOpen(false);
+  };
+
+  // Color mapping function (matching WorkflowsLanding and Sidebar)
+  const getCategoryColor = (category: string): string => {
+    const colorList = [
+      "#7A23D9",
+      "#3BAB5A",
+      "#4589FF",
+      "#FF9D00",
+      "#FF0000",
+    ];
+    const categories = Array.from(
+      new Set(allWorkflows.map((w) => w.category)),
+    );
+    const categoryIndex = categories.indexOf(category);
+    return categoryIndex >= 0
+      ? colorList[categoryIndex % colorList.length]
+      : "#7A23D9";
+  };
+
+  // Get current workflow's color
+  // Non-workflow pages (Home, Questions) always use purple
+  const currentColor =
+    !currentWorkflow ||
+    currentWorkflow === "__QUESTIONS__" ||
+    currentWorkflow === "CoreIgnite Team: Add New Workflow"
+      ? "#7A23D9"
+      : workflowData?.category
+        ? getCategoryColor(workflowData.category)
+        : "#7A23D9";
 
   const cardsJsonUrl =
     currentWorkflow && workflowJsonUrls[currentWorkflow]
@@ -162,6 +189,11 @@ export default function App() {
     setSidebarOpen(false);
   };
 
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="bg-[#F2F2F2] min-h-screen flex flex-col">
       <Header
@@ -169,6 +201,8 @@ export default function App() {
         isMenuOpen={sidebarOpen}
         onLogoClick={() => handleWorkflowClick("__HOME__")}
         themeColor={currentColor}
+        isAuthenticated={isAuthenticated}
+        onLogout={handleLogout}
       />
       <Sidebar
         currentWorkflow={currentWorkflow}
@@ -185,14 +219,14 @@ export default function App() {
             loading={loading}
           />
         ) : currentWorkflow === "__QUESTIONS__" ? (
-          <div className="max-w-[1200px] mx-auto px-[32px] pt-[24px] md:px-8">
-            <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[24px] font-medium text-center mt-[0px]">
+          <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 pt-[24px]">
+            <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[20px] sm:text-[24px] font-medium text-center mt-[0px]">
               Questions
             </h1>
           </div>
         ) : (
-          <div className="max-w-[1200px] mx-auto px-[32px] pt-[24px] md:px-8">
-            <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[24px] font-medium text-center flex items-center justify-center mt-[0px] mr-[0px] ml-[0px]">
+          <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 pt-[24px]">
+            <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[20px] sm:text-[24px] font-medium text-center flex items-center justify-center mt-[0px] mr-[0px] ml-[0px]">
               <Network
                 icon={workflowData?.icon}
                 iconColor={currentColor}
@@ -200,7 +234,7 @@ export default function App() {
               />
               {workflowData?.title || currentWorkflow}
             </h1>
-            <p className="mb-8 font-[IBM_Plex_Sans] text-[16px] text-[#525252] text-center px-[96px] py-[0px]">
+            <p className="mb-8 font-[IBM_Plex_Sans] text-[14px] sm:text-[16px] text-[#525252] text-center px-4 sm:px-8 md:px-16 lg:px-24 py-[0px]">
               {workflowData?.description ||
                 "Loading workflow description..."}
             </p>

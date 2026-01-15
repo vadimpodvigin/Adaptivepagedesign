@@ -889,7 +889,7 @@ function Card({
       )}
 
       {hasButtons && (
-        <div className="flex flex-wrap gap-[8px] p-2">
+        <div className="flex flex-wrap gap-[8px]">
           {buttons.map((btn, index) => (
             <Button
               key={index}
@@ -931,7 +931,7 @@ function Card({
 
       {hasSections && (
         <div
-          className={`flex flex-${sections.direction} gap-[16px]`}
+          className={`flex ${sections.direction === "row" ? "flex-col sm:flex-row" : "flex-col"} gap-[16px]`}
         >
           {sections.items.map((section, index) => (
             <SectionCard
@@ -1011,14 +1011,14 @@ function renderTabContent(
         content.sections.items &&
         content.sections.items.length > 0 && (
           <div
-            className={`flex flex-${content.sections.direction} gap-[16px] pt-[8px]`}
+            className={`flex ${content.sections.direction === "row" ? "flex-col sm:flex-row" : "flex-col"} gap-[16px] pt-[8px]`}
           >
             {content.sections.items.map((section, index) => (
               <div
                 key={index}
                 className={
                   content.sections.direction === "row"
-                    ? "flex-1"
+                    ? "w-full sm:flex-1"
                     : "w-full"
                 }
               >
@@ -1331,7 +1331,7 @@ function CardWithArrows({
       elements.push(
         <div
           key={`left-arrow-${idx}`}
-          className="flex items-center justify-center w-[40px]"
+          className="flex items-center justify-center w-[24px] sm:w-[40px]"
         >
           <StaticArrow direction="left" />
         </div>,
@@ -1394,7 +1394,7 @@ function CardWithArrows({
           elements.push(
             <div
               key={`${sourceCardId}-right-arrow-${startIdx + idx}`}
-              className="flex items-center justify-center w-[40px]"
+              className="flex items-center justify-center w-[24px] sm:w-[40px]"
             >
               <StaticArrow direction="right" />
             </div>,
@@ -1466,9 +1466,9 @@ function CardWithArrows({
       {shouldSpanVertically && spanToCardId ? (
         <div className="flex flex-col w-full">
           {/* Flex layout for main cards + arrows + right column */}
-          <div className="flex flex-row items-stretch w-full gap-0">
+          <div className="flex flex-row items-stretch w-full gap-0 overflow-x-auto">
             {/* Left: Main cards + Arrows combined */}
-            <div className="flex flex-col gap-[40px] flex-1">
+            <div className="flex flex-col gap-[24px] sm:gap-[40px] w-[90%] md:flex-1 shrink-0">
               {cardsInSpan.map((spanCard, index) => {
                 const isLastInSpan =
                   index === cardsInSpan.length - 1;
@@ -1554,7 +1554,7 @@ function CardWithArrows({
 
                     {/* Arrow - shares height with card */}
                     <div
-                      className={`flex ${arrowAlignment} justify-center w-[40px] shrink-0`}
+                      className={`flex ${arrowAlignment} justify-center w-[24px] sm:w-[40px] shrink-0`}
                     >
                       {showArrowToShared && (
                         <StaticArrow direction="right" />
@@ -1566,7 +1566,7 @@ function CardWithArrows({
             </div>
 
             {/* Right column: Side cards + Shared cards */}
-            <div className="flex flex-col flex-1 relative">
+            <div className="flex flex-col w-[90%] md:flex-1 min-w-[90%] md:min-w-0 shrink-0 relative">
               {(() => {
                 const elements: JSX.Element[] = [];
 
@@ -1606,6 +1606,28 @@ function CardWithArrows({
                   });
                 });
 
+                // Calculate card counts for adaptivity
+                const topSideCardCount = sideCards.filter(sc => sc.sourceIndex === 0).length;
+                const bottomSideCardCount = sideCards.filter(sc => sc.sourceIndex > 0).length;
+                const sharedCardCount = sharedCardsGroup.length;
+
+                // Determine width classes based on adaptivity rules
+                let topSideCardWidthClass = "flex-1";
+                let sharedCardContainerWidthClass = "flex-1";
+
+                // Top side card vs shared cards adaptivity
+                if (topSideCardCount === 1 && sharedCardCount === 2) {
+                  topSideCardWidthClass = "w-full";
+                } else if (topSideCardCount === 1 && sharedCardCount === 1) {
+                  topSideCardWidthClass = "flex-1";
+                  sharedCardContainerWidthClass = "flex-1";
+                }
+
+                // If shared cards need to adapt to match bottom side cards
+                if (sharedCardCount === 1 && bottomSideCardCount === 2) {
+                  sharedCardContainerWidthClass = "w-full";
+                }
+
                 // Render side card at top (if first card has a right arrow to a non-shared card)
                 const topSideCard = sideCards.find(
                   (sc) => sc.sourceIndex === 0,
@@ -1617,10 +1639,10 @@ function CardWithArrows({
                       className="flex flex-row gap-0 w-full"
                     >
                       {/* Arrow for side card - centered to side card height */}
-                      <div className="w-[40px] -ml-[40px] flex items-center justify-center shrink-0">
+                      <div className="w-[24px] sm:w-[40px] -ml-[24px] sm:-ml-[40px] flex items-center justify-center shrink-0">
                         <StaticArrow direction="right" />
                       </div>
-                      <div className="flex-1">
+                      <div className={topSideCardWidthClass}>
                         <Card
                           title={topSideCard.card.title}
                           badge={topSideCard.card.badge}
@@ -1671,12 +1693,12 @@ function CardWithArrows({
                   elements.push(
                     <div
                       key="shared-cards"
-                      className="flex flex-row gap-[4px] flex-1 h-full min-h-0"
+                      className={`flex flex-row gap-[4px] ${sharedCardContainerWidthClass} h-full min-h-0 min-w-[90%] md:min-w-0`}
                     >
                       {sharedCardsGroup.map((sharedCard) => (
                         <div
                           key={`shared-${sharedCard.id}`}
-                          className="flex-1 h-full"
+                          className="flex-1 h-full min-w-[90%] md:min-w-0"
                         >
                           <Card
                             title={sharedCard.title}
@@ -1716,18 +1738,82 @@ function CardWithArrows({
                     />,
                   );
 
-                  bottomSideCards.forEach(
-                    (bottomSideCard, idx) => {
-                      elements.push(
-                        <div
-                          key={`side-wrapper-bottom-${bottomSideCard.card.id}`}
-                          className="flex flex-row gap-0 w-full"
-                        >
-                          {/* Arrow for side card - centered to side card height */}
-                          <div className="w-[40px] -ml-[40px] flex items-center justify-center shrink-0">
-                            <StaticArrow direction="right" />
+                  // If we have 2 bottom cards and need to match 1 shared card above, render them side by side
+                  if (bottomSideCardCount === 2 && sharedCardCount === 1) {
+                    elements.push(
+                      <div
+                        key="bottom-side-cards-container"
+                        className="flex flex-row gap-[4px] w-full"
+                      >
+                        {bottomSideCards.map((bottomSideCard, idx) => (
+                          <div
+                            key={`side-wrapper-bottom-${bottomSideCard.card.id}`}
+                            className="flex flex-row gap-0 flex-1"
+                          >
+                            {/* Arrow for side card - centered to side card height */}
+                            <div className="w-[24px] sm:w-[40px] -ml-[24px] sm:-ml-[40px] flex items-center justify-center shrink-0">
+                              <StaticArrow direction="right" />
+                            </div>
+                            <div className="flex-1">
+                              <Card
+                                title={bottomSideCard.card.title}
+                                badge={bottomSideCard.card.badge}
+                                description={
+                                  bottomSideCard.card.description
+                                }
+                                icon={bottomSideCard.card.icon}
+                                tags={bottomSideCard.card.tags}
+                                list={bottomSideCard.card.list}
+                                table={bottomSideCard.card.table}
+                                stepper={
+                                  bottomSideCard.card.stepper
+                                }
+                                checkboxGroup={
+                                  bottomSideCard.card
+                                    .checkboxGroup
+                                }
+                                accordion={
+                                  bottomSideCard.card.accordion
+                                }
+                                notifications={
+                                  bottomSideCard.card
+                                    .notifications
+                                }
+                                buttons={
+                                  bottomSideCard.card.buttons
+                                }
+                                codeSnippet={
+                                  bottomSideCard.card.codeSnippet
+                                }
+                                tabs={bottomSideCard.card.tabs}
+                                nestedcards={
+                                  bottomSideCard.card.nestedcards
+                                }
+                                sections={
+                                  bottomSideCard.card.sections
+                                }
+                                color={color}
+                                hugHeight={false}
+                              />
+                            </div>
                           </div>
-                          <div className="flex-1">
+                        ))}
+                      </div>
+                    );
+                  } else {
+                    // Default rendering for bottom side cards (stacked vertically)
+                    bottomSideCards.forEach(
+                      (bottomSideCard, idx) => {
+                        elements.push(
+                          <div
+                            key={`side-wrapper-bottom-${bottomSideCard.card.id}`}
+                            className="flex flex-row gap-0 w-full"
+                          >
+                            {/* Arrow for side card - centered to side card height */}
+                            <div className="w-[24px] sm:w-[40px] -ml-[24px] sm:-ml-[40px] flex items-center justify-center shrink-0">
+                              <StaticArrow direction="right" />
+                            </div>
+                            <div className="flex-1">
                             <Card
                               title={bottomSideCard.card.title}
                               badge={bottomSideCard.card.badge}
@@ -1773,6 +1859,7 @@ function CardWithArrows({
                       );
                     },
                   );
+                  }
                 }
 
                 return elements;
@@ -1815,7 +1902,7 @@ function CardWithArrows({
                 >
                   {/* Arrow container - adjust width based on adjacent cards */}
                   {useNarrowWidth ? (
-                    <div className="flex flex-row w-full gap-[40px]">
+                    <div className="flex flex-row w-full gap-[24px] sm:gap-[40px]">
                       <div className="flex justify-center w-1/2">
                         <StaticArrow direction="down" />
                       </div>
@@ -1872,20 +1959,50 @@ function CardWithArrows({
                 arrowsByRow.keys(),
               ).sort((a, b) => a - b);
 
+              // Calculate card counts per row for adaptivity
+              const cardCountsByRow = new Map<number, number>();
+              rowIndices.forEach((rowIdx) => {
+                const arrows = arrowsByRow.get(rowIdx)!;
+                let cardCount = 0;
+                arrows.forEach((arrow) => {
+                  const targetCard = cardsById.get(arrow.targetCardId);
+                  if (targetCard) {
+                    cardCount++;
+                    // Count chained cards
+                    const processChain = (card: CardData) => {
+                      const rightArrows = (card.arrows || []).filter(
+                        (a) => a.direction === "right",
+                      );
+                      rightArrows.forEach((rightArrow) => {
+                        const chainedCard = cardsById.get(
+                          rightArrow.targetCardId,
+                        );
+                        if (chainedCard) {
+                          cardCount++;
+                          processChain(chainedCard);
+                        }
+                      });
+                    };
+                    processChain(targetCard);
+                  }
+                });
+                cardCountsByRow.set(rowIdx, cardCount);
+              });
+
               return (
-                <div className="flex flex-row items-stretch w-full gap-0">
+                <div className="flex flex-row items-stretch w-full gap-0 overflow-x-auto">
                   {/* Left: Main card */}
-                  <div className="flex flex-row items-stretch flex-1">
+                  <div className="flex flex-row items-stretch w-[90%] md:flex-1 shrink-0">
                     {renderHorizontalRow()}
                   </div>
 
                   {/* Middle: Arrow column */}
-                  <div className="flex flex-col justify-center w-[40px]">
+                  <div className="flex flex-col justify-center w-[24px] sm:w-[40px] shrink-0">
                     <StaticArrow direction="right" />
                   </div>
 
                   {/* Right: Sidecard rows column */}
-                  <div className="flex flex-col flex-1 gap-[40px]">
+                  <div className="flex flex-col w-[90%] md:flex-1 min-w-[90%] md:min-w-0 shrink-0 gap-[24px] sm:gap-[40px]">
                     {rowIndices.map((rowIdx) => {
                       const arrows = arrowsByRow.get(rowIdx)!;
 
@@ -1926,10 +2043,25 @@ function CardWithArrows({
                         }
                       });
 
+                      // Determine adaptive width for this row
+                      const thisRowCardCount = cardCountsByRow.get(rowIdx) || 1;
+                      const otherRowCardCounts = Array.from(cardCountsByRow.values()).filter((count, idx) => 
+                        rowIndices[idx] !== rowIdx
+                      );
+                      
+                      // Check if this row needs to adapt (1 card vs 2 cards in another row)
+                      let rowWidthClass = "flex-1";
+                      if (thisRowCardCount === 1 && otherRowCardCounts.some(count => count === 2)) {
+                        rowWidthClass = "w-full";
+                      } else if (thisRowCardCount === 2 && otherRowCardCounts.some(count => count === 1)) {
+                        // 2 cards should split evenly
+                        rowWidthClass = "flex-1";
+                      }
+
                       return (
                         <div
                           key={`row-${rowIdx}`}
-                          className="flex flex-1 flex-row items-stretch gap-[4px]"
+                          className={`flex ${rowWidthClass} flex-row items-stretch gap-[4px]`}
                         >
                           {allCardsInRow.map((targetCard) => (
                             <div
@@ -2048,7 +2180,7 @@ function CardWithArrows({
           >
             {/* Arrow container - adjust width based on adjacent cards */}
             {useNarrowWidth ? (
-              <div className="flex flex-row w-full gap-[40px]">
+              <div className="flex flex-row w-full gap-[24px] sm:gap-[40px]">
                 <div className="flex justify-center w-1/2">
                   <StaticArrow direction="down" />
                 </div>

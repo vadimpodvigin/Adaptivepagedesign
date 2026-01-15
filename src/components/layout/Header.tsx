@@ -1,5 +1,6 @@
 import svgPaths from "../../assets/svg/svg-ge5nv5v5ru";
 import overflowMenuPaths from "../../assets/svg/svg-4l2a964jjw";
+import logoutPaths from "../../imports/svg-7n3wi5itg7";
 import { X } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
@@ -117,7 +118,7 @@ function MenuTrigger({ onClick, isOpen }: { onClick?: () => void; isOpen?: boole
   );
 }
 
-export function Header({ onMenuClick, isMenuOpen, onLogoClick, themeColor = "#7a23d9" }: { onMenuClick?: () => void; isMenuOpen?: boolean; onLogoClick?: () => void; themeColor?: string }) {
+export function Header({ onMenuClick, isMenuOpen, onLogoClick, themeColor = "#7a23d9", isAuthenticated = false, onLogout }: { onMenuClick?: () => void; isMenuOpen?: boolean; onLogoClick?: () => void; themeColor?: string; isAuthenticated?: boolean; onLogout?: () => void }) {
   return (
     <div className="w-full bg-white fixed top-0 left-0 right-0 z-20 border-[#ededed] border-[0px_0px_1px] border-solid h-[60px]">
       <div className="relative size-full">
@@ -129,11 +130,36 @@ export function Header({ onMenuClick, isMenuOpen, onLogoClick, themeColor = "#7a
           onClick={onLogoClick}
         >
           <p className="font-['IBM_Plex_Sans:Regular',sans-serif] text-[14px] text-[#161616] font-[IBM_Plex_Mono] font-bold">
-            CoreIgnite/<span style={{ color: "#7A23D9" }}>Docs</span>
+            <span className="hidden sm:inline">CoreIgnite/</span><span style={{ color: "#7A23D9" }}>Docs</span>
           </p>
         </div>
         
-        <div className="absolute right-[24px] top-[22px]">
+        <div className="absolute right-[12px] sm:right-[24px] top-1/2 -translate-y-1/2 flex items-center gap-[8px] sm:gap-[16px]">
+          {/* Logout Button - only show when authenticated */}
+          {isAuthenticated && onLogout && (
+            <button
+              onClick={onLogout}
+              className="bg-[rgba(255,255,255,0)] content-stretch flex items-center gap-[6px] sm:gap-[8px] overflow-clip px-[8px] sm:px-[16px] py-[11px] rounded-[4px] cursor-pointer transition-opacity hover:opacity-70"
+            >
+              <p className="font-['IBM_Plex_Sans',sans-serif] font-bold leading-[18px] not-italic text-[#525252] text-[12px] sm:text-[14px] text-nowrap tracking-[0.16px]">
+                Logout
+              </p>
+              <div className="relative shrink-0 size-[16px]">
+                <div className="absolute inset-0">
+                  <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+                    <g id="Logout">
+                      <rect fill="white" fillOpacity="0.01" height="16" width="16" />
+                      <g id="Vector">
+                        <path d={logoutPaths.p2a978500} fill="#525252" stroke="#525252" strokeWidth="0.3" />
+                        <path d={logoutPaths.p27bc9a80} fill="#525252" stroke="#525252" strokeWidth="0.3" />
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+            </button>
+          )}
+          
           <Help />
         </div>
       </div>

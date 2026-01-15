@@ -164,7 +164,7 @@ export function WorkflowTile({ title, description, icon, iconColor = '#7A23D9', 
 
   return (
     <div
-      className={`bg-white content-stretch flex flex-col h-[120px] isolate items-start relative shrink-0 w-full max-w-[308px] ${
+      className={`bg-white content-stretch flex flex-col h-[120px] isolate items-start relative shrink-0 w-full sm:max-w-[308px] ${
         onClick ? 'cursor-pointer hover:shadow-lg transition-shadow' : 'cursor-default'
       }`}
       onClick={onClick}

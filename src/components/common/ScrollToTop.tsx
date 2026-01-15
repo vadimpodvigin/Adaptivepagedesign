@@ -57,7 +57,7 @@ export function ScrollToTop() {
       onClick={scrollToTop}
       className="fixed z-50 cursor-pointer hover:opacity-80 transition-opacity"
       style={{
-        right: 'max(40px, calc(50vw - 600px))', // Stay 40px from right edge of content, but minimum 40px from screen edge
+        right: 'max(40px, calc(50vw - 616px))', // Stay 16px from right edge of content, but minimum 40px from screen edge
         bottom: `${bottomPosition}px`,
         width: '40px',
         height: '40px',
@@ -73,7 +73,7 @@ export function ScrollToTop() {
             </g>
             <g id="Chevron_up">
               <rect fill="white" fillOpacity="0.01" height="16" transform="translate(12 12)" width="16" />
-              <path d={svgPaths.p22d08a00} fill="#161616" id="Vector" />
+              <path d={svgPaths.p22d08a00} fill="#161616" stroke="#161616" strokeWidth="0.2" id="Vector" />
             </g>
           </g>
           <defs>

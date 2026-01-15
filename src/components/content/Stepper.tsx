@@ -245,7 +245,7 @@ export function Stepper({ steps, direction = "horizontal", color }: StepperProps
               </div>
             </div>
             {/* Min-width constraint */}
-            <div className="h-[0.001px] shrink-0 w-[128px]" />
+            <div className="h-[0.001px] shrink-0 w-[96px] sm:w-[128px]" />
           </div>
         );
       })}

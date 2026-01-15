@@ -26,7 +26,7 @@ export function Button({
   return (
     <button
       onClick={handleClick}
-      className={`m-1 px-[16px] py-[11px] rounded cursor-pointer transition-opacity w-fit ${
+      className={`px-[12px] sm:px-[16px] py-[11px] rounded cursor-pointer transition-opacity w-fit ${
         isPrimary ? "hover:opacity-90" : "hover:opacity-70"
       }`}
       style={{

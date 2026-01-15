@@ -84,10 +84,10 @@ function AccordionItemComponent({
         aria-disabled={disabled}
       >
         <div className="flex flex-row items-center size-full">
-          <div className="content-stretch flex gap-[16px] isolate items-center px-[16px] py-[10px] relative w-full">
+          <div className="content-stretch flex gap-[12px] sm:gap-[16px] isolate items-center px-[12px] sm:px-[16px] py-[10px] relative w-full">
             {/* Title - grows to fill space, pushing chevron to the right */}
             <p
-              className="basis-0 font-['IBM_Plex_Sans',sans-serif] font-medium grow leading-[20px] min-h-px min-w-px not-italic relative shrink-0 text-[14px] tracking-[0.16px]"
+              className="basis-0 font-['IBM_Plex_Sans',sans-serif] font-medium grow leading-[20px] min-h-px min-w-px not-italic relative shrink-0 text-[12px] sm:text-[14px] tracking-[0.16px]"
               style={{ color: titleColor }}
             >
               {title}
@@ -101,8 +101,8 @@ function AccordionItemComponent({
       {/* Accordion Content - Expandable */}
       {isExpanded && (
         <div className="w-full overflow-hidden">
-          <div className="px-[16px] pb-[16px] pt-[4px]">
-            <p className="font-['IBM_Plex_Sans',sans-serif] leading-[20px] not-italic text-[14px] tracking-[0.16px]" style={{ color: '#525252' }}>
+          <div className="px-[12px] sm:px-[16px] pb-[16px] pt-[4px]">
+            <p className="font-['IBM_Plex_Sans',sans-serif] leading-[20px] not-italic text-[12px] sm:text-[14px] tracking-[0.16px]" style={{ color: '#525252' }}>
               {content}
             </p>
           </div>

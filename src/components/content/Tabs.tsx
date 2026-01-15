@@ -116,7 +116,7 @@ export function Tabs({
             <button
               key={index}
               onClick={() => setActiveTab(index)}
-              className="flex-1 content-stretch flex items-center justify-center px-[16px] py-[11px] relative bg-transparent cursor-pointer hover:bg-[#f4f4f4] transition-colors"
+              className="flex-1 content-stretch flex items-center justify-center px-[12px] sm:px-[16px] py-[11px] relative bg-transparent cursor-pointer hover:bg-[#f4f4f4] transition-colors"
               data-name="_Horizontal tabs items"
             >
               <div
@@ -134,7 +134,7 @@ export function Tabs({
                 data-name="Text overflow"
               >
                 <p
-                  className={`font-['IBM_Plex_Sans',sans-serif] font-medium leading-[18px] not-italic relative shrink-0 text-[14px] tracking-[0.16px] w-full text-center ${
+                  className={`font-['IBM_Plex_Sans',sans-serif] font-medium leading-[18px] not-italic relative shrink-0 text-[12px] sm:text-[14px] tracking-[0.16px] w-full text-center ${
                     isActive
                       ? "text-[#161616]"
                       : "text-[#525252]"

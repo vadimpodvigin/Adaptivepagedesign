@@ -135,7 +135,7 @@ export function Notification({ type, title, message }: NotificationProps) {
         style={{ borderColor: style.borderColor }}
       />
       <div className="size-full">
-        <div className="content-stretch flex items-start pl-[16px] pr-0 py-0 relative size-full">
+        <div className="content-stretch flex items-start pl-[12px] sm:pl-[16px] pr-0 py-0 relative size-full">
           {/* Icon margin */}
           <div className="content-stretch flex items-start pb-0 pt-[14px] px-0 relative shrink-0">
             <IconComponent color={style.accentColor} />
@@ -144,7 +144,7 @@ export function Notification({ type, title, message }: NotificationProps) {
           {/* Title + Message */}
           <div className="basis-0 grow min-h-px min-w-px relative shrink-0">
             <div className="size-full">
-              <div className="content-stretch flex flex-col gap-[2px] items-start leading-[18px] not-italic px-[16px] py-[15px] relative text-[#161616] text-[14px] tracking-[0.16px] w-full">
+              <div className="content-stretch flex flex-col gap-[2px] items-start leading-[18px] not-italic px-[12px] sm:px-[16px] py-[15px] relative text-[#161616] text-[12px] sm:text-[14px] tracking-[0.16px] w-full">
                 <p className="font-['IBM_Plex_Sans',sans-serif] font-semibold relative shrink-0 w-full">
                   {title}
                 </p>

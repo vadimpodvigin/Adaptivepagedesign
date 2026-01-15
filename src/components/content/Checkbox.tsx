@@ -155,7 +155,7 @@ function CheckboxWithLabel({
       {/* Label */}
       <div className="content-stretch flex flex-col items-start px-0 py-px relative shrink-0">
         <p
-          className="font-['IBM_Plex_Sans',sans-serif] not-italic relative shrink-0 text-nowrap tracking-[0.16px] text-neutral-600"
+          className="font-['IBM_Plex_Sans',sans-serif] not-italic relative shrink-0 text-nowrap tracking-[0.16px] text-neutral-600 text-[12px] sm:text-[14px]"
         >
           {label}
         </p>

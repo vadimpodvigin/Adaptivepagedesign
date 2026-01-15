@@ -51,7 +51,7 @@ export function WorkflowsLanding({
 
   if (loading) {
     return (
-      <div className="max-w-[1200px] mx-auto px-[32px] py-[24px]">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 py-[24px]">
         <div className="flex flex-col gap-[24px]">
           {/* Skeleton for categories */}
           {[1, 2].map((categoryIndex) => (
@@ -63,7 +63,7 @@ export function WorkflowsLanding({
               <div className="h-[18px] w-[150px] bg-gray-200 animate-pulse rounded mb-2" />
 
               {/* Workflow tiles skeleton */}
-              <div className="content-start flex flex-wrap gap-[8px] items-start relative shrink-0 w-full">
+              <div className="content-start flex flex-wrap gap-2 items-start relative shrink-0 w-full">
                 {[1, 2, 3].map((tileIndex) => (
                   <WorkflowTileSkeleton key={tileIndex} />
                 ))}
@@ -76,7 +76,7 @@ export function WorkflowsLanding({
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto px-[32px] py-[24px] pt-[24px] pr-[32px] pb-[0px] pl-[32px]">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 py-[24px]">
       <div className="flex flex-col gap-[24px]">
         {categories.map((category, index) => {
           // Assign color based on category index, rotating through the color list

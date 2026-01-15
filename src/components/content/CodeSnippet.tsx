@@ -45,8 +45,8 @@ function CopyIcon() {
           <g id="Copy">
             <rect fill="white" fillOpacity="0.01" height="16" style={{ mixBlendMode: "multiply" }} width="16" />
             <g id="Vector">
-              <path d={copyIconPaths.p35c00080} fill="#161616" />
-              <path d={copyIconPaths.p2aaf9200} fill="#161616" />
+              <path d={copyIconPaths.p35c00080} fill="#161616" stroke="#161616" strokeWidth="0.2" />
+              <path d={copyIconPaths.p2aaf9200} fill="#161616" stroke="#161616" strokeWidth="0.2" />
             </g>
           </g>
         </svg>
@@ -115,7 +115,7 @@ export function CodeSnippet({ code, caption }: CodeSnippetProps) {
             </div>
 
             {/* Gradient Wrapper */}
-            <div className="absolute bottom-0 content-stretch flex flex-col items-end right-0 top-0 w-[72px] pointer-events-none" data-name="Gradient wrapper">
+            <div className="absolute bottom-0 content-stretch flex flex-col items-end right-0 top-0 w-[56px] sm:w-[72px] pointer-events-none" data-name="Gradient wrapper">
               <div className="basis-0 flex grow items-center justify-center min-h-px min-w-px mix-blend-multiply relative shrink-0 w-full">
                 <div className="flex-none rotate-[180deg] scale-y-[-100%] size-full">
                   <div className="bg-[rgba(255,255,255,0)] content-stretch flex isolate items-start relative size-full" data-name="Gradient (Variable)">

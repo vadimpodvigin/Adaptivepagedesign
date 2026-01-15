@@ -8,6 +8,7 @@ import { WorkflowsLanding } from "./components/features/WorkflowsLanding";
 import { Footer } from "./components/layout/Footer";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Network from "./components/legacy/Network";
+import { LoginPage } from "./components/auth/LoginPage";
 import { useState, useEffect } from "react";
 import yaml from "js-yaml";
 
@@ -18,6 +19,7 @@ export interface WorkflowMetadata extends WorkflowData {
 }
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentWorkflow, setCurrentWorkflow] = useState<
     string | null
   >(null);
@@ -30,25 +32,25 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   // Map workflows to their JSON/YAML URLs
-  const workflowJsonUrls: Record<string, string> = {
-    "Digital Assets":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/digitalAsset.yaml",
-    "Stripe Payment":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/stripePayment.yaml",
-    "CoreIgnite User Account Creation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/accountCreation.yaml",
-    "New Core Banking Space Activation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/initiateBank.yaml",
-    "Card Transaction":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/cardTransaction.yaml",
-    "Direct Account":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/directAccount.yaml",
-    "Direct Debit":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/directDebit.yaml",
-    BNPL: "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/bnpl.yaml",
-    "CoreIgnite Team: Add New Workflow":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/exampleCardComponent.yaml",
+  const workflowUrls: Record<string, string> = {
+    "Digital Assets": "/data/digitalAsset.yaml",
+    "Stripe Payment": "/data/stripePayment.yaml",
+    "CoreIgnite User Account Creation": "/data/accountCreation.yaml",
+    "New Core Banking Space Activation": "/data/initiateBank.yaml",
+    "Card Transaction": "/data/cardTransaction.yaml",
+    "Direct Account": "/data/directAccount.yaml",
+    "Direct Debit": "/data/directDebit.yaml",
+    BNPL: "/data/bnpl.yaml",
+    "CoreIgnite Team: Add New Workflow": "/data/exampleCardComponents.yaml",
   };
+
+  // Check sessionStorage for authentication on mount
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem("coreIgniteAuth");
+    if (authStatus === "authenticated") {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   // Color mapping function (matching WorkflowsLanding and Sidebar)
   const getCategoryColor = (category: string): string => {
@@ -79,14 +81,16 @@ export default function App() {
         ? getCategoryColor(workflowData.category)
         : "#7A23D9";
 
-  // Fetch workflow metadata on mount
+  // Fetch workflow metadata on mount (only when authenticated)
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     async function fetchAllWorkflowMetadata() {
       setLoading(true);
       const workflows: WorkflowMetadata[] = [];
 
       for (const [name, url] of Object.entries(
-        workflowJsonUrls,
+        workflowUrls,
       )) {
         try {
           const response = await fetch(url);
@@ -141,12 +145,27 @@ export default function App() {
     }
 
     fetchAllWorkflowMetadata();
-  }, []);
+  }, [isAuthenticated]);
+
+  // Handle successful login
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    sessionStorage.setItem("coreIgniteAuth", "authenticated");
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem("coreIgniteAuth");
+    setCurrentWorkflow(null);
+    setWorkflowData(null);
+    setSidebarOpen(false);
+  };
 
   const cardsJsonUrl =
-    currentWorkflow && workflowJsonUrls[currentWorkflow]
-      ? workflowJsonUrls[currentWorkflow]
-      : workflowJsonUrls["Digital Assets"];
+    currentWorkflow && workflowUrls[currentWorkflow]
+      ? workflowUrls[currentWorkflow]
+      : workflowUrls["Digital Assets"];
 
   const handleWorkflowClick = (workflowName: string) => {
     if (workflowName === "__HOME__") {
@@ -162,6 +181,11 @@ export default function App() {
     setSidebarOpen(false);
   };
 
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="bg-[#F2F2F2] min-h-screen flex flex-col">
       <Header
@@ -169,6 +193,8 @@ export default function App() {
         isMenuOpen={sidebarOpen}
         onLogoClick={() => handleWorkflowClick("__HOME__")}
         themeColor={currentColor}
+        isAuthenticated={isAuthenticated}
+        onLogout={handleLogout}
       />
       <Sidebar
         currentWorkflow={currentWorkflow}
@@ -185,14 +211,14 @@ export default function App() {
             loading={loading}
           />
         ) : currentWorkflow === "__QUESTIONS__" ? (
-          <div className="max-w-[1200px] mx-auto px-[32px] pt-[24px] md:px-8">
-            <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[24px] font-medium text-center mt-[0px]">
+          <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 pt-[24px]">
+            <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[20px] sm:text-[24px] font-medium text-center mt-[0px]">
               Questions
             </h1>
           </div>
         ) : (
-          <div className="max-w-[1200px] mx-auto px-[32px] pt-[24px] md:px-8">
-            <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[24px] font-medium text-center flex items-center justify-center mt-[0px] mr-[0px] ml-[0px]">
+          <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 pt-[24px]">
+            <h1 className="mb-[8px] font-[IBM_Plex_Sans] text-[20px] sm:text-[24px] font-medium text-center flex items-center justify-center mt-[0px] mr-[0px] ml-[0px]">
               <Network
                 icon={workflowData?.icon}
                 iconColor={currentColor}
@@ -200,7 +226,7 @@ export default function App() {
               />
               {workflowData?.title || currentWorkflow}
             </h1>
-            <p className="mb-8 font-[IBM_Plex_Sans] text-[16px] text-[#525252] text-center px-[96px] py-[0px]">
+            <p className="mb-8 font-[IBM_Plex_Sans] text-[14px] sm:text-[16px] text-[#525252] text-center px-4 sm:px-8 md:px-16 lg:px-24 py-[0px]">
               {workflowData?.description ||
                 "Loading workflow description..."}
             </p>

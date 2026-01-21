@@ -120,7 +120,7 @@ function MenuTrigger({ onClick, isOpen }: { onClick?: () => void; isOpen?: boole
 
 export function Header({ onMenuClick, isMenuOpen, onLogoClick, themeColor = "#7a23d9", isAuthenticated = false, onLogout }: { onMenuClick?: () => void; isMenuOpen?: boolean; onLogoClick?: () => void; themeColor?: string; isAuthenticated?: boolean; onLogout?: () => void }) {
   return (
-    <div className="w-full bg-white fixed top-0 left-0 right-0 z-20 border-[#ededed] border-[0px_0px_1px] border-solid h-[60px]">
+    <div className="w-full bg-white fixed bottom-0 md:top-0 md:bottom-auto left-0 right-0 z-20 border-[#ededed] border-[0px_0px_1px] md:border-[0px_0px_1px] border-solid h-[60px] shadow-[0_-2px_8px_rgba(0,0,0,0.1)] md:shadow-none">
       <div className="relative size-full">
         <MenuTrigger onClick={onMenuClick} isOpen={isMenuOpen} />
         

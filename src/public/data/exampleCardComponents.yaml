@@ -63,12 +63,9 @@ cards:
     sections:
       direction: row
       items:
-        - title: Left Section
+        - title: Section Card
           badge: "4.1"
-          description: This section appears on the left side when using row layout.
-        - title: Right Section
-          badge: "4.2"
-          description: This section appears on the right side when using row layout.
+          description: This section appears when using row layout to create a side card effect.
 
   - id: card5
     title: Card with Nested Cards
@@ -133,12 +130,9 @@ cards:
           sections:
             direction: row
             items:
-              - title: Parallel Process A
+              - title: Parallel Process
                 badge: "7.1"
-                description: This process runs in parallel with Process B
-              - title: Parallel Process B
-                badge: "7.2"
-                description: This process runs in parallel with Process A
+                description: This process demonstrates row layout within a tab
 
   - id: card8
     title: Card with Nested Tabs

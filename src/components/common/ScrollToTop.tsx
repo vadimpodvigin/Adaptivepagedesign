@@ -9,6 +9,7 @@ export function ScrollToTop() {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
+      const isMobile = window.innerWidth < 768; // md breakpoint
 
       // Show button if scrolled more than 1500px
       setIsVisible(scrollY > 1500);
@@ -22,25 +23,32 @@ export function ScrollToTop() {
         const footerPaddingTop = 24;
         const footerContentTop = footerRect.top + footerPaddingTop;
         
+        // On mobile, also account for the bottom header (60px)
+        const mobileHeaderHeight = isMobile ? 60 : 0;
+        
         // If footer content is visible in viewport
         if (footerContentTop < windowHeight) {
           // Calculate distance from bottom of viewport to footer content top
           const distanceFooterContentFromBottom = windowHeight - footerContentTop;
-          // Button should stop 24px above footer content start
-          setBottomPosition(Math.max(40, distanceFooterContentFromBottom + 24));
+          // Button should stop 24px above footer content start, plus mobile header space
+          setBottomPosition(Math.max(40, distanceFooterContentFromBottom + 24 + mobileHeaderHeight));
         } else {
-          // Footer not visible, keep button at 40px from bottom
-          setBottomPosition(40);
+          // Footer not visible, keep button at 40px from bottom on desktop, above header on mobile
+          setBottomPosition(isMobile ? 100 : 40);
         }
       } else {
-        setBottomPosition(40);
+        setBottomPosition(isMobile ? 100 : 40);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll); // Also listen to resize for responsive updates
     handleScroll(); // Check initial state
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, []);
 
   const scrollToTop = () => {

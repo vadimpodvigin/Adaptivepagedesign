@@ -11,6 +11,7 @@ import Network from "./components/legacy/Network";
 import { LoginPage } from "./components/auth/LoginPage";
 import { useState, useEffect } from "react";
 import yaml from "js-yaml";
+import { WORKFLOW_URLS } from "./config/workflows";
 
 // Extended interface to include URL
 export interface WorkflowMetadata extends WorkflowData {
@@ -30,27 +31,9 @@ export default function App() {
     WorkflowMetadata[]
   >([]);
   const [loading, setLoading] = useState(true);
-
-  // Map workflows to their JSON/YAML URLs
-  const workflowJsonUrls: Record<string, string> = {
-    "Digital Assets":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/digitalAsset.yaml",
-    "Stripe Payment":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/stripePayment.yaml",
-    "CoreIgnite User Account Creation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/accountCreation.yaml",
-    "New Core Banking Space Activation":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/initiateBank.yaml",
-    "Card Transaction":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/cardTransaction.yaml",
-    "Direct Account":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/directAccount.yaml",
-    "Direct Debit":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/directDebit.yaml",
-    BNPL: "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/bnpl.yaml",
-    "CoreIgnite Team: Add New Workflow":
-      "https://raw.githubusercontent.com/vadimpodvigin/Adaptivepagedesign/refs/heads/local-data-version/public/data/exampleCardComponent.yaml",
-  };
+  const [failedWorkflows, setFailedWorkflows] = useState<
+    Array<{ name: string; error: string }>
+  >([]);
 
   // Check sessionStorage for authentication on mount
   useEffect(() => {
@@ -69,7 +52,7 @@ export default function App() {
       const workflows: WorkflowMetadata[] = [];
 
       for (const [name, url] of Object.entries(
-        workflowJsonUrls,
+        WORKFLOW_URLS,
       )) {
         try {
           const response = await fetch(url);
@@ -104,18 +87,30 @@ export default function App() {
               console.warn(
                 `${name}: Missing workflow key in data structure`,
               );
+              setFailedWorkflows((prev) => [
+                ...prev,
+                { name, error: "Missing workflow key in data structure" },
+              ]);
             }
           } catch (parseError) {
-            console.error(
-              `Failed to parse ${name}:`,
+            const errorMsg =
               parseError instanceof Error
                 ? parseError.message
-                : parseError,
-            );
+                : String(parseError);
+            console.error(`Failed to parse ${name}:`, errorMsg);
+            console.error(`URL attempted: ${url}`);
+            setFailedWorkflows((prev) => [
+              ...prev,
+              { name, error: errorMsg },
+            ]);
             continue;
           }
         } catch (error) {
           console.warn(`Failed to fetch ${name}:`, error);
+          setFailedWorkflows((prev) => [
+            ...prev,
+            { name, error: error instanceof Error ? error.message : String(error) },
+          ]);
         }
       }
 
@@ -171,9 +166,9 @@ export default function App() {
         : "#7A23D9";
 
   const cardsJsonUrl =
-    currentWorkflow && workflowJsonUrls[currentWorkflow]
-      ? workflowJsonUrls[currentWorkflow]
-      : workflowJsonUrls["Digital Assets"];
+    currentWorkflow && WORKFLOW_URLS[currentWorkflow]
+      ? WORKFLOW_URLS[currentWorkflow]
+      : WORKFLOW_URLS["Digital Assets"];
 
   const handleWorkflowClick = (workflowName: string) => {
     if (workflowName === "__HOME__") {
@@ -196,6 +191,53 @@ export default function App() {
 
   return (
     <div className="bg-[#F2F2F2] min-h-screen flex flex-col">
+      {/* Error notification banner */}
+      {failedWorkflows.length > 0 && (
+        <div className="bg-[#fff1f1] border-b border-[#da1e28] px-4 py-3 z-50 sticky top-0">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="flex items-start gap-3">
+              <svg
+                className="w-5 h-5 text-[#da1e28] shrink-0 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <div className="flex-1">
+                <p className="font-['IBM_Plex_Sans',sans-serif] text-[14px] text-[#161616] font-semibold mb-1">
+                  Failed to load {failedWorkflows.length} workflow
+                  {failedWorkflows.length > 1 ? "s" : ""}
+                </p>
+                <ul className="font-['IBM_Plex_Sans',sans-serif] text-[12px] text-[#525252] space-y-1">
+                  {failedWorkflows.map((failed, index) => (
+                    <li key={index} className="break-words">
+                      <span className="font-semibold">{failed.name}:</span>{" "}
+                      {failed.error}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={() => setFailedWorkflows([])}
+                className="text-[#161616] hover:text-[#525252] transition-colors shrink-0"
+                aria-label="Dismiss"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <Header
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         isMenuOpen={sidebarOpen}
@@ -211,7 +253,7 @@ export default function App() {
         onClose={() => setSidebarOpen(false)}
         workflows={allWorkflows}
       />
-      <div className="py-[61px] flex-grow pt-[61px] pr-[0px] pb-[0px] pl-[0px]">
+      <div className="md:pt-[61px] flex-grow pr-[0px] pl-[0px]">
         {!currentWorkflow ? (
           <WorkflowsLanding
             onWorkflowClick={handleWorkflowClick}

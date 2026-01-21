@@ -244,14 +244,14 @@ export function Sidebar({
       {/* Overlay - only visible when sidebar is open */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 top-[60px]"
+          className="fixed inset-0 bg-black/50 z-30 bottom-[60px] md:bottom-0 md:top-[60px]"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
       <div
-        className={`fixed left-0 top-[60px] bottom-0 w-[280px] sm:w-[320px] bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-40 ${
+        className={`fixed left-0 top-0 md:top-[60px] bottom-[60px] md:bottom-0 w-[280px] sm:w-[320px] bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-40 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

@@ -51,7 +51,7 @@ export function WorkflowsLanding({
 
   if (loading) {
     return (
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 py-[24px]">
+      <div className="max-w-[1200px] mx-auto pt-[24px] pb-0x-4 sm:px-6 md:px-8 pt-[24px] pb-[0px]">
         <div className="flex flex-col gap-[24px]">
           {/* Skeleton for categories */}
           {[1, 2].map((categoryIndex) => (

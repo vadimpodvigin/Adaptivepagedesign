@@ -18,7 +18,7 @@ export interface StepperProps {
 // Incomplete icon (unfilled circle with dashes)
 function IncompleteIcon() {
   return (
-    <div className="relative shrink-0 size-[16px]">
+    <div className="relative shrink-0 size-[20px] sm:size-[16px]">
       <div className="absolute inset-0" style={{ "--fill-0": "rgba(255, 255, 255, 1)" } as React.CSSProperties}>
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
           <g id="Circle-dash">
@@ -45,7 +45,7 @@ function IncompleteIcon() {
 // Current icon (half-filled circle)
 function CurrentIcon({ color = "#0f62fe" }: { color?: string }) {
   return (
-    <div className="relative shrink-0 size-[16px]">
+    <div className="relative shrink-0 size-[20px] sm:size-[16px]">
       <div className="absolute inset-0" style={{ "--fill-0": "rgba(255, 255, 255, 1)" } as React.CSSProperties}>
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
           <g id="Incomplete--normal">
@@ -67,7 +67,7 @@ function CurrentIcon({ color = "#0f62fe" }: { color?: string }) {
 // Completed icon (checkmark in circle)
 function CompletedIcon({ color = "#0f62fe" }: { color?: string }) {
   return (
-    <div className="relative shrink-0 size-[16px]" style={{ color }}>
+    <div className="relative shrink-0 size-[20px] sm:size-[16px]" style={{ color }}>
       <div className="absolute inset-0" style={{ "--fill-0": "rgba(255, 255, 255, 1)" } as React.CSSProperties}>
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
           <g id="Checkmark--filled">
@@ -86,7 +86,7 @@ function CompletedIcon({ color = "#0f62fe" }: { color?: string }) {
 // Error icon (X in circle)
 function ErrorIcon() {
   return (
-    <div className="relative shrink-0 size-[16px]">
+    <div className="relative shrink-0 size-[20px] sm:size-[16px]">
       <div className="absolute inset-0" style={{ "--fill-0": "rgba(255, 255, 255, 1)" } as React.CSSProperties}>
         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
           <g id="Error--filled">
@@ -172,15 +172,15 @@ export function Stepper({ steps, direction = "horizontal", color }: StepperProps
               </div>
 
               {/* Right side: Label and description */}
-              <div className="flex flex-col pl-[8px] pb-[16px] flex-1">
+              <div className="flex flex-col pl-[10px] sm:pl-[8px] pb-[20px] sm:pb-[16px] flex-1">
                 <p
-                  className="font-['IBM_Plex_Sans',sans-serif] leading-[18px] not-italic text-[14px] tracking-[0.16px]"
+                  className="font-['IBM_Plex_Sans',sans-serif] leading-[20px] sm:leading-[18px] not-italic text-[16px] sm:text-[14px] tracking-[0.16px]"
                   style={{ color: textColor, fontWeight: 500 }}
                 >
                   {step.label}
                 </p>
                 {step.description && (
-                  <p className="font-['IBM_Plex_Sans',sans-serif] leading-[16px] not-italic text-[#525252] text-[12px] tracking-[0.32px] mt-[4px]">
+                  <p className="font-['IBM_Plex_Sans',sans-serif] leading-[18px] sm:leading-[16px] not-italic text-[#525252] text-[14px] sm:text-[12px] tracking-[0.32px] mt-[4px]">
                     {step.description}
                   </p>
                 )}
@@ -215,13 +215,13 @@ export function Stepper({ steps, direction = "horizontal", color }: StepperProps
               <div className="size-full">
                 <div className="content-stretch flex flex-col items-start pb-0 pl-0 pr-[16px] pt-[10px] relative w-full">
                   {/* Icon + Label */}
-                  <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">
+                  <div className="content-stretch flex gap-[10px] sm:gap-[8px] items-start relative shrink-0 w-full">
                     <div className="content-stretch flex items-start px-0 py-px relative shrink-0">
                       {getIconForState(step.state, color)}
                     </div>
-                    <div className="bg-[rgba(255,255,255,0)] content-stretch flex flex-col h-[18px] items-start mix-blend-multiply overflow-clip relative shrink-0">
+                    <div className="bg-[rgba(255,255,255,0)] content-stretch flex flex-col h-auto sm:h-[18px] items-start mix-blend-multiply overflow-clip relative shrink-0">
                       <p
-                        className="font-['IBM_Plex_Sans',sans-serif] font-bold leading-[18px] not-italic relative shrink-0 text-[14px] text-nowrap tracking-[0.16px]"
+                        className="font-['IBM_Plex_Sans',sans-serif] font-bold leading-[20px] sm:leading-[18px] not-italic relative shrink-0 text-[16px] sm:text-[14px] text-nowrap tracking-[0.16px]"
                         style={{ color: textColor }}
                       >
                         {step.label}
@@ -233,8 +233,8 @@ export function Stepper({ steps, direction = "horizontal", color }: StepperProps
                   {step.description && (
                     <div className="relative shrink-0 w-full">
                       <div className="overflow-clip rounded-[inherit] size-full">
-                        <div className="content-stretch flex items-start pl-[24px] pr-0 py-0 relative w-full">
-                          <p className="basis-0 font-['IBM_Plex_Sans',sans-serif] grow leading-[16px] min-h-px min-w-px not-italic relative shrink-0 text-[#525252] text-[12px] tracking-[0.32px]">
+                        <div className="content-stretch flex items-start pl-[30px] sm:pl-[24px] pr-0 py-0 relative w-full">
+                          <p className="basis-0 font-['IBM_Plex_Sans',sans-serif] grow leading-[18px] sm:leading-[16px] min-h-px min-w-px not-italic relative shrink-0 text-[#525252] text-[14px] sm:text-[12px] tracking-[0.32px]">
                             {step.description}
                           </p>
                         </div>

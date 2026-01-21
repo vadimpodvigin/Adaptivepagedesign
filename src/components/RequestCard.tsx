@@ -399,15 +399,15 @@ function NestedCard({
   return (
     <div className="bg-white relative shrink-0 w-full rounded-[8px] border border-[#ededed]">
       <div className="size-full">
-        <div className="box-border content-stretch flex gap-[4px] items-start p-[8px] relative w-full">
+        <div className="box-border content-stretch flex gap-[6px] sm:gap-[4px] items-start p-[12px] sm:p-[8px] relative w-full">
           <div
-            className={`basis-0 content-stretch flex flex-col ${description ? "gap-[4px] items-start" : "items-start justify-center"} grow leading-[normal] min-h-px min-w-px not-italic relative shrink-0 text-[#525252]`}
+            className={`basis-0 content-stretch flex flex-col ${description ? "gap-[6px] sm:gap-[4px] items-start" : "items-start justify-center"} grow leading-[normal] min-h-px min-w-px not-italic relative shrink-0 text-[#525252]`}
           >
-            <p className="font-['IBM_Plex_Sans',sans-serif] font-bold relative shrink-0 w-full text-[10px] md:text-[12px]">
+            <p className="font-['IBM_Plex_Sans',sans-serif] font-bold relative shrink-0 w-full text-[12px] md:text-[14px]">
               {title}
             </p>
             {description && (
-              <p className="font-['IBM_Plex_Sans',sans-serif] relative shrink-0 w-full text-[10px] md:text-[12px]">
+              <p className="font-['IBM_Plex_Sans',sans-serif] relative shrink-0 w-full text-[12px] md:text-[14px]">
                 {description}
               </p>
             )}
@@ -1018,7 +1018,7 @@ function renderTabContent(
                 key={index}
                 className={
                   content.sections.direction === "row"
-                    ? "w-full sm:flex-1"
+                    ? "w-[90%] sm:flex-1"
                     : "w-full"
                 }
               >
@@ -1074,11 +1074,11 @@ function StaticArrow({
   const isVertical = direction === "up" || direction === "down";
 
   return (
-    <div className="content-stretch size-[40px] flex-col flex isolate items-center justify-center overflow-clip shrink-0 bg-transparent">
+    <div className="content-stretch size-[24px] sm:size-[40px] flex-col flex isolate items-center justify-center overflow-clip shrink-0 bg-transparent">
       <div className="relative shrink-0 w-full">
         <div className="flex flex-row items-center overflow-clip size-full">
           <div className="box-border content-stretch flex isolate items-center justify-center relative w-full">
-            <div className="flex items-center justify-center shrink-0">
+            <div className="flex items-center justify-center shrink-0 scale-75 sm:scale-100">
               <ArrowComponent />
             </div>
           </div>
@@ -1612,14 +1612,19 @@ function CardWithArrows({
                 const sharedCardCount = sharedCardsGroup.length;
 
                 // Determine width classes based on adaptivity rules
+                // Rule: 1 card = calc(180% + 4px) to match 2 cards (90% + 4px gap + 90%)
+                //       2 cards = each 90%
                 let topSideCardWidthClass = "flex-1";
+                let topSideCardMobileWidthClass = "w-[calc(180%+4px)] min-w-[calc(180%+4px)]"; // Default: match 2-card width
                 let sharedCardContainerWidthClass = "flex-1";
 
                 // Top side card vs shared cards adaptivity
                 if (topSideCardCount === 1 && sharedCardCount === 2) {
                   topSideCardWidthClass = "w-full";
+                  topSideCardMobileWidthClass = "w-[calc(180%+4px)] min-w-[calc(180%+4px)]"; // Match 2 cards below
                 } else if (topSideCardCount === 1 && sharedCardCount === 1) {
                   topSideCardWidthClass = "flex-1";
+                  topSideCardMobileWidthClass = "w-[calc(180%+4px)] min-w-[calc(180%+4px)]"; // Match 2-card standard
                   sharedCardContainerWidthClass = "flex-1";
                 }
 
@@ -1642,7 +1647,7 @@ function CardWithArrows({
                       <div className="w-[24px] sm:w-[40px] -ml-[24px] sm:-ml-[40px] flex items-center justify-center shrink-0">
                         <StaticArrow direction="right" />
                       </div>
-                      <div className={topSideCardWidthClass}>
+                      <div className={`${topSideCardWidthClass} ${topSideCardMobileWidthClass} md:flex-1 md:w-auto md:min-w-0 shrink-0`}>
                         <Card
                           title={topSideCard.card.title}
                           badge={topSideCard.card.badge}
@@ -1693,35 +1698,42 @@ function CardWithArrows({
                   elements.push(
                     <div
                       key="shared-cards"
-                      className={`flex flex-row gap-[4px] ${sharedCardContainerWidthClass} h-full min-h-0 min-w-[90%] md:min-w-0`}
+                      className={`flex flex-row gap-[4px] ${sharedCardContainerWidthClass} h-full min-h-0 md:min-w-0`}
                     >
-                      {sharedCardsGroup.map((sharedCard) => (
-                        <div
-                          key={`shared-${sharedCard.id}`}
-                          className="flex-1 h-full min-w-[90%] md:min-w-0"
-                        >
-                          <Card
-                            title={sharedCard.title}
-                            badge={sharedCard.badge}
-                            description={sharedCard.description}
-                            icon={sharedCard.icon}
-                            tags={sharedCard.tags}
-                            list={sharedCard.list}
-                            table={sharedCard.table}
-                            stepper={sharedCard.stepper}
-                            checkboxGroup={
-                              sharedCard.checkboxGroup
-                            }
-                            accordion={sharedCard.accordion}
-                            notifications={
-                              sharedCard.notifications
-                            }
-                            buttons={sharedCard.buttons}
-                            color={color}
-                            hugHeight={false}
-                          />
-                        </div>
-                      ))}
+                      {sharedCardsGroup.map((sharedCard) => {
+                        // Rule: 1 card = calc(180% + 4px), 2+ cards = 90% each
+                        const cardMobileWidth = sharedCardsGroup.length === 1 
+                          ? 'w-[calc(180%+4px)] min-w-[calc(180%+4px)]' 
+                          : 'w-[90%] min-w-[90%]';
+                        
+                        return (
+                          <div
+                            key={`shared-${sharedCard.id}`}
+                            className={`${sharedCardsGroup.length === 1 ? 'flex-1' : 'shrink-0'} h-full ${cardMobileWidth} md:flex-1 md:w-auto md:min-w-0`}
+                          >
+                            <Card
+                              title={sharedCard.title}
+                              badge={sharedCard.badge}
+                              description={sharedCard.description}
+                              icon={sharedCard.icon}
+                              tags={sharedCard.tags}
+                              list={sharedCard.list}
+                              table={sharedCard.table}
+                              stepper={sharedCard.stepper}
+                              checkboxGroup={
+                                sharedCard.checkboxGroup
+                              }
+                              accordion={sharedCard.accordion}
+                              notifications={
+                                sharedCard.notifications
+                              }
+                              buttons={sharedCard.buttons}
+                              color={color}
+                              hugHeight={false}
+                            />
+                          </div>
+                        );
+                      })}
                     </div>,
                   );
                 }
@@ -1743,18 +1755,18 @@ function CardWithArrows({
                     elements.push(
                       <div
                         key="bottom-side-cards-container"
-                        className="flex flex-row gap-[4px] w-full"
+                        className="flex flex-row gap-[4px] w-full md:min-w-0"
                       >
                         {bottomSideCards.map((bottomSideCard, idx) => (
                           <div
                             key={`side-wrapper-bottom-${bottomSideCard.card.id}`}
-                            className="flex flex-row gap-0 flex-1"
+                            className="flex flex-row gap-0 shrink-0 md:flex-1 md:min-w-0"
                           >
                             {/* Arrow for side card - centered to side card height */}
                             <div className="w-[24px] sm:w-[40px] -ml-[24px] sm:-ml-[40px] flex items-center justify-center shrink-0">
                               <StaticArrow direction="right" />
                             </div>
-                            <div className="flex-1">
+                            <div className="w-[90%] min-w-[90%] md:flex-1 md:w-auto md:min-w-0 shrink-0">
                               <Card
                                 title={bottomSideCard.card.title}
                                 badge={bottomSideCard.card.badge}
@@ -1802,6 +1814,11 @@ function CardWithArrows({
                     );
                   } else {
                     // Default rendering for bottom side cards (stacked vertically)
+                    // Rule: 1 card = calc(180% + 4px), 2+ cards = 90% each
+                    const bottomCardMobileWidth = bottomSideCards.length === 1
+                      ? 'w-[calc(180%+4px)] min-w-[calc(180%+4px)]'
+                      : 'w-[90%] min-w-[90%]';
+                    
                     bottomSideCards.forEach(
                       (bottomSideCard, idx) => {
                         elements.push(
@@ -1813,7 +1830,7 @@ function CardWithArrows({
                             <div className="w-[24px] sm:w-[40px] -ml-[24px] sm:-ml-[40px] flex items-center justify-center shrink-0">
                               <StaticArrow direction="right" />
                             </div>
-                            <div className="flex-1">
+                            <div className={`${bottomCardMobileWidth} md:flex-1 md:w-auto md:min-w-0 shrink-0`}>
                             <Card
                               title={bottomSideCard.card.title}
                               badge={bottomSideCard.card.badge}
@@ -2063,43 +2080,50 @@ function CardWithArrows({
                           key={`row-${rowIdx}`}
                           className={`flex ${rowWidthClass} flex-row items-stretch gap-[4px]`}
                         >
-                          {allCardsInRow.map((targetCard) => (
-                            <div
-                              key={targetCard.id}
-                              className="flex-1 flex flex-col"
-                            >
-                              <Card
-                                title={targetCard.title}
-                                badge={targetCard.badge}
-                                description={
-                                  targetCard.description
-                                }
-                                icon={targetCard.icon}
-                                tags={targetCard.tags}
-                                list={targetCard.list}
-                                table={targetCard.table}
-                                stepper={targetCard.stepper}
-                                checkboxGroup={
-                                  targetCard.checkboxGroup
-                                }
-                                accordion={targetCard.accordion}
-                                notifications={
-                                  targetCard.notifications
-                                }
-                                buttons={targetCard.buttons}
-                                codeSnippet={
-                                  targetCard.codeSnippet
-                                }
-                                tabs={targetCard.tabs}
-                                nestedcards={
-                                  targetCard.nestedcards
-                                }
-                                sections={targetCard.sections}
-                                color={color}
-                                hugHeight={false}
-                              />
-                            </div>
-                          ))}
+                          {allCardsInRow.map((targetCard, cardIdx) => {
+                            // Apply 90% width rule for chained side cards (2+ cards)
+                            const cardWidthClass = allCardsInRow.length >= 2
+                              ? 'w-[90%] sm:flex-1'
+                              : 'flex-1';
+                            
+                            return (
+                              <div
+                                key={targetCard.id}
+                                className={`${cardWidthClass} flex flex-col shrink-0 sm:shrink`}
+                              >
+                                <Card
+                                  title={targetCard.title}
+                                  badge={targetCard.badge}
+                                  description={
+                                    targetCard.description
+                                  }
+                                  icon={targetCard.icon}
+                                  tags={targetCard.tags}
+                                  list={targetCard.list}
+                                  table={targetCard.table}
+                                  stepper={targetCard.stepper}
+                                  checkboxGroup={
+                                    targetCard.checkboxGroup
+                                  }
+                                  accordion={targetCard.accordion}
+                                  notifications={
+                                    targetCard.notifications
+                                  }
+                                  buttons={targetCard.buttons}
+                                  codeSnippet={
+                                    targetCard.codeSnippet
+                                  }
+                                  tabs={targetCard.tabs}
+                                  nestedcards={
+                                    targetCard.nestedcards
+                                  }
+                                  sections={targetCard.sections}
+                                  color={color}
+                                  hugHeight={false}
+                                />
+                              </div>
+                            );
+                          })}
                         </div>
                       );
                     })}

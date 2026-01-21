@@ -1,5 +1,7 @@
 import { useState } from "react";
 import svgPaths from "../../imports/svg-jbv9pku346";
+import viewSvgPaths from "../../imports/svg-ii4aty865g";
+import viewOffSvgPaths from "../../imports/svg-1157kohv19";
 
 interface LoginPageProps {
   onLoginSuccess: () => void;
@@ -84,7 +86,7 @@ function SiteTitle() {
 function HelpButton() {
   return (
     <div
-      className="relative shrink-0 size-[22px]"
+      className="relative shrink-0 w-[22px] h-full hover:opacity-70 transition-opacity cursor-default"
       data-name="Help Button"
     >
       <svg
@@ -109,6 +111,8 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,116 +141,181 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
   return (
     <div
-      className="bg-[#f4f4f4] content-stretch flex flex-col items-center justify-between min-h-screen relative"
+      className="bg-[#f4f4f4] content-stretch flex flex-col items-center justify-between relative"
+      style={{ minHeight: '100dvh' }}
       data-name="Site Frame (Header + Footer)"
     >
       {/* Transparent Gray Overlay */}
       <div className="absolute inset-0 bg-black/30 z-0" />
 
-      {/* Header */}
-      <div className="bg-white content-stretch flex h-[60px] items-center justify-between relative shrink-0 w-full px-4 md:px-6 z-10">
-        <div
-          aria-hidden="true"
-          className="absolute border-[#ededed] border-b border-solid inset-0 pointer-events-none"
-        />
-        <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative z-10">
-          <div className="content-stretch flex flex-col items-center justify-center p-[10.5px] relative shrink-0">
-            <MenuButton />
-          </div>
-          <SiteTitle />
-        </div>
-        <div className="aspect-[22/22] content-stretch flex h-full items-center justify-center relative shrink-0 z-10">
-          <HelpButton />
-        </div>
-      </div>
+      {/* Main Content - Centered Modal */}
+      <div className="flex-1 flex items-end md:items-center justify-center relative w-full z-10 px-4 pb-4 md:pb-0">
+        <div className="bg-white relative rounded-[8px] shrink-0 w-[320px]">
+          <form
+            onSubmit={handleSubmit}
+            className="content-stretch flex flex-col gap-[16px] items-center justify-center px-[16px] py-[16px] relative rounded-[inherit] w-full"
+          >
+            {/* Title with Help Icon */}
+            <div className="content-stretch flex items-center justify-between relative w-full">
+              <div className="flex flex-col font-['IBM_Plex_Sans',sans-serif] font-medium justify-center not-italic text-[#161616] text-[18px]">
+                <p className="leading-[normal]">Login</p>
+              </div>
+              
+              {/* Help Button with Tooltip */}
+              <div className="relative flex items-center">
+                <button
+                  type="button"
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
+                  className="bg-transparent border-none p-0 cursor-pointer"
+                  aria-label="Help"
+                >
+                  <HelpButton />
+                </button>
+                
+                {/* Tooltip */}
+                {showTooltip && (
+                  <div className="absolute left-1/2 -translate-x-1/2 bottom-[28px] bg-[#161616] text-white px-[12px] py-[8px] rounded shadow-lg whitespace-nowrap z-50 max-w-[90vw]">
+                    <p className="font-['IBM_Plex_Sans',sans-serif] text-[12px] leading-[16px]">
+                      To get the password, reach out to your administrator
+                    </p>
+                    {/* Tooltip Arrow */}
+                    <div className="absolute left-1/2 -translate-x-1/2 bottom-[-4px] w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-[#161616]" />
+                  </div>
+                )}
+              </div>
+            </div>
 
-      {/* Main Content */}
-      <div className="flex-[1_0_0] min-h-px min-w-px relative w-full z-10">
-        <div className="flex flex-col items-center justify-center size-full">
-          <div className="content-stretch flex flex-col items-center justify-center px-4 md:px-[80px] py-[40px] relative size-full">
-            <div className="bg-white relative rounded-[8px] shrink-0 w-full max-w-[440px]">
-              <form
-                onSubmit={handleSubmit}
-                className="content-stretch flex flex-col gap-[16px] md:gap-[24px] items-center justify-center overflow-clip px-6 md:px-8 lg:px-[64px] py-8 md:py-[64px] relative rounded-[inherit] w-full"
-              >
-                <p className="font-['IBM_Plex_Sans',sans-serif] font-bold leading-[normal] not-italic relative shrink-0 text-[16px] md:text-[18px] text-black text-center">
-                  CoreIgnite Docs
+            {/* Password Input with Label */}
+            <div className="content-stretch flex flex-col items-start w-full relative shrink-0">
+              {/* Label */}
+              <div className="content-stretch flex flex-col items-start pb-[8px] relative w-full">
+                <p className="font-['IBM_Plex_Sans',sans-serif] leading-[16px] not-italic text-[#525252] text-[12px] tracking-[0.32px]">
+                  Password
                 </p>
-                <p className="font-['IBM_Plex_Sans',sans-serif] leading-[normal] not-italic relative shrink-0 text-[14px] md:text-[16px] text-black text-center w-full">
-                  This information is password protected.
-                </p>
+              </div>
 
-                {/* Password Input */}
-                <div className="relative rounded-[8px] shrink-0 w-full">
-                  <div className="flex flex-col justify-center overflow-clip rounded-[inherit] size-full">
-                    <div className="content-stretch flex flex-col items-start justify-center px-[8px] h-[44px] relative w-full">
+              {/* Input Container */}
+              <div className="h-[40px] relative w-full group">
+                <div className="flex flex-row items-center size-full">
+                  <div className="content-stretch flex gap-[16px] isolate items-center px-[16px] py-[11px] relative size-full">
+                    <div className="content-stretch flex flex-1 h-[18px] items-start overflow-x-auto overflow-y-clip relative z-[6]">
                       <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         value={password}
                         onChange={(e) => {
                           setPassword(e.target.value);
                           setHasError(false);
                         }}
-                        placeholder="Enter password..."
                         disabled={isLoading}
-                        className={`font-['IBM_Plex_Sans',sans-serif] leading-[normal] not-italic w-full text-[14px] text-left bg-transparent border-none outline-none ${
+                        className={`flex-1 font-['IBM_Plex_Sans',sans-serif] leading-[18px] not-italic text-[14px] tracking-[0.16px] text-left bg-transparent border-none outline-none overflow-hidden text-ellipsis ${
                           password
                             ? "text-[#161616]"
-                            : "text-[#525252]"
-                        } placeholder:text-[#525252] disabled:opacity-50`}
+                            : "text-[#a8a8a8]"
+                        } placeholder:text-[#a8a8a8] disabled:opacity-50`}
+                      />
+                    </div>
+                    {/* Show/Hide Toggle Button */}
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="shrink-0 size-[16px] cursor-pointer bg-transparent border-none p-0 z-[7]"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      <svg
+                        className="block size-full"
+                        fill="none"
+                        viewBox="0 0 16 16"
+                      >
+                        {showPassword ? (
+                          /* Carbon View Off Icon from Figma */
+                          <g>
+                            <rect fill="white" fillOpacity="0.01" height="16" width="16" />
+                            <g>
+                              <path d={viewOffSvgPaths.pc76100} fill="#161616" />
+                              <path d={viewOffSvgPaths.p27e1cf80} fill="#161616" />
+                              <path d={viewOffSvgPaths.p1693c980} fill="#161616" />
+                            </g>
+                          </g>
+                        ) : (
+                          /* Carbon View Icon from Figma */
+                          <g>
+                            <rect fill="white" fillOpacity="0.01" height="16" width="16" />
+                            <g>
+                              <path d={viewSvgPaths.p3345a780} fill="#161616" />
+                              <path d={viewSvgPaths.p2fbb9300} fill="#161616" />
+                            </g>
+                          </g>
+                        )}
+                      </svg>
+                    </button>
+                    {/* Background with border */}
+                    <div className="absolute bg-[#f4f4f4] inset-0 z-[1]">
+                      <div 
+                        aria-hidden="true" 
+                        className={`absolute border-b border-solid inset-0 pointer-events-none transition-colors ${
+                          hasError 
+                            ? "border-[#da1e28]" 
+                            : "border-[#8d8d8d] group-focus-within:border-[#0f62fe]"
+                        }`} 
                       />
                     </div>
                   </div>
-                  <div
-                    aria-hidden="true"
-                    className={`absolute border ${hasError ? "border-[#da1e28]" : "border-[#cecece]"} border-solid inset-0 pointer-events-none rounded-[8px]`}
-                  />
                 </div>
-
-                {/* Error Message */}
-                {hasError && (
-                  <p className="font-['IBM_Plex_Sans',sans-serif] text-[12px] text-[#da1e28] -mt-2 md:-mt-4 text-center md:text-left">
-                    Incorrect password. Please try again.
-                  </p>
-                )}
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={!password || isLoading}
-                  className={`px-[12px] sm:px-[16px] py-[11px] rounded cursor-pointer transition-opacity w-full md:w-auto ${
-                    !password || isLoading
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:opacity-90"
-                  }`}
-                  style={{
-                    backgroundColor: "#7a23d9",
-                  }}
-                >
-                  <p
-                    className="font-['IBM_Plex_Sans',sans-serif] font-bold not-italic text-nowrap tracking-[0.16px]"
-                    style={{
-                      fontSize: "14px",
-                      lineHeight: "18px",
-                      color: "white",
-                    }}
-                  >
-                    {isLoading ? "Loading..." : "Submit"}
-                  </p>
-                </button>
-              </form>
-              <div
-                aria-hidden="true"
-                className="absolute border border-[#ededed] border-solid inset-0 pointer-events-none rounded-[8px] shadow-[0px_10px_15px_0px_rgba(0,0,0,0.1)]"
-              />
+                {/* Outer border for focus/error states */}
+                <div 
+                  aria-hidden="true" 
+                  className={`absolute border-b border-solid inset-0 pointer-events-none transition-colors ${
+                    hasError 
+                      ? "border-[#da1e28]" 
+                      : "border-[#8d8d8d] group-focus-within:border-[#0f62fe]"
+                  }`} 
+                />
+              </div>
             </div>
-          </div>
+
+            {/* Error Message */}
+            {hasError && (
+              <p className="font-['IBM_Plex_Sans',sans-serif] text-[12px] text-[#da1e28] mt-[-12px] text-left mr-[0px] mb-[0px] ml-[0px] w-full">
+                Incorrect password. Please try again.
+              </p>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={!password || isLoading}
+              className={`px-[16px] py-[11px] rounded transition-opacity w-full ${
+                !password || isLoading
+                  ? "opacity-50 cursor-default"
+                  : "hover:opacity-90 cursor-pointer"
+              }`}
+              style={{
+                backgroundColor: "#7a23d9",
+              }}
+            >
+              <p
+                className="font-['IBM_Plex_Sans',sans-serif] font-bold not-italic text-nowrap tracking-[0.16px]"
+                style={{
+                  fontSize: "14px",
+                  lineHeight: "18px",
+                  color: "white",
+                }}
+              >
+                {isLoading ? "Loading..." : "Submit"}
+              </p>
+            </button>
+          </form>
+          <div
+            aria-hidden="true"
+            className="absolute border border-[#ededed] border-solid inset-0 pointer-events-none rounded-[8px] shadow-[0px_10px_15px_0px_rgba(0,0,0,0.1)]"
+          />
         </div>
       </div>
 
       {/* Footer */}
       <div
-        className="content-stretch flex flex-col items-center justify-center px-4 md:px-0 py-[40px] relative shrink-0 w-full z-10"
+        className="content-stretch flex flex-col items-center justify-center px-[16px] py-[16px] relative shrink-0 w-full z-10"
         data-name="Footer"
       >
         <p className="font-['IBM_Plex_Sans',sans-serif] leading-[22px] not-italic relative shrink-0 text-[#525252] text-[12px] text-center w-full whitespace-pre-wrap">
